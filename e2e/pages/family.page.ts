@@ -18,6 +18,9 @@ import { PageSlug } from "../fixtures/routes.js";
  *     Account               .account-card (avatar · email · "Signed in since …" · [Add photo | Change photo] · [Sign out])
  *
  *   D17b sign-in choice     "Will they sign in?" radios (No sign-in | Invite to sign in) · Email when inviting (L2-125, L2-126)
+ *                           · "This is me" checkbox while the owner is not in Who's in (L2-216)
+ *   D17 This is me          "Is this you?" [This is me] for a member with no access · own row: "This is you. Signs in as …", no Remove (L2-218)
+ *   Add yourself            first .list__item of Who's in while the owner is not in it (L2-217)
  *   D30 Invite link dialog  .dialog__sub ("We also emailed this link to {email}. It works once.", L2-183) · .copy-field__value (the accept-invite link) · [Done]
  *
  *   D31 Connect Google      what Saturdaze writes and reads · [Not now] · [Continue to Google] (error state: warn banner)
@@ -55,8 +58,9 @@ export class FamilyPage extends BasePage {
     return this.section("Who's in");
   }
 
+  /** The people in Who's in: rows with an avatar, so not the "Add yourself" row. */
   memberRows(): Locator {
-    return this.membersSection().locator(".list__item");
+    return this.membersSection().locator(".list__item").filter({ has: this.page.locator(".avatar") });
   }
 
   memberRow(name: string): Locator {
@@ -77,6 +81,26 @@ export class FamilyPage extends BasePage {
 
   membersSubtitle(): Locator {
     return this.membersSection().locator(".section-header__sub");
+  }
+
+  /** The "Add yourself" row heading the owner's list while they are not in it (L2-217). */
+  addYourselfRow(): Locator {
+    return this.membersSection().locator(".list__item").filter({ has: this.page.locator(".list__title", { hasText: /^Add yourself$/ }) });
+  }
+
+  /** D17b's "This is me" checkbox (L2-216). */
+  thisIsMeCheckbox(): Locator {
+    return this.dialog().getByRole("checkbox", { name: "This is me", exact: true });
+  }
+
+  /** D17's "This is me" button for a member with no access (L2-216). */
+  thisIsMeButton(): Locator {
+    return this.dialog().locator(".dialog__body").getByRole("button", { name: "This is me", exact: true });
+  }
+
+  /** The dialog's soft notes: how a member signs in, the "This is me" hint. */
+  dialogNote(): Locator {
+    return this.dialog().locator(".dialog__body p.sd-text-xs");
   }
 
   /** Rows that open the member dialog — only the owner's are actionable (L2-124 #4). */
@@ -122,6 +146,14 @@ export class FamilyPage extends BasePage {
     );
     await this.dialogAction(member.inviteEmail ? "Send invite" : "Add member").click();
     return (await posted).postDataJSON() as Record<string, unknown>;
+  }
+
+  /** The body of the next `POST /api/family/members`. */
+  async nextMemberPost(): Promise<Record<string, unknown>> {
+    const request = await this.page.waitForRequest(
+      (r) => r.url().endsWith("/api/family/members") && r.method() === "POST",
+    );
+    return request.postDataJSON() as Record<string, unknown>;
   }
 
   /** The accept-invite link shown in D30. */

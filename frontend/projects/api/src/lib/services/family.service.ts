@@ -377,10 +377,28 @@ export class FamilyService implements IFamilyService {
         name: member.name.trim(),
         age: member.age,
         email: member.email?.trim() || null,
+        ...(member.self ? { self: true } : {}),
       }),
     );
     await this.load();
     return result.invite ?? null;
+  }
+
+  /**
+   * Claim Member.
+   *
+   * @param {string} id - The member id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async claimMember(id: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post<unknown>(
+        `${this.baseUrl}/api/family/members/${encodeURIComponent(id)}/claim`,
+        null,
+      ),
+    );
+    await this.load();
   }
 
   /**

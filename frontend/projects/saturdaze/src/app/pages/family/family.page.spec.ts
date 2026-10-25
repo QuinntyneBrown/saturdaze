@@ -296,7 +296,9 @@ describe('FamilyPage', () => {
     await settle();
     expect(dialog.open).toHaveBeenCalledWith(
       FamilyMemberDialog,
-      expect.objectContaining({ data: { mode: 'add', existingNames: ['Quinn', 'Mae'] } }),
+      expect.objectContaining({
+        data: { mode: 'add', existingNames: ['Quinn', 'Mae'], selfEmail: null, self: false },
+      }),
     );
     expect(familyService.addMember).toHaveBeenCalledWith({ name: 'Eli', age: 9, email: null });
     expect(familyService.saveProfile).not.toHaveBeenCalled();
@@ -354,6 +356,8 @@ describe('FamilyPage', () => {
           existingNames: ['Quinn', 'Mae'],
           access: 'None',
           email: null,
+          selfEmail: null,
+          isSelf: false,
         },
       }),
     );

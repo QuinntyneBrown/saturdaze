@@ -207,6 +207,71 @@ describe('FamilyMemberDialog', () => {
     expect(host.querySelector('sd-seg-radio')).toBeNull();
   });
 
+  const notes = (): string[] =>
+    Array.from(host.querySelectorAll('p.sd-text-xs')).map((p) => p.textContent?.trim() ?? '');
+
+  it('adds the owner as themselves: This is me hides the sign-in choice (L2-216)', async () => {
+    await mount({
+      mode: 'add',
+      existingNames: [],
+      selfEmail: 'quinn@example.com',
+      self: true,
+    });
+    expect(host.querySelector('sd-seg-radio')).toBeNull();
+    expect(notes()).toEqual(['Linked to your account, quinn@example.com. No invite is sent.']);
+    expect(primary().textContent?.trim()).toBe('Add me');
+    component['name'].set('Quinn');
+    component['age'].set('38');
+    component['submit']();
+    expect(dialogRef.close).toHaveBeenCalledWith({
+      kind: 'save',
+      name: 'Quinn',
+      age: 38,
+      email: null,
+      self: true,
+    });
+  });
+
+  it("offers This is me unticked only while the owner is not in Who's in (L2-216)", async () => {
+    await mount({ mode: 'add', existingNames: [], selfEmail: 'quinn@example.com' });
+    expect(host.querySelector('sd-checkbox')).not.toBeNull();
+    expect(host.querySelector('sd-seg-radio')).not.toBeNull();
+    expect(primary().textContent?.trim()).toBe('Add member');
+    TestBed.resetTestingModule();
+    await mount({ mode: 'add', existingNames: [] });
+    expect(host.querySelector('sd-checkbox')).toBeNull();
+  });
+
+  it('claims a member with no access through This is me (L2-216)', async () => {
+    await mount({
+      mode: 'edit',
+      initial: { name: 'Quinn', age: 38 },
+      existingNames: MEMBER_NAMES,
+      access: 'None',
+      selfEmail: 'quinn@example.com',
+    });
+    expect(notes()).toEqual(['Links Quinn to your account, quinn@example.com.']);
+    const claim = Array.from(host.querySelectorAll('.dialog__body sd-button button')).find(
+      (b) => b.textContent?.trim() === 'This is me',
+    ) as HTMLButtonElement;
+    claim.click();
+    expect(dialogRef.close).toHaveBeenCalledWith({ kind: 'claim' });
+  });
+
+  it("edits the owner's own row without Remove (L2-218)", async () => {
+    await mount({
+      mode: 'edit',
+      initial: { name: 'Quinn', age: 38 },
+      existingNames: MEMBER_NAMES,
+      access: 'Account',
+      email: 'quinn@example.com',
+      isSelf: true,
+    });
+    expect(notes()).toEqual(['This is you. Signs in as quinn@example.com']);
+    expect(host.querySelector('sd-button[slot="actions-left"]')).toBeNull();
+    expect(primary().textContent?.trim()).toBe('Save');
+  });
+
   it('closes with nothing on cancel', async () => {
     await mount({ mode: 'add', existingNames: [] });
     component['cancel']();

@@ -23,7 +23,8 @@ test.describe("Family", () => {
   test("members list the four Browns with derived roles", async ({ pages }) => {
     const f = pages.family;
     await expect(f.memberRows()).toHaveCount(4);
-    await expect(f.rowSubtitle(f.memberRow("Quinn"))).toHaveText("Parent · 38");
+    // The seeded owner is Quinn, linked by users.json (L2-214, ADR-024).
+    await expect(f.rowSubtitle(f.memberRow("Quinn"))).toHaveText(`Parent · 38 · Signs in as ${SEEDED_USER.email}`);
     await expect(f.rowSubtitle(f.memberRow("Sara"))).toHaveText("Parent · 36");
     await expect(f.rowSubtitle(f.memberRow("Eli"))).toHaveText("Kid · 9");
     await expect(f.rowSubtitle(f.memberRow("Mae"))).toHaveText("Kid · 5");

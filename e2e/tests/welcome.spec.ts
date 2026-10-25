@@ -1,5 +1,5 @@
 import { test, expect } from "../fixtures/sd-test.js";
-import { FakeApi, installFakeApi, freshFamily } from "../fixtures/fake-api.js";
+import { FAKE_USER, FakeApi, installFakeApi, freshFamily, ownerlessFamily } from "../fixtures/fake-api.js";
 
 /**
  * Welcome — the onboarding wizard a new account lands in (L1-039): one
@@ -151,13 +151,15 @@ test.describe("Welcome — who's in (L2-168)", () => {
     await pages.welcome.open("family");
   });
 
-  // Traces to: L2-168 AC1
-  test("starts empty with the add row and no members", async ({ pages }) => {
+  // Traces to: L2-168 AC1, L2-214 AC4
+  test("starts with the owner's own row and the add row", async ({ pages }) => {
     const w = pages.welcome;
     await expect(w.stepperLabel()).toHaveText("Step 2 of 4");
     await expect(w.cardTitle()).toHaveText("Who's in?");
     await expect(w.cardSubtitle()).toContainText("Ages shape the picks.");
-    await expect(w.memberRows()).toHaveCount(0);
+    await expect(w.memberRows()).toHaveCount(1);
+    await expect(w.rowSubtitle(w.memberRow("Quinn"))).toHaveText(`Parent · 38 · Signs in as ${FAKE_USER.email}`);
+    await expect(w.addYourselfRow()).toHaveCount(0);
     await expect(w.addMemberRow()).toBeVisible();
     await expect(w.continueButton()).toBeEnabled();
   });
@@ -173,9 +175,9 @@ test.describe("Welcome — who's in (L2-168)", () => {
     const sent = await w.addMember({ name: "Mae", age: 5 });
     expect(sent).toEqual({ name: "Mae", age: 5, email: null });
     await expect(w.dialog()).toHaveCount(0);
-    await expect(w.memberRows()).toHaveCount(1);
+    await expect(w.memberRows()).toHaveCount(2);
     await expect(w.rowSubtitle(w.memberRow("Mae"))).toHaveText("Kid · 5");
-    expect(api.family.members.map((m) => m.name)).toEqual(["Mae"]);
+    expect(api.family.members.map((m) => m.name)).toEqual(["Quinn", "Mae"]);
   });
 
   // Traces to: L2-168 AC3
@@ -202,7 +204,10 @@ test.describe("Welcome — who's in (L2-168)", () => {
     const saved = w.nextProfileSave();
     await w.dialogAction("Save").click();
     const members = (await saved)["members"] as Array<{ name: string; age: number }>;
-    expect(members).toEqual([{ id: expect.any(String), name: "Eli", age: 10, interests: [] }]);
+    expect(members).toEqual([
+      { id: "m-owner", name: "Quinn", age: 38, interests: [] },
+      { id: expect.any(String), name: "Eli", age: 10, interests: [] },
+    ]);
     await expect(w.rowSubtitle(w.memberRow("Eli"))).toHaveText("Kid · 10");
 
     await w.memberRow("Eli").click();
@@ -213,14 +218,14 @@ test.describe("Welcome — who's in (L2-168)", () => {
     await deleted;
     await expect(w.dialog()).toHaveCount(0);
     await expect(w.memberRow("Eli")).toHaveCount(0);
-    expect(api.family.members).toEqual([]);
+    expect(api.family.members.map((m) => m.name)).toEqual(["Quinn"]);
   });
 
   // Traces to: L2-168 AC5
   test("Continue moves on without another family request", async ({ page, pages }) => {
     const w = pages.welcome;
     await w.addMember({ name: "Mae", age: 5 });
-    await expect(w.memberRows()).toHaveCount(1);
+    await expect(w.memberRows()).toHaveCount(2);
     const requests: string[] = [];
     page.on("request", (r) => {
       if (r.url().includes("/api/family")) requests.push(`${r.method()} ${new URL(r.url()).pathname}`);
@@ -229,6 +234,42 @@ test.describe("Welcome — who's in (L2-168)", () => {
     await page.waitForURL("**/welcome/likes");
     await expect(w.stepperLabel()).toHaveText("Step 3 of 4");
     expect(requests).toEqual([]);
+  });
+});
+
+test.describe("Welcome — an owner who is not in Who's in yet (L2-217)", () => {
+  let api: FakeApi;
+
+  test.beforeEach(async ({ page, pages }) => {
+    api = await installFakeApi(page, { family: ownerlessFamily() });
+    await pages.welcome.open("family");
+  });
+
+  // Traces to: L2-217 AC4, L2-216 AC8
+  test("a Google owner sees only Add yourself and adds themselves", async ({ pages }) => {
+    const w = pages.welcome;
+    await expect(w.memberRows()).toHaveCount(0);
+    await expect(w.rowSubtitle(w.addYourselfRow())).toHaveText(
+      "You're not in Who's in yet. Weekends plan for you once you are.",
+    );
+
+    await w.addYourselfRow().click();
+    await expect(w.dialogTitle()).toHaveText("Add a family member");
+    await expect(w.thisIsMeCheckbox()).toBeChecked();
+    await expect(w.signInChoice("No sign-in")).toHaveCount(0);
+    await expect(w.dialogNote()).toHaveText(
+      `Linked to your account, ${FAKE_USER.email}. No invite is sent.`,
+    );
+    await w.dialogField("Name").fill("Quinn");
+    await w.dialogField("Age").fill("38");
+    const posted = w.nextMemberPost();
+    await w.dialogAction("Add me").click();
+    expect(await posted).toEqual({ name: "Quinn", age: 38, email: null, self: true });
+
+    await expect(w.dialog()).toHaveCount(0);
+    await expect(w.addYourselfRow()).toHaveCount(0);
+    await expect(w.rowSubtitle(w.memberRow("Quinn"))).toHaveText(`Parent · 38 · Signs in as ${FAKE_USER.email}`);
+    expect(api.family.selfMemberId).toBe(api.family.members[0]!.id);
   });
 });
 

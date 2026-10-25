@@ -24,3 +24,10 @@
   margin: 0;
   color: var(--colorStatusDangerForeground1);
 }
+
+/* "Is this you?" reads as a field label (sd-text-input's .field__label). */
+.claim__label {
+  font-size: var(--fontSizeBase300);
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorNeutralForeground2);
+}

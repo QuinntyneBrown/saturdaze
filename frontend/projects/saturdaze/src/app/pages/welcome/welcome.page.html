@@ -28,8 +28,19 @@
           <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
         }
         <form class="form" (submit)="submit($event)">
-          @if (view().members.length) {
+          @if (view().members.length || view().needsSelf) {
             <sd-list card>
+              @if (view().needsSelf) {
+                <sd-list-item
+                  action
+                  chevron
+                  title="Add yourself"
+                  [subtitle]="addYourselfSubtitle()"
+                  (pressed)="addYourself()"
+                >
+                  <sd-disc slot="leading" icon="user" tone="primary" />
+                </sd-list-item>
+              }
               @for (member of view().members; track member.id) {
                 <sd-list-item
                   action
