@@ -103,7 +103,8 @@ public sealed class WeekendFactory
         Reason = b.Reason,
         SortOrder = b.SortOrder,
         Stop = b.Stop?.Copy(),
-        FromCalendar = b.FromCalendar
+        FromCalendar = b.FromCalendar,
+        PickedByAgents = b.PickedByAgents
     };
 }
 

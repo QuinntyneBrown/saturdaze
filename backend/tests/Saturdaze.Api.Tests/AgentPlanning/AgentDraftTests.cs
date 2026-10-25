@@ -120,9 +120,11 @@ public class AgentDraftTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
         weekend.GetProperty("planSource").GetString().Should().Be("Agents");
         weekend.GetProperty("agentDraft").GetProperty("status").GetString().Should().Be("Applied");
 
-        // Each pick is on its day with the drafter's reason.
+        // Each pick is on its day with the drafter's reason, marked as the agents' pick (L2-211).
         foreach (var pick in picks)
-            Plans.Blocks(weekend, pick.Day).Should().Contain(b => Plans.RefId(b) == Id(pick.Name, pick.On) && Plans.Reason(b) == pick.Reason);
+            Plans.Blocks(weekend, pick.Day).Should().Contain(b => Plans.RefId(b) == Id(pick.Name, pick.On) && Plans.Reason(b) == pick.Reason
+                && b.GetProperty("pickedByAgents").GetBoolean());
+        Plans.Blocks(weekend).Where(b => Plans.Kind(b) != "Activity").Should().OnlyContain(b => !b.GetProperty("pickedByAgents").GetBoolean());
 
         // No Halloween content: nothing the unfiltered catalog tags halloween.
         var everyone = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;

@@ -667,6 +667,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("Kind")
                         .HasColumnType("int");
 
+                    b.Property<bool>("PickedByAgents")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(500)

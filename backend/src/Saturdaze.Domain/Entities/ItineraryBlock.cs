@@ -23,6 +23,9 @@ public class ItineraryBlock
     /// </summary>
     public bool FromCalendar { get; set; }
 
+    /// <summary>An outing the agents picked; its reason is the drafter's (L2-202, L2-211).</summary>
+    public bool PickedByAgents { get; set; }
+
     /// <summary>
     /// Where the block happens when that is a catalog place (L2-103), copied when the block
     /// is planned so the record survives catalog edits. Null at home or when unknown.

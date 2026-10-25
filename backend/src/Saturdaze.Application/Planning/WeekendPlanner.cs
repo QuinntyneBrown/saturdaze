@@ -117,6 +117,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 .FirstOrDefault(f => f is not null);
             if (placed is not { } pickFit) continue;
             var pickBlocks = BuildOuting(c, pickFit, pick.Reason, day).ToList();
+            foreach (var outing in pickBlocks.Where(b => b.Kind == BlockKind.Activity)) outing.PickedByAgents = true;
             outings.AddRange(pickBlocks);
             occupied.AddRange(pickBlocks);
             rejected.Add(c.Id);
@@ -214,7 +215,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 IsLocked = true,
                 Reason = string.IsNullOrEmpty(l.Reason) ? "locked by user" : l.Reason,
                 Stop = l.Stop?.Copy(),
-                FromCalendar = l.FromCalendar
+                FromCalendar = l.FromCalendar,
+                PickedByAgents = l.PickedByAgents
             });
         }
 
