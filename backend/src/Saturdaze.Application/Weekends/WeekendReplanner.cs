@@ -64,8 +64,9 @@ public sealed class WeekendReplanner
                 Stop = b.Stop?.Copy(),
                 FromCalendar = b.FromCalendar
             };
+            // EF fixup adds the block to weekend.Blocks through its WeekendId;
+            // adding it here too would return every block twice.
             _db.ItineraryBlocks.Add(block);
-            weekend.Blocks.Add(block);
         }
 
         await _db.SaveChangesAsync(ct);

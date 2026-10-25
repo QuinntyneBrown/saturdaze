@@ -151,6 +151,32 @@ public class WeekendsControllerTests : IClassFixture<SaturdazeApiFactory>, IAsyn
     }
 
     [Fact]
+    public async Task Regenerate_returns_each_planned_block_once()
+    {
+        // Given a planned weekend
+        var plan = await _client.PostAsJsonAsync("/api/weekends/plan",
+            new { WeekendOf = new DateOnly(2026, 10, 24).ToString("yyyy-MM-dd") });
+        plan.EnsureSuccessStatusCode();
+        var weekendId = JsonDocument.Parse(await plan.Content.ReadAsStringAsync())
+            .RootElement.GetProperty("id").GetGuid();
+
+        // When the family regenerates it
+        var regenerated = await _client.PostAsync($"/api/weekends/{weekendId}/regenerate", content: null);
+        var body = await regenerated.Content.ReadAsStringAsync();
+        regenerated.StatusCode.Should().Be(HttpStatusCode.OK, body);
+
+        // Then each block appears once, matching what a fresh load returns
+        var returnedIds = JsonDocument.Parse(body).RootElement.GetProperty("blocks").EnumerateArray()
+            .Select(b => b.GetProperty("id").GetGuid()).ToArray();
+        returnedIds.Should().OnlyHaveUniqueItems();
+
+        var reloaded = await _client.GetFromJsonAsync<JsonElement>($"/api/weekends/{weekendId}");
+        reloaded.GetProperty("blocks").EnumerateArray()
+            .Select(b => b.GetProperty("id").GetGuid())
+            .Should().BeEquivalentTo(returnedIds);
+    }
+
+    [Fact]
     public async Task Day_lock_and_regenerate_preserves_other_day()
     {
         var saturday = new DateOnly(2026, 6, 13);
