@@ -87,6 +87,7 @@ public class AgentRunsAndTracingTests : IClassFixture<SaturdazeApiFactory>, IAsy
         totals.GetProperty("appliedToday").GetInt32().Should().BeGreaterThanOrEqualTo(1);
         totals.GetProperty("spendThisMonthUsd").GetDecimal().Should().BeGreaterThan(0);
         totals.GetProperty("monthlyCapUsd").GetDecimal().Should().Be(25m);
+        totals.GetProperty("runsPerDayCap").GetInt32().Should().Be(60);
     }
 
     [Fact]

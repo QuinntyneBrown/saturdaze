@@ -27,7 +27,8 @@ public sealed record AgentRunDto(
     string? TraceId,
     int PolicyViolations);
 
-public sealed record AgentRunTotalsDto(int RunsToday, int AppliedToday, int FellBackToday, decimal SpendThisMonthUsd, decimal MonthlyCapUsd);
+public sealed record AgentRunTotalsDto(
+    int RunsToday, int AppliedToday, int FellBackToday, decimal SpendThisMonthUsd, decimal MonthlyCapUsd, int RunsPerDayCap);
 
 public sealed record AgentRunsDto(IReadOnlyList<AgentRunDto> Runs, AgentRunTotalsDto Totals);
 
@@ -69,6 +70,7 @@ public sealed class GetAgentRunsQueryHandler : IRequestHandler<GetAgentRunsQuery
                 today.Count(r => r.Status == AgentRunStatus.Applied),
                 today.Count(r => r.Status == AgentRunStatus.FellBack),
                 recent.Where(r => r.QueuedUtc >= startOfMonth).Sum(r => r.CostUsd),
-                _options.MonthlySpendCapUsd));
+                _options.MonthlySpendCapUsd,
+                _options.MaxRunsPerDay));
     }
 }
