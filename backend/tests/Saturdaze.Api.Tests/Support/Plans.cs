@@ -33,6 +33,19 @@ internal static class Plans
 
     public static TimeOnly End(JsonElement block) => TimeOnly.Parse(block.GetProperty("endTime").GetString()!);
 
+    public static string Kind(JsonElement block) => block.GetProperty("kind").GetString()!;
+
+    /// <summary>Great-circle kilometres between two <c>{ latitude, longitude }</c> objects; enough to rank by distance.</summary>
+    public static double Km(JsonElement a, JsonElement b)
+    {
+        static double Rad(double d) => d * Math.PI / 180;
+        var (lat1, lng1) = (a.GetProperty("latitude").GetDouble(), a.GetProperty("longitude").GetDouble());
+        var (lat2, lng2) = (b.GetProperty("latitude").GetDouble(), b.GetProperty("longitude").GetDouble());
+        var h = Math.Pow(Math.Sin(Rad(lat2 - lat1) / 2), 2)
+                + Math.Cos(Rad(lat1)) * Math.Cos(Rad(lat2)) * Math.Pow(Math.Sin(Rad(lng2 - lng1) / 2), 2);
+        return 2 * 6371 * Math.Asin(Math.Sqrt(h));
+    }
+
     public static string Title(JsonElement block) => block.GetProperty("title").GetString()!;
 
     public static string Reason(JsonElement block) => block.GetProperty("reason").GetString()!;

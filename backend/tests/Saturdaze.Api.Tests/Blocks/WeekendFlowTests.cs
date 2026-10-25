@@ -120,8 +120,10 @@ public class WeekendFlowTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifeti
             new { WeekendOf = TestSaturday.AddDays(21).ToString("yyyy-MM-dd") });
         planResp.EnsureSuccessStatusCode();
         var planned = await ReadAsync(planResp);
+        // (the outing with the most room, so an alternative fits; L2-015 #3 covers none left)
         var activity = planned.GetProperty("blocks").EnumerateArray()
-            .First(b => b.GetProperty("kind").GetString() == "Activity");
+            .Where(b => b.GetProperty("kind").GetString() == "Activity")
+            .MaxBy(b => TimeOnly.Parse(b.GetProperty("endTime").GetString()!) - TimeOnly.Parse(b.GetProperty("startTime").GetString()!));
         var blockId = activity.GetProperty("id").GetGuid();
         var activityA = activity.GetProperty("refId").GetGuid();
 

@@ -1,5 +1,6 @@
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Common;
+using Saturdaze.Application.Travel;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
@@ -19,11 +20,17 @@ public sealed class WeekendPlanner : IWeekendPlanner
     {
         var rng = new SeededRandomSource(inputs.Seed);
         var blocks = new List<ItineraryBlock>();
+        // One weekend, one visit per place (L2-185): Sunday never repeats Saturday,
+        // and a locked activity counts as already picked.
+        var picked = inputs.LockedBlocks
+            .Where(b => b.Kind == BlockKind.Activity && b.RefId is not null)
+            .Select(b => b.RefId!.Value)
+            .ToHashSet();
         foreach (var day in new[] { DayOfWeekend.Saturday, DayOfWeekend.Sunday })
         {
             var dayDate = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
             var forecast = ForecastFor(inputs.Forecast, dayDate);
-            blocks.AddRange(PlanDay(inputs, day, dayDate, forecast, rng));
+            blocks.AddRange(PlanDay(inputs, day, dayDate, forecast, rng, picked));
         }
         return blocks;
     }
@@ -58,46 +65,62 @@ public sealed class WeekendPlanner : IWeekendPlanner
     // ─── Day pipeline ────────────────────────────────────────────────────────
 
     private static IEnumerable<ItineraryBlock> PlanDay(
-        PlannerInputs inputs, DayOfWeekend day, DateOnly date, WeatherForecast forecast, IRandomSource rng)
+        PlannerInputs inputs, DayOfWeekend day, DateOnly date, WeatherForecast forecast, IRandomSource rng,
+        HashSet<Guid> rejected)
     {
-        var fixedBlocks = BuildFixedBlocks(inputs, day);
+        var profile = inputs.Boundaries;
+        var (dayStart, dayEnd) = (profile.DayStart, profile.DayEnd(day));
+
+        var fixedBlocks = BuildFixedBlocks(inputs, day, dayStart, dayEnd);
         EnsureNoOverlap(fixedBlocks);
 
-        var gaps = ComputeGaps(day, fixedBlocks);
-        var picked = new Dictionary<TimeOnly, Activity>(); // gap-start → activity
-        var rejected = new HashSet<Guid>();
+        // Meals first (L2-186, L2-187), so outings go around them rather than over them.
+        var meals = ReserveMeals(inputs, day, fixedBlocks, dayStart, dayEnd);
+        var occupied = fixedBlocks.Concat(meals).ToList();
 
-        foreach (var gap in gaps.Where(g => GapMinutes(g) >= PlannerTimes.ActivityMinGapMinutes).ToList())
+        // Two passes in time order (L2-184): one outing per long-enough gap, then
+        // what is left of a gap, until the day reaches the family's pace.
+        var outings = new List<ItineraryBlock>();
+        var outingCount = 0;
+        var pace = profile.Outings(day);
+        for (var pass = 0; pass < 2 && outingCount < pace; pass++)
         {
-            var scored = ScoreActivities(inputs, gap, forecast, rejected, day);
-            if (scored.Count == 0) continue;
+            var placedThisPass = false;
+            foreach (var gap in ComputeGaps(occupied, dayStart, dayEnd)
+                         .Where(g => GapMinutes(g) >= PlannerTimes.ActivityMinGapMinutes).ToList())
+            {
+                if (outingCount >= pace) break;
+                var scored = ScoreActivities(inputs, gap, forecast, rejected, day);
+                if (scored.Count == 0) continue;
 
-            var topScore = scored[0].score;
-            var topCandidates = scored.TakeWhile(s => s.score == topScore).Select(s => s.activity).ToList();
-            var winner = topCandidates[rng.Next(topCandidates.Count)];
-            picked[gap.start] = winner;
-            rejected.Add(winner.Id);
+                var topScore = scored[0].score;
+                var topCandidates = scored.TakeWhile(s => s.score == topScore).Select(s => s.activity).ToList();
+                var winner = topCandidates[rng.Next(topCandidates.Count)];
+                rejected.Add(winner.Id);
+
+                var firstTime = inputs.TryNew && inputs.History.All(h => h.ActivityId != winner.Id);
+                var blocks = BuildActivityWithDrives(winner, gap, forecast, firstTime, day).ToList();
+                outings.AddRange(blocks);
+                occupied.AddRange(blocks);
+                outingCount++;
+                placedThisPass = true;
+            }
+            if (!placedThisPass) break;
         }
 
         var result = new List<ItineraryBlock>(fixedBlocks);
-        foreach (var (gapStart, activity) in picked)
-        {
-            var gap = gaps.First(g => g.start == gapStart);
-            result.AddRange(BuildActivityWithDrives(activity, gap, forecast, inputs.TryNew, day));
-        }
-
-        result.AddRange(PlaceMeals(inputs, day, date, result, picked));
+        result.AddRange(outings);
+        result.AddRange(AssignRestaurants(inputs, meals, result));
         result = result.OrderBy(b => b.StartTime).ToList();
 
         if (day == DayOfWeekend.Saturday && inputs.Errand is not null)
         {
-            var errandBlock = PlaceErrandCore(inputs.Errand, result, day);
+            var errandBlock = PlaceErrandCore(inputs.Errand, result, day, dayStart, dayEnd);
             if (errandBlock is not null) result.Add(errandBlock);
         }
 
         result = result.OrderBy(b => b.StartTime).ToList();
-        result.AddRange(Downtime(day, result));
-        result = result.OrderBy(b => b.StartTime).ToList();
+        result.AddRange(Downtime(day, result, dayStart, dayEnd));
 
         // Apply sort order index.
         var sorted = new List<ItineraryBlock>();
@@ -113,7 +136,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     // ─── Fixed blocks (commitments + locked) ──────────────────────────────────
 
-    private static List<ItineraryBlock> BuildFixedBlocks(PlannerInputs inputs, DayOfWeekend day)
+    private static List<ItineraryBlock> BuildFixedBlocks(
+        PlannerInputs inputs, DayOfWeekend day, TimeOnly dayStart, TimeOnly dayEnd)
     {
         var dow = day == DayOfWeekend.Saturday ? DayOfWeek.Saturday : DayOfWeek.Sunday;
         var locked = inputs.LockedBlocks.Where(b => b.Day == day).ToList();
@@ -158,7 +182,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
         // and fixed blocks never overlap (L2-177).
         var calendar = (inputs.CalendarCommitments ?? Array.Empty<CalendarCommitment>())
             .Where(c => c.Day == day)
-            .Select(c => (c, start: Max(c.Start, PlannerTimes.DayStart), end: Min(c.End, PlannerTimes.DayEnd)))
+            .Select(c => (c, start: Max(c.Start, dayStart), end: Min(c.End, dayEnd)))
             .Where(x => x.start < x.end)
             .OrderBy(x => x.start);
         foreach (var (c, start, end) in calendar)
@@ -199,17 +223,17 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     // ─── Gap computation ──────────────────────────────────────────────────────
 
-    private static List<(TimeOnly start, TimeOnly end)> ComputeGaps(DayOfWeekend day, IReadOnlyList<ItineraryBlock> fixedBlocks)
+    private static List<(TimeOnly start, TimeOnly end)> ComputeGaps(
+        IReadOnlyList<ItineraryBlock> occupied, TimeOnly dayStart, TimeOnly dayEnd)
     {
-        var end = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;
         var gaps = new List<(TimeOnly start, TimeOnly end)>();
-        var cursor = PlannerTimes.DayStart;
-        foreach (var b in fixedBlocks.OrderBy(b => b.StartTime))
+        var cursor = dayStart;
+        foreach (var b in occupied.OrderBy(b => b.StartTime))
         {
             if (cursor < b.StartTime) gaps.Add((cursor, b.StartTime));
             if (b.EndTime > cursor) cursor = b.EndTime;
         }
-        if (cursor < end) gaps.Add((cursor, end));
+        if (cursor < dayEnd) gaps.Add((cursor, dayEnd));
         return gaps;
     }
 
@@ -363,7 +387,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
         }
     }
 
-    private static string BuildActivityReason(Activity act, WeatherForecast forecast, bool tryNew, int gapMinutes)
+    /// <param name="firstTime">True only when the try-new bonus applied: the family never had it (L2-189).</param>
+    private static string BuildActivityReason(Activity act, WeatherForecast forecast, bool firstTime, int gapMinutes)
     {
         var parts = new List<string>();
         if (forecast.Unavailable) parts.Add("weather unavailable");
@@ -374,101 +399,112 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 parts.Add("outdoor pick — fair weather");
             else if (forecast.Tags.Contains("snow") && act.Indoor) parts.Add("indoor pick — snow in forecast");
         }
-        if (tryNew) parts.Add("first time trying this — variety on");
+        if (firstTime) parts.Add("first time trying this — variety on");
         parts.Add($"fits {act.TypicalDurationMinutes}-min window in {gapMinutes}-min gap");
         return string.Join("; ", parts);
     }
 
     // ─── Meals ────────────────────────────────────────────────────────────────
 
-    private static List<ItineraryBlock> PlaceMeals(
-        PlannerInputs inputs, DayOfWeekend day, DateOnly date,
-        List<ItineraryBlock> placedSoFar, Dictionary<TimeOnly, Activity> picked)
+    private static readonly string[] MealWords = { "lunch", "brunch", "dinner", "supper" };
+
+    /// <summary>
+    /// Holds each meal's hour before outings are placed (L2-186): the first free
+    /// quarter-hour start found going forward from the preferred time to the
+    /// window's latest start, then back to its earliest. A meal that does not fit
+    /// its window is left out, never moved. Restaurants are chosen afterwards.
+    /// </summary>
+    private static List<ItineraryBlock> ReserveMeals(
+        PlannerInputs inputs, DayOfWeekend day, IReadOnlyList<ItineraryBlock> fixedBlocks,
+        TimeOnly dayStart, TimeOnly dayEnd)
     {
+        var profile = inputs.Boundaries;
         var meals = new List<ItineraryBlock>();
-        foreach (var (slot, winStart, winEnd) in new[]
+        foreach (var (slot, earliest, preferred, latest) in new[]
         {
-            (MealSlot.Lunch,  PlannerTimes.LunchWindowStart,  PlannerTimes.LunchWindowEnd),
-            (MealSlot.Dinner, PlannerTimes.DinnerWindowStart, PlannerTimes.DinnerWindowEnd)
+            (MealSlot.Lunch, PlannerTimes.LunchEarliestStart, PlannerTimes.LunchWindowStart, PlannerTimes.LunchLatestStart),
+            (MealSlot.Dinner, PlannerTimes.DinnerEarliestStart, PlannerTimes.DinnerWindowStart, PlannerTimes.DinnerLatestStart)
         })
         {
-            // Sunday wind-down blocks dinner.
-            if (slot == MealSlot.Dinner && day == DayOfWeekend.Sunday) continue;
+            var atHome = slot == MealSlot.Dinner && day == DayOfWeekend.Sunday && profile.SundayDinnerAtHome;
+            if (!atHome && !EligibleRestaurants(inputs, slot).Any()) continue;
 
-            var candidates = inputs.Restaurants
-                .Where(r => r.Slot == slot && r.WifeApproved)
-                .ToList();
-            if (candidates.Count == 0) continue;
+            // "Lunch at Grandma's" is the lunch.
+            var windowEnd = latest.AddMinutes(PlannerTimes.MealMinutes);
+            if (fixedBlocks.Any(b => b.Kind == BlockKind.Commitment
+                                     && Overlaps(b.StartTime, b.EndTime, earliest, windowEnd)
+                                     && MealWords.Any(w => b.Title.Contains(w, StringComparison.OrdinalIgnoreCase))))
+                continue;
 
-            var anchorActivity = picked.Values
-                .OrderBy(a => Math.Abs(MidpointMinutes(winStart, winEnd) - DriveMidpoint(a)))
-                .FirstOrDefault();
-            var restaurant = anchorActivity is null
-                ? candidates.OrderBy(r => r.DriveMinutes).First()
-                : candidates
-                    .OrderBy(r => Math.Abs(r.DriveMinutes - anchorActivity.DriveMinutes))
-                    .ThenBy(r => r.Name)
-                    .First();
-
-            var mealRange = FindMealSlot(placedSoFar, meals, winStart, winEnd, day);
-            if (mealRange is null) continue;
+            var taken = fixedBlocks.Concat(meals).ToList();
+            var start = MealStarts(earliest, preferred, latest)
+                .Cast<TimeOnly?>()
+                .FirstOrDefault(t => t!.Value >= dayStart
+                                     && t.Value.AddMinutes(PlannerTimes.MealMinutes) <= dayEnd
+                                     && !taken.Any(b => Overlaps(b.StartTime, b.EndTime, t.Value, t.Value.AddMinutes(PlannerTimes.MealMinutes))));
+            if (start is null) continue;
 
             meals.Add(new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
                 Day = day,
-                StartTime = mealRange.Value.start,
-                EndTime = mealRange.Value.end,
+                StartTime = start.Value,
+                EndTime = start.Value.AddMinutes(PlannerTimes.MealMinutes),
                 Kind = BlockKind.Meal,
-                Title = $"{slot}: {restaurant.Name}",
-                RefId = restaurant.Id,
-                Reason = anchorActivity is null
-                    ? $"closest {slot.ToString().ToLowerInvariant()} spot"
-                    : $"close to {anchorActivity.Name}",
-                Stop = restaurant.Geo?.Copy()
+                Title = atHome ? "Dinner at home" : slot.ToString(),
+                Reason = atHome ? "Sunday dinner at home" : string.Empty
             });
         }
         return meals;
     }
 
-    private static (TimeOnly start, TimeOnly end)? FindMealSlot(
-        IReadOnlyList<ItineraryBlock> existing, IReadOnlyList<ItineraryBlock> meals,
-        TimeOnly winStart, TimeOnly winEnd, DayOfWeekend day)
+    private static IEnumerable<TimeOnly> MealStarts(TimeOnly earliest, TimeOnly preferred, TimeOnly latest)
     {
-        var sorted = existing.Concat(meals).Where(b => b.Day == day).OrderBy(b => b.StartTime).ToList();
-        // Try preferred window first.
-        if (FitsIn(sorted, winStart, winEnd, PlannerTimes.MealMinutes, out var fit))
-            return fit;
-
-        // Otherwise scan day for a 60-min gap, preferring closest to original window midpoint.
-        var dayBoundEnd = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;
-        var freeRanges = FindFreeRanges(sorted, PlannerTimes.DayStart, dayBoundEnd, PlannerTimes.MealMinutes);
-        var winMid = MidpointMinutes(winStart, winEnd);
-        var best = freeRanges
-            .Select(r => (r.start, end: r.start.AddMinutes(PlannerTimes.MealMinutes),
-                          dist: Math.Abs(MidpointMinutes(r.start, r.start.AddMinutes(PlannerTimes.MealMinutes)) - winMid)))
-            .OrderBy(r => r.dist)
-            .Select(r => ((TimeOnly start, TimeOnly end)?)(r.start, r.end))
-            .FirstOrDefault();
-        return best;
+        for (var t = preferred; t <= latest; t = t.AddMinutes(15)) yield return t;
+        for (var t = preferred.AddMinutes(-15); t >= earliest; t = t.AddMinutes(-15)) yield return t;
     }
 
-    private static bool FitsIn(
-        IReadOnlyList<ItineraryBlock> sorted, TimeOnly winStart, TimeOnly winEnd, int neededMinutes,
-        out (TimeOnly start, TimeOnly end) fit)
+    private static IEnumerable<Restaurant> EligibleRestaurants(PlannerInputs inputs, MealSlot slot) =>
+        inputs.Restaurants.Where(r => r.Slot == slot && r.WifeApproved && r.DriveMinutes <= inputs.Boundaries.MaxDriveMinutes);
+
+    /// <summary>
+    /// Puts a restaurant on each reserved meal: the eligible one nearest the stop
+    /// before it, or nearest home (L2-186). A meal with no restaurant is dropped.
+    /// </summary>
+    private static IEnumerable<ItineraryBlock> AssignRestaurants(
+        PlannerInputs inputs, IReadOnlyList<ItineraryBlock> meals, IReadOnlyList<ItineraryBlock> placed)
     {
-        // Slide a 60-min slot inside [winStart, winEnd] checking against existing blocks.
-        for (var t = winStart; t.AddMinutes(neededMinutes) <= winEnd; t = t.AddMinutes(15))
+        foreach (var meal in meals)
         {
-            var candidateEnd = t.AddMinutes(neededMinutes);
-            if (!sorted.Any(b => Overlaps(b.StartTime, b.EndTime, t, candidateEnd)))
+            if (meal.RefId is null && meal.Title == "Dinner at home")
             {
-                fit = (t, candidateEnd);
-                return true;
+                yield return meal;
+                continue;
             }
+
+            var slot = meal.Title == nameof(MealSlot.Lunch) ? MealSlot.Lunch : MealSlot.Dinner;
+            var candidates = EligibleRestaurants(inputs, slot).ToList();
+            if (candidates.Count == 0) continue;
+
+            var anchor = placed
+                .Where(b => b.Stop is not null && b.EndTime <= meal.StartTime && b.Kind != BlockKind.Meal)
+                .OrderBy(b => b.EndTime)
+                .LastOrDefault();
+            var from = anchor?.Stop ?? inputs.Home;
+            var restaurant = from is null
+                ? candidates.OrderBy(r => r.DriveMinutes).ThenBy(r => r.Name).First()
+                : candidates
+                    .OrderBy(r => r.Geo is null ? decimal.MaxValue : TravelEstimator.DistanceKm(from, r.Geo))
+                    .ThenBy(r => r.DriveMinutes)
+                    .ThenBy(r => r.Name)
+                    .First();
+
+            meal.Title = $"{slot}: {restaurant.Name}";
+            meal.RefId = restaurant.Id;
+            meal.Reason = anchor is null ? "near home" : $"near {anchor.Title}";
+            meal.Stop = restaurant.Geo?.Copy();
+            yield return meal;
         }
-        fit = default;
-        return false;
     }
 
     private static List<(TimeOnly start, TimeOnly end)> FindFreeRanges(
@@ -491,18 +527,13 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     private static int Minutes(TimeOnly a, TimeOnly b) => (int)(b.ToTimeSpan() - a.ToTimeSpan()).TotalMinutes;
 
-    private static int MidpointMinutes(TimeOnly a, TimeOnly b) =>
-        (Minutes(TimeOnly.MinValue, a) + Minutes(TimeOnly.MinValue, b)) / 2;
-
-    private static int DriveMidpoint(Activity a) =>
-        Minutes(TimeOnly.MinValue, PlannerTimes.DayStart) + 240 + a.DriveMinutes; // crude proxy for "when is the activity"
-
     // ─── Errand placement ─────────────────────────────────────────────────────
 
     public ItineraryBlock? PlaceErrand(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day)
-        => PlaceErrandCore(errand, dayBlocks, day);
+        => PlaceErrandCore(errand, dayBlocks, day, PlannerProfile.Default.DayStart, PlannerProfile.Default.DayEnd(day));
 
-    private static ItineraryBlock? PlaceErrandCore(ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day)
+    private static ItineraryBlock? PlaceErrandCore(
+        ShoppingErrand errand, IReadOnlyList<ItineraryBlock> dayBlocks, DayOfWeekend day, TimeOnly dayStart, TimeOnly dayEnd)
     {
         var neededMinutes = errand.EstimatedMinutes + PlannerTimes.ErrandBufferMinutes;
         // Downtime is exactly the space an errand should take over.
@@ -511,8 +542,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
             .OrderBy(b => b.StartTime)
             .ToList();
 
-        var dayBoundEnd = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;
-        var ranges = FindFreeRanges(sorted, PlannerTimes.DayStart, dayBoundEnd, neededMinutes);
+        var ranges = FindFreeRanges(sorted, dayStart, dayEnd, neededMinutes);
         if (ranges.Count == 0) return null;
 
         // Prefer the morning (before noon), choosing smallest-fit gap to leave room.
@@ -540,13 +570,13 @@ public sealed class WeekendPlanner : IWeekendPlanner
     // ─── Downtime ─────────────────────────────────────────────────────────────
 
     public IReadOnlyList<ItineraryBlock> FillDowntime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> dayBlocks)
-        => Downtime(day, dayBlocks).ToList();
+        => Downtime(day, dayBlocks, PlannerProfile.Default.DayStart, PlannerProfile.Default.DayEnd(day)).ToList();
 
-    private static IEnumerable<ItineraryBlock> Downtime(DayOfWeekend day, IReadOnlyList<ItineraryBlock> placed)
+    private static IEnumerable<ItineraryBlock> Downtime(
+        DayOfWeekend day, IReadOnlyList<ItineraryBlock> placed, TimeOnly dayStart, TimeOnly dayEnd)
     {
         var sorted = placed.Where(b => b.Day == day).OrderBy(b => b.StartTime).ToList();
-        var dayBoundEnd = day == DayOfWeekend.Sunday ? PlannerTimes.SundayWindDownStart : PlannerTimes.DayEnd;
-        foreach (var (start, end) in FindFreeRanges(sorted, PlannerTimes.DayStart, dayBoundEnd, PlannerTimes.DowntimeMinMinutes))
+        foreach (var (start, end) in FindFreeRanges(sorted, dayStart, dayEnd, PlannerTimes.DowntimeMinMinutes))
         {
             yield return new ItineraryBlock
             {

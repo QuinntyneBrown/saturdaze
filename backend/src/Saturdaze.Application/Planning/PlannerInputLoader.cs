@@ -46,7 +46,8 @@ public sealed record PlannerContext(
             lockedBlocks,
             TryNew: Family.TryNewEnabled,
             Seed: seed,
-            CalendarCommitments: CalendarCommitments);
+            CalendarCommitments: CalendarCommitments,
+            Home: Home);
 
     public WeatherForecast ForecastFor(DayOfWeekend day)
     {

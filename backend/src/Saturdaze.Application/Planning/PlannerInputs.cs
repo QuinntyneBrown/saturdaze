@@ -1,6 +1,7 @@
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Planning;
 
@@ -19,7 +20,13 @@ public sealed record PlannerInputs(
     IReadOnlyList<ItineraryBlock> LockedBlocks,
     bool TryNew,
     int Seed,
-    IReadOnlyList<CalendarCommitment>? CalendarCommitments = null);
+    IReadOnlyList<CalendarCommitment>? CalendarCommitments = null,
+    PlannerProfile? Profile = null,
+    GeoLocation? Home = null)
+{
+    /// <summary>The family's boundaries, or the defaults when none were given.</summary>
+    public PlannerProfile Boundaries => Profile ?? PlannerProfile.Default;
+}
 
 /// <summary>
 /// A timed event from a connected calendar on one weekend day, in local time
