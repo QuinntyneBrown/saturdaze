@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context - Plan a weekend with agents
+
+Person(family, "Family member", "Asks for a drafted weekend and reads why each pick was made")
+Person(admin, "Administrator", "Watches agent runs, cost and traces")
+System(saturdaze, "Saturdaze", "Plans family weekends; agents propose, the planner disposes")
+System_Ext(foundry, "Microsoft Foundry", "Claude on Azure (claude-sonnet-5), web_search_20250305")
+System_Ext(web, "The web", "Venue, municipal and tourism pages the researcher reads")
+System_Ext(insights, "Application Insights", "Traces of every run")
+System_Ext(openmeteo, "Open-Meteo", "Forecast for the family's home")
+
+Rel(family, saturdaze, "Drafts and reads weekends", "HTTPS")
+Rel(admin, saturdaze, "Reviews agent runs", "HTTPS")
+Rel(saturdaze, foundry, "Runs researcher, curator and drafter", "Messages API, Entra token")
+Rel(foundry, web, "Searches on the researcher's behalf")
+Rel(saturdaze, insights, "Exports spans", "OpenTelemetry")
+Rel(saturdaze, openmeteo, "Reads the forecast", "HTTPS")
+@enduml

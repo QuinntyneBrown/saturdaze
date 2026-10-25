@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { API_BASE_URL } from '../api/api-base-url';
 import { block, settle, weekendDto } from '../testing/weekend-fixture';
+import { AgentDraftDto, AgentRunStatus } from '../models/agent-draft.dto';
 import { WeekendPlanService } from './weekend-plan.service';
 
 const BASE = 'http://localhost:3000';
@@ -279,5 +280,103 @@ describe('WeekendPlanService', () => {
     req.flush(weekendDto({ id: 'w3' }));
     await repeat;
     expect(service.getWeekend()().id).toBe('w3');
+  });
+
+  describe('draftWithAgents (L2-211)', () => {
+    const DRAFTS = `${BASE}/api/weekends/w1/drafts`;
+    const LATEST = `${DRAFTS}/latest`;
+    const run = (status: AgentRunStatus, extra: Partial<AgentDraftDto> = {}): AgentDraftDto => ({
+      runId: 'r1',
+      status,
+      trigger: 'OnDemand',
+      requestedUtc: '2026-10-25T12:00:00Z',
+      finishedUtc: null,
+      fallbackReason: null,
+      notice: null,
+      ...extra,
+    });
+
+    it('marks the weekend as drafting, polls every 3 seconds and reloads when the run ends', async () => {
+      await loadCurrent();
+      vi.useFakeTimers();
+      try {
+        const pending = service.draftWithAgents();
+        httpMock.expectOne({ method: 'POST', url: DRAFTS }).flush(run('Queued'));
+        expect(await pending).toBeNull();
+        expect(service.getWeekend()().agentDraft.drafting).toBe(true);
+
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(run('Running'));
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service.getWeekend()().agentDraft.drafting).toBe(true);
+
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(run('Applied'));
+        await vi.advanceTimersByTimeAsync(0);
+        httpMock
+          .expectOne(CURRENT)
+          .flush(weekendDto({ planSource: 'Agents', agentDraft: run('Applied') }));
+        await vi.advanceTimersByTimeAsync(0);
+      } finally {
+        vi.useRealTimers();
+      }
+      const view = service.getWeekend()();
+      expect(view.agentDraft.drafting).toBe(false);
+      expect(view.draftedByAgents).toBe(true);
+    });
+
+    it('keeps polling after a failed check', async () => {
+      await loadCurrent();
+      vi.useFakeTimers();
+      try {
+        const pending = service.draftWithAgents();
+        httpMock.expectOne({ method: 'POST', url: DRAFTS }).flush(run('Queued'));
+        await pending;
+
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(null, { status: 502, statusText: 'Bad Gateway' });
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(run('FellBack', { fallbackReason: 'Error', notice: 'x' }));
+        await vi.advanceTimersByTimeAsync(0);
+        httpMock.expectOne(CURRENT).flush(weekendDto());
+        await vi.advanceTimersByTimeAsync(0);
+      } finally {
+        vi.useRealTimers();
+      }
+      expect(service.getWeekend()().agentDraft.drafting).toBe(false);
+    });
+
+    it('gives back the refusal for a 409 or 429', async () => {
+      await loadCurrent();
+      const pending = service.draftWithAgents();
+      httpMock
+        .expectOne(DRAFTS)
+        .flush(
+          { detail: 'The agents are already drafting this weekend.' },
+          { status: 409, statusText: 'Conflict' },
+        );
+      expect(await pending).toBe('The agents are already drafting this weekend.');
+    });
+
+    it('offers Try again only for Error, Timeout and Invalid fallbacks', async () => {
+      const notice = 'The agents could not finish.';
+      await loadCurrent(
+        weekendDto({ agentDraft: run('FellBack', { fallbackReason: 'Timeout', notice }) }),
+      );
+      expect(service.getWeekend()().agentDraft).toEqual({
+        drafting: false,
+        notice,
+        canRetry: true,
+      });
+
+      await loadCurrent(
+        weekendDto({ agentDraft: run('FellBack', { fallbackReason: 'Disabled', notice }) }),
+      );
+      expect(service.getWeekend()().agentDraft).toEqual({
+        drafting: false,
+        notice,
+        canRetry: false,
+      });
+    });
   });
 });

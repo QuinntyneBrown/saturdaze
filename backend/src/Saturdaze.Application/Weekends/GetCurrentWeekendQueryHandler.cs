@@ -48,7 +48,7 @@ public sealed class GetCurrentWeekendQueryHandler : IRequestHandler<GetCurrentWe
             return await _mediator.Send(new GenerateWeekendCommand(weekendOf), cancellationToken);
         }
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 

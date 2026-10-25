@@ -32,6 +32,7 @@ public sealed class WeekendReplanner
         var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, ct);
 
         weekend.RegenerateCount++;
+        weekend.PlanSource = Domain.Enums.PlanSource.Planner;
         var seed = weekend.WeekendOf.DayNumber + weekend.RegenerateCount * 31;
 
         var pendingErrand = weekend.Errands.FirstOrDefault(e => !e.Done);
@@ -64,8 +65,9 @@ public sealed class WeekendReplanner
                 Stop = b.Stop?.Copy(),
                 FromCalendar = b.FromCalendar
             };
+            // EF's relationship fix-up puts the block in the tracked weekend.Blocks
+            // (WeekendId is set); adding it there too listed it twice (L2-188).
             _db.ItineraryBlocks.Add(block);
-            weekend.Blocks.Add(block);
         }
 
         await _db.SaveChangesAsync(ct);

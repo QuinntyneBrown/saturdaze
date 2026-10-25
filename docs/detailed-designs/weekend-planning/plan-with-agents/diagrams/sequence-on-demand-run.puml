@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - On-demand draft from the Weekend page
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage" as page
+ participant "WeekendPlanService" as svc
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "WeekendsController" as ctrl
+ participant "AgentDraftQueueProcessor" as queue
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "RequestWeekendDraftCommandHandler" as handler
+ participant "WeekendDraftRunner" as runner
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext" as db
+end box
+actor -> page : More options -> Draft with agents
+page -> svc : requestDraft(weekendId)
+svc -> ctrl : POST /api/weekends/{id}/drafts
+ctrl -> handler : RequestWeekendDraftCommand
+handler -> db : Weekend of the caller's family? (404 otherwise)
+alt run queued or running
+ handler --> ctrl : 409 draft_in_progress
+else Sunday in the past
+ handler --> ctrl : 409 weekend_past
+else 3 on-demand runs already
+ handler --> ctrl : 429 draft_limit
+else
+ handler -> runner : QueueAsync(OnDemand)
+ runner -> db : Insert AgentRun Queued
+ handler --> ctrl : 202 { runId, status }
+end
+ctrl --> svc : response
+svc --> page : status row "Agents are drafting your weekend..." (L2-211)
+queue -> db : Next Queued run
+queue -> runner : RunAsync(runId) (as the scheduled run)
+loop every 3 s while Queued or Running
+ page -> svc : latestDraft(weekendId)
+ svc -> ctrl : GET /api/weekends/{id}/drafts/latest
+ ctrl --> svc : { status, fallbackReason, notice }
+end
+page -> svc : reload weekend
+svc -> ctrl : GET /api/weekends/{id}
+ctrl --> svc : WeekendDto planSource=Agents, reasons
+svc --> page : "Drafted for your family", reasons on picks
+@enduml

@@ -140,6 +140,7 @@ public class SaveFamilyProfileCommandHandlerTests
         services.AddSingleton<IDateTimeProvider>(new StubDateTimeProvider());
         services.AddScoped<FamilyProfileReader>();
         services.AddScoped<FamilyOwnership>();
+        services.AddSingleton<Saturdaze.Application.Geocoding.IGeocoder, NoGeocoder>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<SaveFamilyProfileCommand>());
         return services.BuildServiceProvider().GetRequiredService<IMediator>();
     }
@@ -152,4 +153,11 @@ internal static class DbExtensions
         var list = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(set);
         return list.Count;
     }
+}
+
+/// <summary>These tests save no addresses; nothing is geocoded.</summary>
+internal sealed class NoGeocoder : Saturdaze.Application.Geocoding.IGeocoder
+{
+    public Task<Saturdaze.Domain.ValueObjects.GeoLocation?> GeocodeAsync(string address, CancellationToken cancellationToken = default)
+        => Task.FromResult<Saturdaze.Domain.ValueObjects.GeoLocation?>(null);
 }

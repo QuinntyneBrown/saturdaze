@@ -1,0 +1,40 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Plan a weekend with agents
+
+Container_Boundary(api, "Saturdaze API / CLI") {
+  Component(ctrl, "WeekendsController / AdminAgentRunsController", "ASP.NET Core", "Draft endpoints and the admin run list")
+  Component(queue, "AgentDraftQueueProcessor", "Hosted service", "Runs queued on-demand drafts one at a time")
+  Component(cli, "DraftWeekendsCommand", "saturdaze CLI", "Queues and runs the Friday drafts")
+}
+Container_Boundary(app, "Saturdaze Application") {
+  Component(runner, "WeekendDraftRunner", "Service", "Run lifecycle, budgets, timeout, fallback, audit")
+  Component(workflow, "WeekendDraftWorkflow", "Service", "Researcher -> curator -> drafter -> validator, bounded rounds")
+  Component(research, "RegionalResearcher", "Service", "Shared research per region cell and weekend")
+  Component(tools, "PlanningToolset", "Agent tools", "Catalog, weather, daylight, drive time; bound to one family")
+  Component(gate, "AgentControlGate", "Policy", "ACS checkpoints: input, pre_tool_call, output")
+  Component(validator, "PlanValidator / DraftAssembler", "Domain service", "WeekendPlanner rules; places picks")
+  Component(applier, "DraftApplier", "Service", "Applies a stored draft to the weekend")
+  Component(port, "IAgentRoleRunner", "Port", "One model role with tools")
+}
+Container_Boundary(infra, "Saturdaze Infrastructure") {
+  Component(maf, "AgentFrameworkRoleRunner", "Microsoft Agent Framework", "ChatClientAgent over the Anthropic IChatClient, OpenTelemetry")
+  Component(search, "ClaudeWebSearchClient", "HttpClient", "Messages API with web_search_20250305")
+  ComponentDb(db, "AppDbContext", "EF Core", "AgentRuns, WeekendDrafts, RegionResearch")
+}
+Rel(ctrl, runner, "Queues and reads runs")
+Rel(queue, runner, "RunAsync(runId)")
+Rel(cli, runner, "RunAsync(runId)")
+Rel(runner, workflow, "Executes within caps")
+Rel(workflow, research, "Ensures research for the cell")
+Rel(research, search, "Grounded search")
+Rel(workflow, port, "Curator and drafter")
+Rel(port, maf, "Implemented by")
+Rel(maf, tools, "Invokes through the gate")
+Rel(tools, gate, "pre_tool_call")
+Rel(workflow, gate, "input and output")
+Rel(workflow, validator, "Assemble and validate each round")
+Rel(runner, applier, "Applies the stored draft")
+Rel(runner, db, "Persists run, draft, weekend")
+@enduml

@@ -4,7 +4,7 @@
 **Date:** 2026-09-26
 **Category:** integration
 **Deciders:** Quinntyne Brown
-**Related:** [ingest-catalogs design](../detailed-designs/discovery/ingest-catalogs/README.md), [schedule-catalog-ingestion design](../detailed-designs/operations/schedule-catalog-ingestion/README.md), L2-078.
+**Related:** [ADR-023](ADR-023-agentic-weekend-planning.md) (agent planning uses the same deployment, with managed identity), [ingest-catalogs design](../detailed-designs/discovery/ingest-catalogs/README.md), [schedule-catalog-ingestion design](../detailed-designs/operations/schedule-catalog-ingestion/README.md), L2-078.
 
 ## Context
 
@@ -54,6 +54,7 @@ Two constraints shaped the details:
 - `sd-ai-uofnt2` is the only resource outside `canadacentral`.
 - Rotating the key means re-running `eng/Deploy-Foundry.ps1` or updating `.deploy/azure.env` and any host settings.
 - Foundry can trail Anthropic on new tool versions; only `web_search_20250305` is supported on Azure-hosted deployments.
+- (2026-10-25) Option 2 is taken up for agent planning (ADR-023): a host now runs in Azure, so the Web App's managed identity holds Cognitive Services User on the account and agent calls send an Entra bearer token. Ingestion stays on the key until it moves too.
 
 ### Risks
 - Global Standard Claude quota is shared and has been exhausted for other tenants. The fallback is `Provider: Anthropic`.

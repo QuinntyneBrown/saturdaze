@@ -8,7 +8,9 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideRouter } from '@angular/router';
 
 import {
+  ADMIN_AGENT_RUNS_SERVICE,
   ADMIN_AUDIT_SERVICE,
+  AdminAgentRunsService,
   ADMIN_INVITATIONS_SERVICE,
   ADMIN_PHOTOS_SERVICE,
   ADMIN_PLACES_SERVICE,
@@ -50,6 +52,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ADMIN_PLACES_SERVICE, useExisting: AdminPlacesService },
     { provide: ADMIN_PHOTOS_SERVICE, useExisting: AdminPhotosService },
     { provide: ADMIN_AUDIT_SERVICE, useExisting: AdminAuditService },
+    { provide: ADMIN_AGENT_RUNS_SERVICE, useExisting: AdminAgentRunsService },
     { provide: ADMIN_INVITATIONS_SERVICE, useExisting: AdminInvitationsService },
 
     // "Continue with Google" (L2-182): Google's button script, off when the

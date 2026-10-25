@@ -40,6 +40,28 @@
 
     <!-- ============================== WEEKEND ============================== -->
 
+    <section class="specimen" id="dialog-block-pick">
+      <span class="specimen__label">D1d · Block details · an agent's pick (L2-211)</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1d-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d1d-title">Terre Bleu Lavender Farm</h2><p class="dialog__sub">Saturday 11:00am to 1:00pm · 45 min drive</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="well">
+              <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>
+              <div><p class="well__title">Why this pick</p><p class="well__body">Sunny Saturday, peak bloom, Mae can walk the rows · open 10–5</p></div>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg>Swap for something else</button>
+            <button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock this block</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="specimen" id="dialog-block">
       <span class="specimen__label">D1 · Block details</span>
       <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d1-title">
@@ -477,6 +499,15 @@
               <input class="field__input" id="d17-age" type="number" value="5" min="0" max="120">
               <p class="field__hint">Kid · under 18 counts as a kid.</p>
             </div>
+            <div class="field">
+              <label class="field__label" for="d17-interests">Interests <span class="field__req">Up to 8</span></label>
+              <div class="chip-input">
+                <span class="chip chip--leaf">Animals<button class="chip__x" type="button" aria-label="Remove Animals"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <span class="chip chip--leaf">Swimming<button class="chip__x" type="button" aria-label="Remove Swimming"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></span>
+                <input class="chip-input__field" id="d17-interests" type="text" placeholder="Add one, press Enter">
+              </div>
+              <p class="field__hint">Picks that match get a boost for this person.</p>
+            </div>
           </div>
           <div class="dialog__actions">
             <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
@@ -504,6 +535,13 @@
               <label class="field__label" for="d17b-age">Age</label>
               <input class="field__input" id="d17b-age" type="number" placeholder="7" min="0" max="120">
               <p class="field__hint">Under 18 counts as a kid.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="d17b-interests">Interests <span class="field__req">Up to 8</span></label>
+              <div class="chip-input">
+                <input class="chip-input__field" id="d17b-interests" type="text" placeholder="Add one, press Enter">
+              </div>
+              <p class="field__hint">Picks that match get a boost for this person.</p>
             </div>
             <div class="field">
               <span class="field__label" id="d17b-signin-label">Will they sign in?</span>
@@ -620,6 +658,20 @@
                 <input class="field__input" id="d18-end" type="time" value="10:00">
               </div>
             </div>
+            <fieldset class="field">
+              <legend class="field__label">Who goes</legend>
+              <div class="cluster">
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Quinn</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Sara</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Eli</span></label>
+                <label class="check"><input class="check__input" type="checkbox" checked><span class="check__label">Mae</span></label>
+              </div>
+              <p class="field__hint">None ticked means everyone. Different people may overlap when an adult can take each.</p>
+            </fieldset>
+            <div class="field">
+              <label class="field__label" for="d18-where">Where <span class="field__req">Optional</span></label>
+              <input class="field__input" id="d18-where" type="text" autocomplete="street-address" value="5980 McLaughlin Rd, Mississauga">
+            </div>
           </div>
           <div class="dialog__actions">
             <div class="dialog__actions-left"><a class="btn btn--quiet btn--warn-text" href="#dialog-remove-commitment"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Remove</a></div>
@@ -659,6 +711,20 @@
                 <label class="field__label" for="d18b-end">End</label>
                 <input class="field__input" id="d18b-end" type="time">
               </div>
+            </div>
+            <fieldset class="field">
+              <legend class="field__label">Who goes</legend>
+              <div class="cluster">
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Quinn</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Sara</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Eli</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Mae</span></label>
+              </div>
+              <p class="field__hint">None ticked means everyone. Different people may overlap when an adult can take each.</p>
+            </fieldset>
+            <div class="field">
+              <label class="field__label" for="d18b-where">Where <span class="field__req">Optional</span></label>
+              <input class="field__input" id="d18b-where" type="text" autocomplete="street-address" placeholder="Address, so the plan drives you there">
             </div>
           </div>
           <div class="dialog__actions">
@@ -1072,6 +1138,121 @@
       </div>
     </section>
 
+    <!-- ============================== HOW YOU PLAN (L2-191, L2-194, L2-195, L2-197) ============================== -->
+
+    <section class="specimen" id="dialog-max-drive">
+      <span class="specimen__label">D35 · Max drive</span>
+      <div class="dialog dialog--specimen" role="dialog" aria-modal="true" aria-labelledby="d35-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d35-title">How far will you drive?</h2><p class="dialog__sub">Each way. Nothing further is planned, listed or suggested.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field">
+              <label class="field__label" for="d35-max">Max drive</label>
+              <select class="field__input" id="d35-max"><option>30 min</option><option>45 min</option><option>1 h</option><option>1 h 30</option><option selected>2 h</option><option>3 h</option></select>
+            </div>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <a class="btn btn--primary" href="./family.html#s-plan">Save</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-observances">
+      <span class="specimen__label">D36 · What you celebrate</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d36-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d36-title">What you celebrate</h2><p class="dialog__sub">Themed places and events are left out everywhere, even when the name doesn't say so.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <fieldset class="field">
+              <legend class="field__label">We don't celebrate</legend>
+              <div class="cluster">
+                <label class="check"><input class="check__input" type="checkbox" checked><span class="check__label">Halloween</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Christmas</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Easter</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Valentine's Day</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="field">
+              <legend class="field__label">Leave out</legend>
+              <div class="cluster">
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Alcohol-focused</span></label>
+                <label class="check"><input class="check__input" type="checkbox"><span class="check__label">Scary or horror</span></label>
+              </div>
+            </fieldset>
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="list__text"><span class="list__title">Keep Sunday quiet</span><span class="list__sub">Worship and rest, one outing at most</span></span>
+                <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Keep Sunday quiet</span></label>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <a class="btn btn--primary" href="./family.html#s-plan">Save</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="specimen" id="dialog-day-shape">
+      <span class="specimen__label">D37 · Day shape</span>
+      <div class="dialog dialog--specimen dialog--wide" role="dialog" aria-modal="true" aria-labelledby="d37-title">
+        <div class="dialog__panel">
+          <div class="dialog__header">
+            <div class="dialog__heading"><h2 class="dialog__title" id="d37-title">Day shape</h2><p class="dialog__sub">When the day starts and ends, and how much goes in it.</p></div>
+            <button class="btn btn--ghost btn--sm btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+          </div>
+          <div class="dialog__body">
+            <div class="field--row">
+              <div class="field">
+                <label class="field__label" for="d37-start">Day starts</label>
+                <select class="field__input" id="d37-start"><option>7:00</option><option>7:30</option><option>8:00</option><option>8:30</option><option selected>9:00</option><option>9:30</option><option>10:00</option><option>10:30</option><option>11:00</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="d37-bed">Youngest's bedtime</label>
+                <select class="field__input" id="d37-bed"><option>No set time</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option selected>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option><option>22:00</option></select>
+                <p class="field__hint">The day ends half an hour before.</p>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field__label" id="d37-pace-label">Outings a day</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d37-pace-label">
+                <label class="seg-radio__opt"><input type="radio" name="d37-pace">1</label>
+                <label class="seg-radio__opt"><input type="radio" name="d37-pace" checked>2</label>
+                <label class="seg-radio__opt"><input type="radio" name="d37-pace">3</label>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field__label" id="d37-lean-label">Indoor or outdoor</span>
+              <div class="seg-radio" role="radiogroup" aria-labelledby="d37-lean-label">
+                <label class="seg-radio__opt"><input type="radio" name="d37-lean">Indoor</label>
+                <label class="seg-radio__opt"><input type="radio" name="d37-lean" checked>Either</label>
+                <label class="seg-radio__opt"><input type="radio" name="d37-lean">Outdoor</label>
+              </div>
+            </div>
+            <ul class="list list--card">
+              <li class="list__item">
+                <span class="list__text"><span class="list__title">Sunday dinner at home</span><span class="list__sub">No restaurant on Sunday evening</span></span>
+                <label class="toggle"><input class="toggle__input" type="checkbox" role="switch" checked><span class="toggle__track"></span><span class="visually-hidden">Sunday dinner at home</span></label>
+              </li>
+            </ul>
+          </div>
+          <div class="dialog__actions">
+            <button class="btn btn--quiet" type="button">Cancel</button>
+            <a class="btn btn--primary" href="./family.html#s-plan">Save</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ============================== ADMIN ============================== -->
 
     <section class="specimen" id="dialog-approve">
@@ -1149,6 +1330,7 @@
           <div class="dialog__body">
             <ul class="list">
               <li><a class="list__item list__item--action" href="#dialog-regenerate"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></span><span class="list__text"><span class="list__title">Regenerate the weekend</span><span class="list__sub">Locked blocks stay where they are</span></span></a></li>
+              <li><a class="list__item list__item--action" href="./weekend.drafting.html"><span class="disc disc--primary"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></span><span class="list__text"><span class="list__title">Draft with agents</span><span class="list__sub">Research what's on and fit it to your family. Locks stay.</span></span></a></li>
               <li><a class="list__item list__item--action" href="#dialog-calendar"><span class="disc"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="list__text"><span class="list__title">Add to calendar</span><span class="list__sub">One .ics with both days</span></span></a></li>
             </ul>
           </div>

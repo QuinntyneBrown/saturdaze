@@ -32,4 +32,11 @@ public sealed record WebSearchResult(
     string RawText,
     int InputTokens,
     int OutputTokens,
-    int WebSearchCount);
+    int WebSearchCount)
+{
+    /// <summary>
+    /// The URLs the web-search tool returned (its <c>web_search_result</c> blocks). Agent research keeps
+    /// only rows that cite one of them (L2-209 AC5).
+    /// </summary>
+    public IReadOnlyList<string> SearchResultUrls { get; init; } = Array.Empty<string>();
+}

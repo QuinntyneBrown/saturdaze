@@ -20,6 +20,7 @@ public static class RootCommandFactory
         root.AddCommand(MigrateCommand.Build(args));
         root.AddCommand(ResetCommand.Build(args));
         root.AddCommand(IngestCommand.Build(args));
+        root.AddCommand(Draft.DraftWeekendsCommand.Build(args));
         return root;
     }
 }

@@ -64,6 +64,8 @@ export const PAGES = [
   // States
   { url: "/pages/weekend.empty.html",            nav: "weekend", expects: { selector: ".empty__title", text: "drafted around the Browns" } },
   { url: "/pages/weekend.generating.html",       nav: "weekend", expects: { selector: ".status-row", text: "Working through" } },
+  { url: "/pages/weekend.drafting.html",         nav: "weekend", expects: { selector: ".status-row", text: "Agents are drafting" } },
+  { url: "/pages/weekend.fallback.html",         nav: "weekend", expects: { selector: ".banner", text: "This is the standard plan" } },
   { url: "/pages/past.empty.html",               nav: "past",    expects: { selector: ".empty__title", text: "Nothing here yet" } },
   { url: "/pages/review-submissions.empty.html", nav: "family",  expects: { selector: ".empty__title", text: "Queue is clear" } },
 
@@ -88,6 +90,7 @@ export const PAGES = [
   { url: "/pages/admin.place.html",          shell: "bare", expects: { selector: ".page-header__title", text: "Port Credit Memorial Park" }, cols: { ".photo-grid": { 390: 1, 820: 2, 1440: 3 } } },
   { url: "/pages/admin.reviews.html",        shell: "bare", expects: { selector: ".review-item .card__title", text: "Harbour Grill" } },
   { url: "/pages/admin.ingestion-skips.html", shell: "bare", expects: { selector: ".skip__reason", text: "previously rejected" } },
+  { url: "/pages/admin.agent-runs.html",      shell: "bare", expects: { selector: ".page-header__title", text: "Agent runs" } },
   { url: "/pages/admin.activity.html",       shell: "bare", expects: { selector: ".audit-row__change", text: "memorial-park.jpg" } },
   { url: "/pages/admin.invitations.html",    shell: "bare", expects: { selector: ".invite-list .list__title", text: "ana@example.com" } },
   { url: "/pages/admin.sample.new.html",     shell: "bare", expects: { selector: ".page-header__title", text: "New sample weekend" } },

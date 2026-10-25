@@ -33,6 +33,9 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
 
+                    b.Property<TimeOnly?>("ClosesAt")
+                        .HasColumnType("time");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -60,6 +63,27 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("nvarchar(160)");
 
+                    b.Property<TimeOnly?>("OpensAt")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("PriceTier")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeasonEndMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SeasonStartMonth")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Themes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<int>("TypicalDurationMinutes")
                         .HasColumnType("int");
 
@@ -73,6 +97,79 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Activities", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.AgentRun", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("CostUsd")
+                        .HasPrecision(12, 6)
+                        .HasColumnType("decimal(12,6)");
+
+                    b.Property<string>("Error")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("FallbackReason")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("FinishedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("InputTokens")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ModelCalls")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OutputTokens")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PolicyViolations")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTimeOffset>("QueuedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Rounds")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("StartedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToolCalls")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TraceId")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int>("Trigger")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WebSearches")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("WeekendOf")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "WeekendOf");
+
+                    b.HasIndex("Status", "QueuedUtc");
+
+                    b.ToTable("AgentRuns", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.CalendarConnection", b =>
@@ -201,6 +298,11 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttendeeMemberIds")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<int>("DayOfWeek")
                         .HasColumnType("int");
@@ -346,6 +448,16 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<bool>("BudgetEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<TimeOnly>("DayStart")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("time")
+                        .HasDefaultValue(new TimeOnly(9, 0, 0));
+
+                    b.Property<string>("ExcludedThemes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<bool>("FridayPreviewEnabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -356,15 +468,39 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("Leaning")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDriveMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(120);
+
                     b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("OutingsPerDay")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(2);
+
                     b.Property<Guid?>("OwnerUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("QuietSunday")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SundayDinnerAtHome")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("TryNewEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<TimeOnly?>("YoungestBedtime")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -433,6 +569,11 @@ namespace Saturdaze.Infrastructure.Migrations
 
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -526,6 +667,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("Kind")
                         .HasColumnType("int");
 
+                    b.Property<bool>("PickedByAgents")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -571,6 +715,9 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.Property<int>("DriveMinutes")
                         .HasColumnType("int");
 
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time");
+
                     b.Property<DateOnly>("EndsOn")
                         .HasColumnType("date");
 
@@ -582,13 +729,30 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int?>("MaxAge")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinAge")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int?>("PriceTier")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time");
+
                     b.Property<DateOnly>("StartsOn")
                         .HasColumnType("date");
+
+                    b.Property<string>("Themes")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -926,6 +1090,36 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.RegionResearch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AgentRunId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CellKey")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTimeOffset>("CompletedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ItemsUpserted")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("WeekendOf")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CellKey", "WeekendOf");
+
+                    b.ToTable("RegionResearch", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.RejectedPlacePhoto", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1213,6 +1407,9 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<int>("PlanSource")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Rating")
                         .HasColumnType("int");
 
@@ -1232,6 +1429,49 @@ namespace Saturdaze.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Weekends", (string)null);
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendDraft", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AgentRunId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Applied")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("CreatedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PicksJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortlistJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValidatorReport")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("WeekendOf")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentRunId")
+                        .IsUnique();
+
+                    b.HasIndex("FamilyId", "WeekendOf");
+
+                    b.ToTable("WeekendDrafts", (string)null);
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.WeekendShare", b =>
@@ -1335,6 +1575,37 @@ namespace Saturdaze.Infrastructure.Migrations
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("Saturdaze.Domain.ValueObjects.GeoLocation", "Location", b1 =>
+                        {
+                            b1.Property<Guid>("CommitmentId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("nvarchar(300)")
+                                .HasColumnName("LocationAddress");
+
+                            b1.Property<decimal>("Latitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("LocationLatitude");
+
+                            b1.Property<decimal>("Longitude")
+                                .HasPrecision(9, 6)
+                                .HasColumnType("decimal(9,6)")
+                                .HasColumnName("LocationLongitude");
+
+                            b1.HasKey("CommitmentId");
+
+                            b1.ToTable("Commitments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CommitmentId");
+                        });
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>

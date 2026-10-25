@@ -93,7 +93,7 @@ public class AdminUploadPhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncL
         stored.StorageKey.Should().NotBeNullOrEmpty();
         stored.AltText.Should().Be("The stage at dusk");
 
-        var family = await SignedInClient.CreateAsync(_factory);
+        var family = await SignedInClient.CreateAsync(_factory, FamilyMode.Own); // stored drives: Stratford is within its max drive
         var feed = await family.Client.GetAsync("/api/activities");
         var card = JsonDocument.Parse(await feed.Content.ReadAsStringAsync()).RootElement.EnumerateArray()
             .Single(a => a.GetProperty("name").GetString() == "Stratford Festival (family matinee)");

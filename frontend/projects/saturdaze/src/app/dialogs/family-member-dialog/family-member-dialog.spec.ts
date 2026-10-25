@@ -53,6 +53,7 @@ describe('FamilyMemberDialog', () => {
       name: 'Theo',
       age: 3,
       email: null,
+      interests: [],
     });
   });
 
@@ -127,6 +128,7 @@ describe('FamilyMemberDialog', () => {
       name: 'Theo',
       age: 0,
       email: null,
+      interests: [],
     });
   });
 
@@ -144,6 +146,7 @@ describe('FamilyMemberDialog', () => {
       name: 'MAE',
       age: 5,
       email: null,
+      interests: [],
     });
   });
 
@@ -188,6 +191,7 @@ describe('FamilyMemberDialog', () => {
       name: 'Jordan',
       age: 37,
       email: 'jordan@example.com',
+      interests: [],
     });
   });
 
@@ -207,5 +211,27 @@ describe('FamilyMemberDialog', () => {
     await mount({ mode: 'add', existingNames: [] });
     component['cancel']();
     expect(dialogRef.close).toHaveBeenCalledWith();
+  });
+
+  it('keeps up to eight interests and says so past that (L2-196, L2-197)', async () => {
+    await mount({
+      mode: 'edit',
+      initial: { name: 'Mae', age: 5, interests: ['Animals'] },
+      existingNames: ['Mae'],
+    });
+    expect(component['interests']()).toEqual(['Animals']);
+    component['interests'].set(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']);
+    fixture.detectChanges();
+    component['submit']();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+    expect(host.querySelector('.interests__error')?.textContent?.trim()).toBe(
+      'Keep it to 8 interests.',
+    );
+
+    component['interests'].set(['Animals', 'Swimming']);
+    component['submit']();
+    expect(dialogRef.close).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: 'save', interests: ['Animals', 'Swimming'] }),
+    );
   });
 });

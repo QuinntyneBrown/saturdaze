@@ -27,6 +27,22 @@
       [ngModel]="age()"
       (ngModelChange)="age.set($event)"
     />
+    <div class="interests">
+      <sd-chip-input
+        label="Interests"
+        tone="leaf"
+        [ngModelOptions]="{ standalone: true }"
+        [ngModel]="interests()"
+        (ngModelChange)="interests.set($event)"
+      />
+      @if (interestsError()) {
+        <p class="sd-text-xs interests__error" role="alert">{{ interestsError() }}</p>
+      } @else {
+        <p class="sd-text-xs sd-text-soft">
+          Picks that match get a boost for this person. Up to 8.
+        </p>
+      }
+    </div>
     @if (isEdit) {
       @if (accessHint) {
         <p class="sd-text-xs sd-text-soft">{{ accessHint }}</p>

@@ -13,7 +13,16 @@ public sealed record FamilyProfileDto(
     IReadOnlyList<CommitmentDto> Commitments,
     IReadOnlyList<PreferenceDto> Preferences,
     bool IsOwner = false,
-    string? OwnerEmail = null);
+    string? OwnerEmail = null,
+    LocationDto? HomeCoordinates = null,
+    int MaxDriveMinutes = 120,
+    IReadOnlyList<string>? ExcludedThemes = null,
+    bool QuietSunday = false,
+    TimeOnly? DayStart = null,
+    TimeOnly? YoungestBedtime = null,
+    bool SundayDinnerAtHome = true,
+    int OutingsPerDay = 2,
+    PlanLeaning Leaning = PlanLeaning.Either);
 
 /// <param name="Email">The invited or signed-in address; null when <see cref="Access"/> is None.</param>
 public sealed record FamilyMemberDto(
@@ -21,14 +30,17 @@ public sealed record FamilyMemberDto(
     string Name,
     int Age,
     MemberAccess Access = MemberAccess.None,
-    string? Email = null);
+    string? Email = null,
+    IReadOnlyList<string>? Interests = null);
 
 public sealed record CommitmentDto(
     Guid Id,
     string Title,
     DayOfWeek DayOfWeek,
     TimeOnly StartTime,
-    TimeOnly EndTime);
+    TimeOnly EndTime,
+    IReadOnlyList<Guid>? AttendeeMemberIds = null,
+    LocationDto? Location = null);
 
 public sealed record PreferenceDto(Guid Id, PreferenceKind Kind, string Value);
 

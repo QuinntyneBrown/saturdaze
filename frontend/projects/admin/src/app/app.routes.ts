@@ -48,6 +48,12 @@ export const routes: Routes = [
       import('./pages/ingestion-skips/ingestion-skips.page').then((m) => m.IngestionSkipsPage),
   },
   {
+    path: 'agent-runs',
+    data: { nav: 'agents', screen: 'agent-runs' },
+    canActivate: [requireAuth],
+    loadComponent: () => import('./pages/agent-runs/agent-runs.page').then((m) => m.AgentRunsPage),
+  },
+  {
     path: 'activity',
     data: { nav: 'activity', screen: 'activity' },
     canActivate: [requireAuth],

@@ -45,4 +45,7 @@ public class Weekend
 
     public int? CoverUploadHeight { get; set; }
     public List<ShoppingErrand> Errands { get; set; } = new();
+
+    /// <summary>Who made the current plan: the planner, or the agents through a draft (L2-202).</summary>
+    public PlanSource PlanSource { get; set; } = PlanSource.Planner;
 }

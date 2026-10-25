@@ -41,7 +41,7 @@ public sealed class GetJoinPreviewQueryHandler : IRequestHandler<GetJoinPreviewQ
         var weekend = await _db.Weekends.AsNoTracking()
             .Include(w => w.Blocks).Include(w => w.Errands)
             .SingleAsync(w => w.Id == prospect.WeekendId, ct);
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
         var dto = await _enrichment.EnrichAsync(WeekendMapper.ToDto(weekend, forecast), ct, shared: true);
         return new JoinPreviewDto(invitation.Email, invitedBy, familyName, invitation.Message, SharedWeekendDto.From(dto));
     }

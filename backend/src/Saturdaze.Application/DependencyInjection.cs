@@ -38,6 +38,18 @@ public static class DependencyInjection
         services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<WeekendForecastService>();
         services.AddScoped<PlannerInputLoader>();
+        services.AddScoped<Families.FamilyBoundariesReader>();
+
+        // Agent planning (ADR-023): the model port comes from Infrastructure.
+        services.AddOptions<AgentPlanning.AgentPlanningOptions>();
+        services.AddScoped<AgentPlanning.AgentControlGate>();
+        services.AddScoped<AgentPlanning.PlanValidator>();
+        services.AddScoped<AgentPlanning.RegionalResearcher>();
+        services.AddScoped<AgentPlanning.WeekendDraftWorkflow>();
+        services.AddScoped<AgentPlanning.WeekendFactory>();
+        services.AddScoped<AgentPlanning.DraftApplier>();
+        services.AddScoped<AgentPlanning.WeekendDraftRunner>();
+        services.AddScoped<AgentPlanning.ScheduledDrafts>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();
         services.AddScoped<Ideas.IdeaResolver>();
         services.AddScoped<Covers.WeekendEnrichment>();

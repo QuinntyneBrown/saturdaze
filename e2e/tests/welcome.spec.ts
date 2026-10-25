@@ -202,7 +202,7 @@ test.describe("Welcome — who's in (L2-168)", () => {
     const saved = w.nextProfileSave();
     await w.dialogAction("Save").click();
     const members = (await saved)["members"] as Array<{ name: string; age: number }>;
-    expect(members).toEqual([{ id: expect.any(String), name: "Eli", age: 10 }]);
+    expect(members).toEqual([{ id: expect.any(String), name: "Eli", age: 10, interests: [] }]);
     await expect(w.rowSubtitle(w.memberRow("Eli"))).toHaveText("Kid · 10");
 
     await w.memberRow("Eli").click();

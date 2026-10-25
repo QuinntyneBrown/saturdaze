@@ -4,7 +4,7 @@
 **Date:** 2026-10-19
 **Category:** operations
 **Deciders:** Quinntyne Brown
-**Related:** [ADR-011](ADR-011-claude-via-microsoft-foundry.md) (Claude on Foundry), [ADR-014](ADR-014-separate-admin-application.md) (admin app), [ADR-015](ADR-015-public-curated-photo-storage.md) (curated photos), L2-041, L2-123, [ingestion triggers](../../backend/deploy/webjobs/ingest/README.md).
+**Related:** [ADR-011](ADR-011-claude-via-microsoft-foundry.md) (Claude on Foundry), [ADR-023](ADR-023-agentic-weekend-planning.md) (the `draft` WebJob and managed identity), [ADR-014](ADR-014-separate-admin-application.md) (admin app), [ADR-015](ADR-015-public-curated-photo-storage.md) (curated photos), L2-041, L2-123, [ingestion triggers](../../backend/deploy/webjobs/ingest/README.md).
 
 ## Context
 
@@ -57,6 +57,7 @@ The ask is production-grade hosting at the lowest cost that still is production-
 - Every push to `main` provisions, deploys and smoke-tests the whole stack, Claude included.
 - Three GitHub secrets retired (`SATURDAZE_CONNECTION`, `SWA_DEPLOYMENT_TOKEN`, `SWA_ADMIN_DEPLOYMENT_TOKEN`, `SWA_DESIGN_SYSTEM_DEPLOYMENT_TOKEN`).
 - Costs are visible in one template and bounded by a budget alert.
+- (2026-10-25) Agent planning (ADR-023) reuses this plan: a second triggered WebJob, `draft`, ships beside `ingest`, and on-demand drafts run in the API process. The Web App's system-assigned identity gets Cognitive Services User on the Foundry account, which needs a deploying principal allowed to write role assignments.
 
 ### Negative
 - The SQL admin password is reset to the GitHub secret on every deployment; the two must be changed together (the bootstrap script keeps them in step).

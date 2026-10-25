@@ -44,8 +44,15 @@ public sealed class BlockSwapper
         var adjacentDrives = dayBlocks
             .Where(b => b.Kind == BlockKind.Drive && (b.EndTime == target.StartTime || b.StartTime == target.EndTime))
             .ToList();
-        var window = (start: adjacentDrives.Concat(new[] { target }).Min(b => b.StartTime),
-                      end:   adjacentDrives.Concat(new[] { target }).Max(b => b.EndTime));
+        var core = adjacentDrives.Append(target).ToList();
+        // The downtime touching the outing is free time the replacement may take (L2-184
+        // leaves smaller gaps around meals); whatever it leaves becomes downtime again.
+        var adjacentDowntime = dayBlocks
+            .Where(b => b.Kind == BlockKind.Downtime
+                        && (b.EndTime == core.Min(c => c.StartTime) || b.StartTime == core.Max(c => c.EndTime)))
+            .ToList();
+        var window = (start: core.Concat(adjacentDowntime).Min(b => b.StartTime),
+                      end:   core.Concat(adjacentDowntime).Max(b => b.EndTime));
 
         var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, ct);
         var dayForecast = ctx.ForecastFor(target.Day);
@@ -87,7 +94,7 @@ public sealed class BlockSwapper
         target.Reason = "swap pick: " + replacement.Reason;
         target.Stop = replacement.Stop?.Copy();
 
-        foreach (var old in adjacentDrives)
+        foreach (var old in adjacentDrives.Concat(adjacentDowntime))
         {
             weekend.Blocks.Remove(old);
             _db.ItineraryBlocks.Remove(old);
@@ -109,8 +116,15 @@ public sealed class BlockSwapper
                 SortOrder = ++nextSort,
                 Stop = nb.Stop?.Copy()
             };
+            // EF's fix-up puts it in weekend.Blocks (WeekendId is set); adding it there too lists it twice.
             _db.ItineraryBlocks.Add(drive);
-            weekend.Blocks.Add(drive);
+        }
+
+        foreach (var gap in _planner.FillDowntime(target.Day, weekend.Blocks.Where(b => b.Day == target.Day).ToList()))
+        {
+            gap.WeekendId = weekend.Id;
+            gap.SortOrder = ++nextSort;
+            _db.ItineraryBlocks.Add(gap);
         }
         await _db.SaveChangesAsync(ct);
         return ctx;

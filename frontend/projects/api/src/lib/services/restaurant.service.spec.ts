@@ -8,6 +8,7 @@ import { addDaysIso, upcomingSaturdayIso } from '../api/weekend-dates';
 import { projectWeekend } from '../api/weekend-projection';
 import { RestaurantDto } from '../models/restaurant.dto';
 import { settle, weekendDto } from '../testing/weekend-fixture';
+import { DEFAULT_PLANNING } from '../api/planning-presentation';
 import { EditableFamilyProfile, FAMILY_SERVICE } from './family.service.contract';
 import { DEFAULT_FOOD_FILTERS, RestaurantService } from './restaurant.service';
 import { WEEKEND_PLAN_SERVICE } from './weekend-plan.service.contract';
@@ -28,6 +29,7 @@ const profile = signal<EditableFamilyProfile | null>({
   ],
   commitments: [],
   preferences: [],
+  planning: DEFAULT_PLANNING,
 });
 
 const weekend = signal(projectWeekend(weekendDto()));

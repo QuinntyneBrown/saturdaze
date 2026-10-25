@@ -1,3 +1,4 @@
+using Saturdaze.Domain.Enums;
 using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Domain.Entities;
@@ -27,6 +28,29 @@ public class Family
 
     /// <summary>"Friday preview notifications" — captured at signup, honoured once delivery exists.</summary>
     public bool FridayPreviewEnabled { get; set; } = true;
+
+    /// <summary>How far the family drives, one way (L2-191).</summary>
+    public int MaxDriveMinutes { get; set; } = 120;
+
+    /// <summary>Content themes from <see cref="ContentThemes"/> the family leaves out (L2-194).</summary>
+    public List<string> ExcludedThemes { get; set; } = new();
+
+    /// <summary>Worship and rest: at most one outing on Sunday (L2-194, L2-195).</summary>
+    public bool QuietSunday { get; set; }
+
+    /// <summary>When the planner's day starts (L2-195).</summary>
+    public TimeOnly DayStart { get; set; } = new(9, 0);
+
+    /// <summary>The youngest's bedtime; the day ends half an hour before (L2-195).</summary>
+    public TimeOnly? YoungestBedtime { get; set; }
+
+    /// <summary>Sunday's dinner is at home rather than a restaurant (L2-187).</summary>
+    public bool SundayDinnerAtHome { get; set; } = true;
+
+    /// <summary>The family's pace: outings a day (L2-184, L2-195).</summary>
+    public int OutingsPerDay { get; set; } = 2;
+
+    public PlanLeaning Leaning { get; set; } = PlanLeaning.Either;
 
     public List<FamilyMember> Members { get; set; } = new();
     public List<Commitment> Commitments { get; set; } = new();

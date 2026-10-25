@@ -105,6 +105,38 @@
         </sd-list>
       </sd-section>
 
+      <sd-section title="How you plan" subtitle="The planner and the agents keep to these.">
+        <sd-list card>
+          <sd-list-item
+            action
+            chevron
+            title="Max drive"
+            [subtitle]="view().planning.maxDrive"
+            (pressed)="editMaxDrive()"
+          >
+            <sd-disc slot="leading" icon="car" />
+          </sd-list-item>
+          <sd-list-item
+            action
+            chevron
+            title="What you celebrate"
+            [subtitle]="view().planning.celebrate"
+            (pressed)="editCelebrations()"
+          >
+            <sd-disc slot="leading" icon="heart" />
+          </sd-list-item>
+          <sd-list-item
+            action
+            chevron
+            title="Day shape"
+            [subtitle]="view().planning.dayShape"
+            (pressed)="editDayShape()"
+          >
+            <sd-disc slot="leading" icon="sun" />
+          </sd-list-item>
+        </sd-list>
+      </sd-section>
+
       <sd-section
         title="Calendar"
         subtitle="Keep this weekend in the calendar you already use. Off until you connect one."

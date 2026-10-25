@@ -39,7 +39,7 @@ public sealed class MarkErrandDoneCommandHandler : IRequestHandler<MarkErrandDon
         errand.Done = request.Done;
         await _db.SaveChangesAsync(cancellationToken);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

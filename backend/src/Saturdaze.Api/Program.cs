@@ -1,3 +1,4 @@
+using Saturdaze.Infrastructure.AgentPlanning;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -39,6 +40,9 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
+    // Agent-drafted weekends (ADR-023): the role runner, Foundry chat client, telemetry and the on-demand queue.
+    builder.Services.AddAgentPlanning(builder.Configuration);
+    builder.Services.AddHostedService<Saturdaze.Api.AgentPlanning.AgentDraftQueueProcessor>();
 
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<ICurrentUserAccessor, HttpContextCurrentUserAccessor>();

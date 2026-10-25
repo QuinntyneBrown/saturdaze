@@ -1,5 +1,6 @@
 using System.Globalization;
 using Saturdaze.Domain.Enums;
+using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Ingestion;
 
@@ -33,29 +34,43 @@ public static class IngestionPrompts
             "venue and \"address\" its street address. Each element MUST match this exact schema (omit any row " +
             "you cannot fully populate and verify):";
 
+        // The richer facts (L2-198, L2-199): optional, but only ever as verified on the source page.
+        var facts =
+            "Times are local \"HH:mm\" (24-hour). \"priceTier\" is 0 free, 1 under $20 a person, 2 $20-50, 3 over $50. " +
+            $"\"themes\" is a subset of [{string.Join(",", ContentThemes.All.Select(t => $"\"{t}\""))}] naming any theme " +
+            "the place or event carries even when its name does not say so (a carved-pumpkin walk is \"halloween\"). " +
+            "Leave out any of these optional facts you cannot verify on the source page; never guess them. " +
+            "The source URL must be an https page that shows the row.";
+
         return type switch
         {
             IngestionType.Events =>
                 $"{preamble}\n\nFind time-bounded events (festivals, markets, theatre, seasonal openings, " +
                 $"community days) happening on or near the weekend of {weekend} and the following weekend " +
                 $"of {nextWeekend}. Avoid adults-only events and ticketed concerts over $50 per adult. " +
-                $"Set \"indoor\" true when the event happens indoors.\n\n" +
+                $"Set \"indoor\" true when the event happens indoors. \"startTime\" and \"endTime\" are the daily " +
+                $"hours it runs.\n\n{facts}\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"startsOn\": \"YYYY-MM-DD\", \"endsOn\": \"YYYY-MM-DD\", " +
                 "\"location\": string, \"driveMinutes\": integer, \"url\": string, \"category\": string, " +
-                "\"indoor\": boolean, \"latitude\": number, \"longitude\": number, \"address\": string}]",
+                "\"indoor\": boolean, \"latitude\": number, \"longitude\": number, \"address\": string, " +
+                "\"startTime\"?: \"HH:mm\", \"endTime\"?: \"HH:mm\", \"priceTier\"?: integer, " +
+                "\"minAge\"?: integer, \"maxAge\"?: integer, \"themes\"?: [string]}]",
 
             IngestionType.Activities =>
                 $"{preamble}\n\nFind mostly-evergreen places to spend an afternoon (parks, trails, " +
                 $"conservation areas, farms, museums, indoor play centres). These are not date-bound; pick " +
                 $"things worth doing across the season. Set \"indoor\" true for venues that work in bad " +
                 $"weather. \"weatherTags\" is a subset of [\"sunny\",\"warm\",\"mild\",\"cool\",\"rain\",\"cold\"] " +
-                $"describing when the activity is best.\n\n" +
+                $"describing when the activity is best. \"opensAt\" and \"closesAt\" are its weekend hours; " +
+                $"\"seasonStartMonth\" and \"seasonEndMonth\" (1-12) bound the months it is worth going.\n\n{facts}\n\n" +
                 $"{output}\n" +
                 "[{\"name\": string, \"category\": string, \"indoor\": boolean, \"minAge\": integer, " +
                 "\"maxAge\": integer, \"driveMinutes\": integer, \"weatherTags\": [string], " +
                 "\"typicalDurationMinutes\": integer, \"description\": string, \"mapUrl\": string, " +
-                "\"latitude\": number, \"longitude\": number, \"address\": string}]",
+                "\"latitude\": number, \"longitude\": number, \"address\": string, \"sourceUrl\": string, " +
+                "\"opensAt\"?: \"HH:mm\", \"closesAt\"?: \"HH:mm\", \"seasonStartMonth\"?: integer, " +
+                "\"seasonEndMonth\"?: integer, \"priceTier\"?: integer, \"themes\"?: [string]}]",
 
             IngestionType.Restaurants =>
                 $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Lunch\" or \"Dinner\". " +

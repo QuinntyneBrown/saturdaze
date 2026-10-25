@@ -50,6 +50,29 @@ class IngestionItem <<record>> {
  +JsonObject Payload
 }
 interface IAppDbContext
+class ThemeTagger {
+ +Tag(name, description, category, url): IReadOnlyList<string>
+}
+class Activity {
+ +TimeOnly? OpensAt
+ +TimeOnly? ClosesAt
+ +int? SeasonStartMonth
+ +int? SeasonEndMonth
+ +int? PriceTier
+ +List<string> Themes
+ +string? SourceUrl
+}
+class LocalEvent {
+ +TimeOnly? StartTime
+ +TimeOnly? EndTime
+ +int? PriceTier
+ +int? MinAge
+ +int? MaxAge
+ +List<string> Themes
+}
+CatalogUpserter --> ThemeTagger : tags themes
+CatalogUpserter --> Activity : writes facts
+CatalogUpserter --> LocalEvent : writes facts
 IngestionRunner --> IWebSearchClient
 ClaudeWebSearchClient ..|> IWebSearchClient
 ClaudeWebSearchClient --> ClaudeWebSearchOptions

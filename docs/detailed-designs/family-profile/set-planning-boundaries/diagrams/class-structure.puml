@@ -1,0 +1,64 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Set planning boundaries
+
+class Family {
+  +GeoLocation? HomeCoordinates
+  +int MaxDriveMinutes = 120
+  +List<string> ExcludedThemes
+  +bool QuietSunday
+  +TimeOnly DayStart = 09:00
+  +TimeOnly? YoungestBedtime
+  +bool SundayDinnerAtHome = true
+  +int OutingsPerDay = 2
+  +PlanLeaning Leaning
+}
+class FamilyMember {
+  +List<string> Interests
+}
+class SaveFamilyProfileCommand {
+  +GeoLocationInput? HomeCoordinates
+  +int? MaxDriveMinutes
+  +IReadOnlyList<string>? ExcludedThemes
+  +bool? QuietSunday
+  +TimeOnly? DayStart
+  +TimeOnly? YoungestBedtime
+  +bool ClearYoungestBedtime
+  +bool? SundayDinnerAtHome
+  +int? OutingsPerDay
+  +PlanLeaning? Leaning
+}
+interface IGeocoder {
+  +GeocodeAsync(address): GeoLocation?
+}
+class NominatimGeocoder
+class ThemeTagger {
+  +Tag(name, description, category, url): IReadOnlyList<string>
+}
+class ContentThemes {
+  +{static} Halloween
+  +{static} Christmas
+  +{static} Easter
+  +{static} Valentines
+  +{static} Alcohol
+  +{static} Horror
+  +{static} All
+}
+class PlaceVisibility {
+  +Visible(themes, family): bool
+}
+Family "1" *-- "*" FamilyMember
+SaveFamilyProfileCommand ..> IGeocoder
+NominatimGeocoder ..|> IGeocoder
+ThemeTagger ..> ContentThemes
+PlaceVisibility ..> ContentThemes
+@enduml

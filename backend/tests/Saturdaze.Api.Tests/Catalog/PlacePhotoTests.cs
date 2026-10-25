@@ -14,7 +14,8 @@ public class PlacePhotoTests : IClassFixture<SaturdazeApiFactory>, IAsyncLifetim
 
     public PlacePhotoTests(SaturdazeApiFactory factory) => _factory = factory;
 
-    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory)).Client;
+    // A family without its own home coordinates, so every seeded place is within its default max drive (L2-190, L2-191).
+    public async Task InitializeAsync() => _client = (await SignedInClient.CreateAsync(_factory, FamilyMode.Own)).Client;
     public Task DisposeAsync() => Task.CompletedTask;
 
     private async Task<JsonElement> Item(string url, string name)

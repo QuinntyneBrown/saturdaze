@@ -32,7 +32,7 @@ public sealed class GetWeekendByIdQueryHandler : IRequestHandler<GetWeekendByIdQ
             .FirstOrDefaultAsync(w => w.Id == request.Id && w.FamilyId == familyId, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Weekend), request.Id);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

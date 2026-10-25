@@ -163,7 +163,13 @@ export class WeekendPage {
       ? `Saturday and Sunday, drafted around ${name}`
       : 'Saturday and Sunday, drafted around your family';
   });
-  protected readonly actionsEnabled = computed(() => this.status() === 'ready' && !this.busy());
+  /** The agents are drafting: the plan stays visible, busy, with its actions off (L2-211). */
+  protected readonly drafting = computed(() => this.weekend().agentDraft.drafting);
+  /** The API's 409 or 429 for a draft request, shown in the banner. */
+  protected readonly draftRefusal = signal('');
+  protected readonly actionsEnabled = computed(
+    () => this.status() === 'ready' && !this.busy() && !this.drafting(),
+  );
 
   constructor() {
     if (this.dev === 'generating') return;
@@ -232,6 +238,12 @@ export class WeekendPage {
           sub: 'Locked blocks stay where they are',
         },
         {
+          id: 'agents',
+          label: 'Draft with agents',
+          icon: 'sparkle',
+          sub: "Research what's on and fit it to your family. Locks stay.",
+        },
+        {
           id: 'calendar',
           label: 'Add to calendar',
           icon: 'calendar',
@@ -240,7 +252,15 @@ export class WeekendPage {
       ],
     });
     if (choice?.id === 'regenerate') await this.regenerateWeekend();
+    if (choice?.id === 'agents') await this.draftWithAgents();
     if (choice?.id === 'calendar') this.calendar();
+  }
+
+  protected draftWithAgents(): Promise<void> {
+    return this.run(async () => {
+      this.draftRefusal.set('');
+      this.draftRefusal.set((await this.weekendService.draftWithAgents()) ?? '');
+    });
   }
 
   protected async regenerateWeekend(): Promise<void> {

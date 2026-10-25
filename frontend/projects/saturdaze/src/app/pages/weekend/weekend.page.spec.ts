@@ -52,6 +52,8 @@ const LOADING: WeekendView = {
   cover: null,
   dateRange: '16 – 17 May',
   coverChoices: [],
+  draftedByAgents: false,
+  agentDraft: { drafting: false, notice: null, canRetry: false },
 };
 
 const EMPTY: WeekendView = { ...LOADING, status: 'empty', headline: 'Your first weekend' };
@@ -66,6 +68,8 @@ const READY: WeekendView = {
   cover: null,
   dateRange: '16 – 17 May',
   coverChoices: [],
+  draftedByAgents: false,
+  agentDraft: { drafting: false, notice: null, canRetry: false },
   days: [
     {
       day: 'Saturday',
@@ -111,6 +115,11 @@ const FAMILY_LOADING: FamilyView = {
   dislikes: [],
   preferences: [],
   plannedAround: [],
+  planning: {
+    maxDrive: 'Up to 2 h each way',
+    celebrate: 'Everything',
+    dayShape: 'Starts 9:00 · 2 outings a day',
+  },
 };
 
 const FAMILY_READY: FamilyView = {
@@ -225,6 +234,7 @@ describe('WeekendPage', () => {
       lockDay: vi.fn(async () => undefined),
       addErrand: vi.fn(async () => null),
       setErrandDone: vi.fn(async () => undefined),
+      draftWithAgents: vi.fn(async () => null),
     };
     family = {
       getFamily: () => familySig,
@@ -409,6 +419,7 @@ describe('WeekendPage', () => {
         title: 'Weekend options',
         items: [
           expect.objectContaining({ id: 'regenerate' }),
+          expect.objectContaining({ id: 'agents', label: 'Draft with agents' }),
           expect.objectContaining({ id: 'calendar' }),
         ],
       }),
@@ -535,5 +546,74 @@ describe('WeekendPage', () => {
     fixture.detectChanges();
     expect(host.querySelector('sd-banner.error')).toBeNull();
     consoleError.mockRestore();
+  });
+
+  describe('agent drafts (L2-211)', () => {
+    const banner = (): HTMLElement | null => host.querySelector('sd-banner.standard-plan');
+    const draft = (agentDraft: WeekendView['agentDraft']): WeekendView => ({
+      ...READY,
+      agentDraft,
+    });
+
+    it('drafts from the More menu and keeps the plan visible and busy while the agents work', async () => {
+      await mountReady();
+      menu.open.mockResolvedValueOnce({
+        id: 'agents',
+        label: 'Draft with agents',
+        icon: 'sparkle',
+      });
+      weekend.draftWithAgents.mockImplementationOnce(async () => {
+        weekendSig.set(draft({ drafting: true, notice: null, canRetry: false }));
+        return null;
+      });
+      coverAction('sd-button[label="More options"]').click();
+      await settle();
+      fixture.detectChanges();
+
+      expect(weekend.draftWithAgents).toHaveBeenCalledTimes(1);
+      expect(host.querySelector('sd-status-row')?.textContent).toContain(
+        'Agents are drafting your weekend',
+      );
+      expect(host.querySelector('.planner')?.getAttribute('aria-busy')).toBe('true');
+      expect(blockTitles()).toEqual(['Swim lessons', 'Terre Bleu Lavender Farm']);
+      expect(coverAction('sd-button[variant="primary"]').disabled).toBe(true);
+    });
+
+    it('marks an agent-drafted weekend with "Drafted for your family"', async () => {
+      await mountReady({ ...READY, draftedByAgents: true });
+      expect(host.querySelector('.cover-actions__chip')?.textContent?.trim()).toBe(
+        'Drafted for your family',
+      );
+      expect(banner()).toBeNull();
+    });
+
+    it('explains a fallback and offers Try again only when retrying can help', async () => {
+      const notice = "The agents couldn't finish, so the planner made this weekend.";
+      await mountReady(draft({ drafting: false, notice, canRetry: true }));
+      expect(banner()?.textContent).toContain('This is the standard plan.');
+      expect(banner()?.textContent).toContain(notice);
+      expect(host.querySelector('.cover-actions__chip')).toBeNull();
+
+      weekend.draftWithAgents.mockResolvedValueOnce(
+        'This weekend has had 3 drafts already. Try again next weekend.',
+      );
+      (banner()!.querySelector('sd-button button') as HTMLButtonElement).click();
+      await settle();
+      fixture.detectChanges();
+      expect(banner()?.textContent).toContain('This weekend has had 3 drafts already.');
+      expect(banner()?.querySelector('sd-button')).toBeNull();
+    });
+
+    it('shows the notice without Try again when agent planning is off', async () => {
+      await mountReady(
+        draft({
+          drafting: false,
+          notice: 'Agent planning is off right now, so the planner made this weekend.',
+          canRetry: false,
+        }),
+      );
+      expect(banner()?.textContent).toContain('Agent planning is off right now');
+      expect(banner()?.querySelector('sd-button')).toBeNull();
+    });
   });
 });

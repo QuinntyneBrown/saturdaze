@@ -59,6 +59,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         var totalOutputTokens = 0;
         var totalSearchRequests = 0;
         var totalText = new StringBuilder();
+        var resultUrls = new List<string>();
 
         for (var continuation = 0; continuation <= _options.MaxContinuationTurns; continuation++)
         {
@@ -87,9 +88,13 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
             totalOutputTokens += parsed.OutputTokens;
             totalSearchRequests += parsed.WebSearchCount;
             totalText.Append(parsed.RawText);
+            resultUrls.AddRange(parsed.ResultUrls);
 
             if (!string.Equals(parsed.StopReason, "pause_turn", StringComparison.Ordinal))
-                return new WebSearchResult(totalText.ToString(), totalInputTokens, totalOutputTokens, totalSearchRequests);
+                return new WebSearchResult(totalText.ToString(), totalInputTokens, totalOutputTokens, totalSearchRequests)
+                {
+                    SearchResultUrls = resultUrls.Distinct().ToList()
+                };
 
             if (continuation == _options.MaxContinuationTurns)
                 throw new ClaudeApiException(
@@ -193,6 +198,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
 
         var text = new StringBuilder();
         var searchBlocks = 0;
+        var urls = new List<string>();
         var stopReason = root.TryGetProperty("stop_reason", out var stopReasonProp)
             ? stopReasonProp.GetString()
             : null;
@@ -213,6 +219,14 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
                          && block.TryGetProperty("name", out var n)
                          && n.GetString() == "web_search")
                     searchBlocks++;
+                else if (type == "web_search_tool_result"
+                         && block.TryGetProperty("content", out var results)
+                         && results.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var r in results.EnumerateArray())
+                        if (r.TryGetProperty("url", out var url) && url.ValueKind == JsonValueKind.String)
+                            urls.Add(url.GetString()!);
+                }
             }
         }
 
@@ -230,7 +244,7 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
                 searchRequests = wsr.GetInt32();
         }
 
-        return new ClaudeResponse(stopReason, contentClone, text.ToString(), inputTokens, outputTokens, searchRequests);
+        return new ClaudeResponse(stopReason, contentClone, text.ToString(), inputTokens, outputTokens, searchRequests, urls);
     }
 
     private static string Snippet(string payload)
@@ -245,5 +259,6 @@ public sealed class ClaudeWebSearchClient : IWebSearchClient
         string RawText,
         int InputTokens,
         int OutputTokens,
-        int WebSearchCount);
+        int WebSearchCount,
+        IReadOnlyList<string> ResultUrls);
 }

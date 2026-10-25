@@ -1,5 +1,8 @@
 <sd-dialog [title]="title" subtitle="Locked into every weekend." wide>
   <form class="form" (submit)="submit($event)">
+    @if (saveFailed()) {
+      <sd-banner tone="warn" role="alert" icon="alert">{{ saveFailed() }}</sd-banner>
+    }
     <sd-text-input
       label="Name"
       name="commitmentTitle"
@@ -33,6 +36,34 @@
         (ngModelChange)="endTime.set($event); error.set('')"
       />
     </div>
+    @if (members.length) {
+      <fieldset class="field">
+        <legend class="field__label">Who goes</legend>
+        <div class="cluster">
+          @for (m of members; track m.id) {
+            <sd-checkbox
+              [name]="'goes-' + m.id"
+              [ngModel]="goes(m.id)"
+              (ngModelChange)="setGoes(m.id, $event)"
+              >{{ m.name }}</sd-checkbox
+            >
+          }
+        </div>
+        <p class="field__hint">
+          None ticked means everyone. Different people may overlap when an adult can take each.
+        </p>
+      </fieldset>
+    }
+    <sd-text-input
+      label="Where"
+      name="where"
+      autocomplete="street-address"
+      placeholder="Address, so the plan drives you there"
+      hint="Optional"
+      [error]="whereError()"
+      [ngModel]="where()"
+      (ngModelChange)="where.set($event); whereError.set('')"
+    />
     <button type="submit" hidden></button>
   </form>
 

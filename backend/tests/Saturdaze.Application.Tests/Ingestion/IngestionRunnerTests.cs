@@ -18,8 +18,8 @@ public class IngestionRunnerTests
 
     private const string TwoEvents = """
         [
-          {"name":"Tulip Festival","startsOn":"2026-05-30","endsOn":"2026-05-31","location":"RBG","driveMinutes":35,"category":"Festival"},
-          {"name":"Farmers Market","startsOn":"2026-05-30","endsOn":"2026-05-30","location":"Lakeshore","driveMinutes":2,"category":"Local"}
+          {"name":"Tulip Festival","startsOn":"2026-05-30","endsOn":"2026-05-31","location":"RBG","driveMinutes":35,"category":"Festival","url":"https://example.com/source"},
+          {"name":"Farmers Market","startsOn":"2026-05-30","endsOn":"2026-05-30","location":"Lakeshore","driveMinutes":2,"category":"Local","url":"https://example.com/source"}
         ]
         """;
 
@@ -100,8 +100,8 @@ public class IngestionRunnerTests
         await using var app = TestApp.Create();
         const string oneGoodOneBad = """
             [
-              {"name":"Good","startsOn":"2026-05-30","endsOn":"2026-05-30","location":"Here"},
-              {"name":"Bad — no date","location":"Here"}
+              {"name":"Good","startsOn":"2026-05-30","endsOn":"2026-05-30","location":"Here","url":"https://example.com/source"},
+              {"name":"Bad — no date","location":"Here","url":"https://example.com/source"}
             ]
             """;
         var client = new FakeWebSearchClient(new WebSearchResult(oneGoodOneBad, 10, 20, 1));
@@ -144,7 +144,7 @@ public class IngestionRunnerTests
     public async Task Each_type_runs_independently_in_one_pass()
     {
         await using var app = TestApp.Create();
-        var activities = """[ {"name":"Bronte Creek","category":"Park","indoor":false} ]""";
+        var activities = """[ {"name":"Bronte Creek","category":"Park","indoor":false,"sourceUrl":"https://example.com/source"} ]""";
         var client = new FakeWebSearchClient(new[]
         {
             new WebSearchResult(TwoEvents, 100, 50, 2),
@@ -167,7 +167,7 @@ public class IngestionRunnerTests
     {
         // Traces to: L2-080 AC4
         await using var app = TestApp.Create();
-        var activities = """[ {"name":"Bronte Creek","category":"Park","indoor":false} ]""";
+        var activities = """[ {"name":"Bronte Creek","category":"Park","indoor":false,"sourceUrl":"https://example.com/source"} ]""";
         var client = new FakeWebSearchClient(new[]
         {
             new WebSearchResult(TwoEvents, 100, 50, 2),

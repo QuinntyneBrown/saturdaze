@@ -29,7 +29,8 @@ internal static class WeekendMapper
                         t?.StopNumber,
                         LocationDto.From(b.Stop),
                         t?.LegBefore is { } leg ? new TravelLegDto(leg.Minutes, leg.DistanceKm, leg.DirectionsUrl) : null,
-                        FromCalendar: b.FromCalendar);
+                        FromCalendar: b.FromCalendar,
+                        PickedByAgents: b.PickedByAgents);
                 })
                 .ToList(),
             weekend.Errands
@@ -38,6 +39,7 @@ internal static class WeekendMapper
                 .ToList(),
             forecast,
             days.Select(d => new DayDto(d.Day, d.StopCount, d.DrivingMinutes, d.DrivingKm)).ToList(),
-            LocationDto.From(weekend.Home));
+            LocationDto.From(weekend.Home),
+            PlanSource: weekend.PlanSource);
     }
 }

@@ -16,7 +16,9 @@ public sealed record WeekendDto(
     IReadOnlyList<WeatherForecast> Weather,
     IReadOnlyList<DayDto>? Days = null,
     LocationDto? Home = null,
-    CoverDto? Cover = null);
+    CoverDto? Cover = null,
+    PlanSource PlanSource = PlanSource.Planner,
+    AgentPlanning.AgentDraftDto? AgentDraft = null);
 
 public sealed record ItineraryBlockDto(
     Guid Id,
@@ -33,7 +35,8 @@ public sealed record ItineraryBlockDto(
     LocationDto? Stop = null,
     TravelLegDto? LegBefore = null,
     PlacePhotoDto? Photo = null,
-    bool FromCalendar = false);
+    bool FromCalendar = false,
+    bool PickedByAgents = false);
 
 public sealed record ShoppingErrandDto(
     Guid Id,

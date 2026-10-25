@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 import { BasePage, control } from "../base.page.js";
 import { PageSlug } from "../../fixtures/routes.js";
 
-export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "activity" | "invitations";
+export type AdminNavKey = "health" | "places" | "reviews" | "skips" | "agents" | "activity" | "invitations";
 
 /**
  * Chrome shared by every Saturdaze Admin screen — pages/admin.*.html

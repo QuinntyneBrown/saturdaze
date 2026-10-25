@@ -197,6 +197,17 @@ export interface IWeekendPlanService {
    * @returns {Promise<void>} The result of the operation
    */
   repeatSaved(id: string): Promise<void>;
+  /**
+   * Draft With Agents — `POST /api/weekends/{id}/drafts` (L2-203, L2-211). While
+   * the run is queued or running the view's `agentDraft.drafting` is true; the
+   * service polls `GET —/drafts/latest` every 3 seconds and reloads the weekend
+   * when the run ends.
+   *
+   * @param {string} id - The weekend id (defaults to the current one)
+   *
+   * @returns {Promise<string | null>} The API's refusal (409 drafting already, 429 over the weekend's limit), or null when queued
+   */
+  draftWithAgents(id?: string): Promise<string | null>;
 }
 
 export const WEEKEND_PLAN_SERVICE = new InjectionToken<IWeekendPlanService>('WEEKEND_PLAN_SERVICE');

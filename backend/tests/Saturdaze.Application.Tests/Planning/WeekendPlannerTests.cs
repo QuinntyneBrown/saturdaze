@@ -91,9 +91,13 @@ public class WeekendPlannerTests
             .Restaurant("R", MealSlot.Lunch, drive: 5)
             .Build();
 
-        var blocks = new WeekendPlanner().Plan(inputs);
-        blocks.Should().Contain(b => b.Kind == BlockKind.Activity && b.Title == "Indoor Museum");
-        blocks.Should().NotContain(b => b.Kind == BlockKind.Activity && b.Title == "Outdoor Park");
+        // The first outing of the weekend is the better fit; the other still comes later,
+        // since each place is visited once and a day holds two outings (L2-184, L2-185).
+        var first = new WeekendPlanner().Plan(inputs)
+            .Where(b => b.Kind == BlockKind.Activity)
+            .OrderBy(b => b.Day).ThenBy(b => b.StartTime)
+            .First();
+        first.Title.Should().Be("Indoor Museum");
     }
 
     [Fact]
@@ -167,9 +171,11 @@ public class WeekendPlannerTests
             .Restaurant("R", MealSlot.Lunch, drive: 5)
             .HistoricalActivityWeeksAgo(recentId, 1);
 
-        var blocks = new WeekendPlanner().Plan(builder.Build());
-        blocks.Should().Contain(b => b.Title == "Fresh");
-        blocks.Should().NotContain(b => b.Title == "Recent");
+        var first = new WeekendPlanner().Plan(builder.Build())
+            .Where(b => b.Kind == BlockKind.Activity)
+            .OrderBy(b => b.Day).ThenBy(b => b.StartTime)
+            .First();
+        first.Title.Should().Be("Fresh");
     }
 
     [Fact]

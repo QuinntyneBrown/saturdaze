@@ -1,0 +1,36 @@
+@startuml
+title UML sequence behaviour - Plan one day
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "GenerateWeekendCommandHandler" as handler
+ participant "PlannerInputLoader" as loader
+ participant "WeekendPlanner" as planner
+ participant "CandidateFilter" as filter
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext" as db
+end box
+handler -> loader : LoadAsync(family, weekendOf)
+loader -> db : Family, commitments, catalog, history
+loader -> loader : Candidates with per-family drive (L2-190); sunsets (L2-200)
+loader --> handler : PlannerContext
+handler -> planner : Plan(inputs)
+loop Saturday, Sunday
+ planner -> planner : Fixed blocks: commitments (merged when attendees split, L2-192), locks, calendar
+ planner -> planner : Drives to and from located commitments (L2-193)
+ planner -> planner : Reserve lunch 11:30-13:30, dinner 17:00-19:00; Sunday dinner at home (L2-186, L2-187)
+ loop gaps in time order while outings < pace (L2-184)
+  planner -> filter : Eligible candidates for the gap and date (L2-191, L2-194, L2-200)
+  filter --> planner : Candidates not yet picked this weekend (L2-185)
+  planner -> planner : Score (weather, leaning, likes +3, interests +2, event +3), place within hours, event times, sunset (L2-196, L2-200, L2-201)
+ end
+ planner -> planner : Restaurant nearest the stop before each meal (L2-186)
+ planner -> planner : Errand, downtime, sort order
+end
+planner --> handler : Blocks
+handler -> db : Save weekend
+@enduml

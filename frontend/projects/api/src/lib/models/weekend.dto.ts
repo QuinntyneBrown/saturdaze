@@ -1,3 +1,4 @@
+import { AgentDraftDto, PlanSource } from './agent-draft.dto';
 import { CoverDto } from './cover.dto';
 import { DaySummaryDto } from './day-summary.dto';
 import { LocationDto } from './location.dto';
@@ -62,4 +63,12 @@ export interface WeekendDto {
    * Cover — the weekend's cover photo, or null for the fallback (L2-108).
    */
   readonly cover?: CoverDto | null;
+  /**
+   * Plan Source — `Agents` when an agent draft made the blocks (L2-202).
+   */
+  readonly planSource?: PlanSource;
+  /**
+   * Agent Draft — the weekend's latest agent run; null when there has been none.
+   */
+  readonly agentDraft?: AgentDraftDto | null;
 }

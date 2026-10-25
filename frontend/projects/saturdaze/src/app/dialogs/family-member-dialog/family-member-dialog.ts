@@ -14,6 +14,7 @@ import { AbstractControl, FormsModule } from '@angular/forms';
 import { MemberAccess } from 'api';
 import {
   Button,
+  ChipInput,
   Dialog as DialogShell,
   ErrorSummary,
   ErrorSummaryProblem,
@@ -27,7 +28,11 @@ import { trimmedEmail } from '../../shared/trimmed-email.validator';
 
 export interface FamilyMemberDialogData {
   readonly mode: 'add' | 'edit';
-  readonly initial?: { readonly name: string; readonly age: number };
+  readonly initial?: {
+    readonly name: string;
+    readonly age: number;
+    readonly interests?: readonly string[];
+  };
   readonly existingNames: readonly string[];
   /** Edit mode: how the member signs in, for the read-only access hint (L2-124). */
   readonly access?: MemberAccess;
@@ -43,8 +48,13 @@ export type FamilyMemberDialogResult =
       readonly age: number;
       /** Add mode: the address to invite, or `null` for a member who won't sign in. */
       readonly email: string | null;
+      /** Up to 8; picks that match get a boost for this person (L2-196). */
+      readonly interests: readonly string[];
     }
   | { readonly kind: 'remove' };
+
+/** The API keeps at most eight interests per member (L2-196). */
+export const MAX_INTERESTS = 8;
 
 type SignIn = 'none' | 'invite';
 
@@ -64,7 +74,7 @@ const SIGN_IN_OPTIONS: readonly SegRadioOption[] = [
 @Component({
   selector: 'app-family-member-dialog',
   standalone: true,
-  imports: [Button, DialogShell, ErrorSummary, FormsModule, Icon, SegRadio, TextInput],
+  imports: [Button, ChipInput, DialogShell, ErrorSummary, FormsModule, Icon, SegRadio, TextInput],
   templateUrl: './family-member-dialog.html',
   styleUrl: './family-member-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,6 +103,10 @@ export class FamilyMemberDialog {
   protected readonly name = signal(this.data.initial?.name ?? '');
   protected readonly signIn = signal<SignIn>(this.data.signIn ?? 'none');
   protected readonly email = signal('');
+  protected readonly interests = signal<readonly string[]>(this.data.initial?.interests ?? []);
+  protected readonly interestsError = computed(() =>
+    this.interests().length > MAX_INTERESTS ? `Keep it to ${MAX_INTERESTS} interests.` : '',
+  );
   protected readonly inviting = computed(() => !this.isEdit && this.signIn() === 'invite');
   protected readonly submitLabel = computed(() =>
     this.isEdit ? 'Save' : this.inviting() ? 'Send invite' : 'Add member',
@@ -179,6 +193,7 @@ export class FamilyMemberDialog {
   protected submit(event?: Event): void {
     event?.preventDefault();
     this.attempted.set(true);
+    if (this.interestsError()) return;
     if (this.problems().length > 0) {
       afterNextRender(() => this.summary()?.focus(), { injector: this.injector });
       return;
@@ -189,6 +204,7 @@ export class FamilyMemberDialog {
       name: this.name().trim(),
       age: Number(this.age()),
       email,
+      interests: this.interests(),
     });
   }
 }

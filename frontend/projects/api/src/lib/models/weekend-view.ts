@@ -1,3 +1,4 @@
+import { AgentDraftView } from './agent-draft-view';
 import { CoverChoice, CoverView } from './cover-view';
 import { DayView } from './day-view';
 
@@ -49,4 +50,12 @@ export interface WeekendView {
    * Cover Choices — the stop photos D29 offers.
    */
   readonly coverChoices: readonly CoverChoice[];
+  /**
+   * Drafted By Agents — shows "Drafted for your family" (L2-211).
+   */
+  readonly draftedByAgents: boolean;
+  /**
+   * Agent Draft — drafting state and fallback notice (L2-211).
+   */
+  readonly agentDraft: AgentDraftView;
 }

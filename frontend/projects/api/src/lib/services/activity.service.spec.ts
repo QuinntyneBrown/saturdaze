@@ -9,6 +9,7 @@ import { ActivityDto } from '../models/activity.dto';
 import { WeatherForecastDto } from '../models/weather-forecast.dto';
 import { settle } from '../testing/weekend-fixture';
 import { ActivityService } from './activity.service';
+import { DEFAULT_PLANNING } from '../api/planning-presentation';
 import { EditableFamilyProfile, FAMILY_SERVICE } from './family.service.contract';
 
 const BASE = 'http://localhost:3000';
@@ -26,6 +27,7 @@ const profile = signal<EditableFamilyProfile | null>({
   ],
   commitments: [],
   preferences: [],
+  planning: DEFAULT_PLANNING,
 });
 
 function activity(overrides: Partial<ActivityDto> = {}): ActivityDto {

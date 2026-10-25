@@ -43,7 +43,7 @@ public sealed class GetSharedWeekendQueryHandler : IRequestHandler<GetSharedWeek
             .FirstOrDefaultAsync(w => w.Id == weekendId, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Weekend), weekendId);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, cancellationToken);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, cancellationToken);
         return WeekendMapper.ToDto(weekend, forecast);
     }
 }

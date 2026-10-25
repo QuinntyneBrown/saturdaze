@@ -44,6 +44,12 @@ describe('BlockDialog', () => {
     expect(actions()).toEqual(['Swap for something else', 'Lock this block']);
   });
 
+  it('titles the reason of an agents pick "Why this pick" (L2-211)', async () => {
+    await mount({ ...BLOCK, pickedByAgents: true });
+    expect(wells()).toEqual(['Why this pick']);
+    expect(text(host.querySelector('sd-well'))).toContain('Lavender peaks 17 to 24 May');
+  });
+
   it('closes with swap or a lock toggle', async () => {
     await mount(BLOCK);
     (

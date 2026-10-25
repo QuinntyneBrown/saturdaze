@@ -32,6 +32,7 @@ describe('MenuDialog', () => {
     const items = Array.from(host.querySelectorAll('[role="menuitem"]'));
     expect(items.map((i) => i.querySelector('.menu__label')?.textContent?.trim())).toEqual([
       'Regenerate the weekend',
+      'Draft with agents',
       'Add to calendar',
     ]);
     expect(items[0]!.querySelector('.menu__sub')?.textContent?.trim()).toBe(

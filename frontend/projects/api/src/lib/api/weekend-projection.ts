@@ -12,6 +12,8 @@ import { WeatherDay } from '../models/weather-day';
 import { WeatherForecastDto } from '../models/weather-forecast.dto';
 import { WeekendDay } from '../models/weekend-day';
 import { WeekendDto } from '../models/weekend.dto';
+import { AgentDraftView } from '../models/agent-draft-view';
+import { AgentDraftDto, AgentFallbackReason } from '../models/agent-draft.dto';
 import { WeekendStatus, WeekendView } from '../models/weekend-view';
 import {
   capitalise,
@@ -77,6 +79,22 @@ export function projectWeekend(dto: WeekendDto | null, status?: WeekendStatus): 
     cover: coverView(dto),
     dateRange: dateRange(sat.dateIso, sun.dateIso),
     coverChoices: coverChoices(dto),
+    draftedByAgents: dto.planSource === 'Agents',
+    agentDraft: agentDraftView(dto.agentDraft ?? null),
+  };
+}
+
+const NO_DRAFT: AgentDraftView = { drafting: false, notice: null, canRetry: false };
+const RETRYABLE: readonly (AgentFallbackReason | null)[] = ['Error', 'Timeout', 'Invalid'];
+
+/** Drafting while queued or running; the notice and "Try again" once a run fell back (L2-211). */
+export function agentDraftView(draft: AgentDraftDto | null): AgentDraftView {
+  if (!draft) return NO_DRAFT;
+  const fellBack = draft.status === 'FellBack';
+  return {
+    drafting: draft.status === 'Queued' || draft.status === 'Running',
+    notice: fellBack ? draft.notice : null,
+    canRetry: fellBack && RETRYABLE.includes(draft.fallbackReason),
   };
 }
 
@@ -226,6 +244,7 @@ export function toBlockRow(
     lockable: !commitment && !drive,
     stopNumber: b.stopNumber ?? null,
     leg: b.legBefore ? toLegView(b.legBefore.minutes, b.legBefore.distanceKm, b) : null,
+    pickedByAgents: b.pickedByAgents ?? false,
   };
 }
 
@@ -321,6 +340,8 @@ function placeholder(status: WeekendStatus): WeekendView {
     cover: null,
     dateRange: '',
     coverChoices: [],
+    draftedByAgents: false,
+    agentDraft: NO_DRAFT,
   };
 }
 

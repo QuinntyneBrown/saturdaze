@@ -5,5 +5,5 @@ namespace Saturdaze.Application.Events;
 
 public sealed record GetLocalEventsQuery(
     DateOnly WeekendOf,
-    int MaxDriveMinutes = 120,
+    int? MaxDriveMinutes = null,
     bool? Indoor = null) : IRequest<IReadOnlyList<LocalEventDto>>;

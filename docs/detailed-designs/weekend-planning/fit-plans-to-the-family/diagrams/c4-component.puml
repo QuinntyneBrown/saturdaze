@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Fit plans to the family
+
+Container_Boundary(api, "Saturdaze API") {
+  Component(ctrl, "WeekendsController / BlocksController", "ASP.NET Core", "plan, regenerate, regenerate day, swap")
+}
+Container_Boundary(app, "Saturdaze Application") {
+  Component(loader, "PlannerInputLoader", "Service", "Family, profile, catalog as candidates, forecast, sunsets, history")
+  Component(filter, "CandidateFilter", "Domain service", "Drive, themes, dislikes, ages, season, the day's dates")
+  Component(planner, "WeekendPlanner", "Domain service", "Fixed blocks, commitment drives, meals, outings, errand, downtime")
+  Component(sun, "SunCalculator", "Domain service", "NOAA sunset at home")
+  Component(drive, "FamilyDriveTime", "Domain service", "Per-family drive minutes from coordinates")
+  Component(replanner, "WeekendReplanner", "Service", "Regenerate; each block added once")
+}
+ComponentDb(db, "AppDbContext", "EF Core", "Weekends, catalog, family")
+Rel(ctrl, loader, "Load inputs")
+Rel(loader, drive, "Drive minutes")
+Rel(loader, sun, "Sunset per day")
+Rel(loader, db, "Reads")
+Rel(ctrl, planner, "Plan")
+Rel(planner, filter, "Eligible candidates")
+Rel(ctrl, replanner, "Regenerate")
+Rel(replanner, db, "Saves")
+@enduml

@@ -29,7 +29,7 @@ describe('DialogsPage', () => {
 
   it('renders the page header and every specimen in the mock order', () => {
     expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('Dialogs');
-    expect(specimens().length).toBe(40);
+    expect(specimens().length).toBe(43);
     expect(specimens().map((s) => s.id)).toEqual([
       'dialog-block',
       'dialog-block-locked',
@@ -66,6 +66,9 @@ describe('DialogsPage', () => {
       'dialog-calendar-feed',
       'dialog-calendar-feed-stop',
       'dialog-calendar-synced',
+      'dialog-max-drive',
+      'dialog-observances',
+      'dialog-day-shape',
       'dialog-approve',
       'dialog-reject',
       'dialog-more',
@@ -76,7 +79,7 @@ describe('DialogsPage', () => {
 
   it('renders each dialog specimen statically inside the sd-dialog shell', () => {
     const dialogs = specimens().filter((s) => !s.classList.contains('specimen--menu'));
-    expect(dialogs.length).toBe(38);
+    expect(dialogs.length).toBe(41);
     for (const section of dialogs) {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
@@ -103,7 +106,7 @@ describe('DialogsPage', () => {
     expect(host.querySelector('#dialog-account .menu__header')?.textContent?.trim()).toBe(
       'quinntynebrown@gmail.com',
     );
-    expect(host.querySelectorAll('#dialog-more-menu [role="menuitem"]').length).toBe(2);
+    expect(host.querySelectorAll('#dialog-more-menu [role="menuitem"]').length).toBe(3);
   });
 
   it('keeps specimens on the page when their close buttons are pressed', () => {
@@ -112,6 +115,6 @@ describe('DialogsPage', () => {
     ).click();
     (host.querySelector('#dialog-share .dialog__close button') as HTMLButtonElement).click();
     fixture.detectChanges();
-    expect(specimens().length).toBe(40);
+    expect(specimens().length).toBe(43);
   });
 });

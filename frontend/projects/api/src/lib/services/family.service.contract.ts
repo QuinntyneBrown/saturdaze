@@ -2,6 +2,7 @@ import { InjectionToken, Signal } from '@angular/core';
 
 import { DayOfWeek } from '../models/day-of-week';
 import { FamilyView } from '../models/family-view';
+import { PlanningSettings } from '../models/planning-settings';
 
 /** Kept for callers that used the older name. */
 export type EditableFamilyDayOfWeek = DayOfWeek;
@@ -22,6 +23,10 @@ export interface EditableFamilyMember {
    * Age.
    */
   readonly age: number;
+  /**
+   * Interests — up to 8; picks that match get a boost for this person (L2-196).
+   */
+  readonly interests?: readonly string[];
 }
 
 /**
@@ -48,6 +53,14 @@ export interface EditableCommitment {
    * End Time — "HH:mm".
    */
   readonly endTime: string;
+  /**
+   * Attendee Member Ids — who goes; empty means everyone (L2-192).
+   */
+  readonly attendeeMemberIds?: readonly string[];
+  /**
+   * Where — the address the plan drives to; null when it has no place (L2-192).
+   */
+  readonly where?: string | null;
 }
 
 /**
@@ -100,6 +113,10 @@ export interface EditableFamilyProfile {
    * Preferences.
    */
   readonly preferences: readonly EditablePreference[];
+  /**
+   * Planning — "How you plan" (L2-197).
+   */
+  readonly planning: PlanningSettings;
 }
 
 /**

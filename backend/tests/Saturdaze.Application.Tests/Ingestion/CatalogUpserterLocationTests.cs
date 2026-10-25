@@ -19,13 +19,13 @@ public class CatalogUpserterLocationTests
         var sut = new CatalogUpserter(app.Db);
 
         await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Bronte Creek","category":"Park","latitude":43.4096,"longitude":-79.7646,"address":"1219 Burloak Dr, Oakville, ON"} ]""",
+            """[ {"name":"Bronte Creek","category":"Park","latitude":43.4096,"longitude":-79.7646,"address":"1219 Burloak Dr, Oakville, ON","sourceUrl":"https://example.com/source"} ]""",
             IngestionType.Activities).Items, IngestionType.Activities, default);
         await sut.UpsertAsync(Parser.Parse(
             """[ {"name":"Snug Harbour","style":"Seafood","slot":"Dinner","latitude":43.5498,"longitude":-79.5853,"address":"14 Stavebank Rd S"} ]""",
             IngestionType.Restaurants).Items, IngestionType.Restaurants, default);
         await sut.UpsertAsync(Parser.Parse(
-            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","location":"RBG","latitude":43.29,"longitude":-79.8763,"address":"680 Plains Rd W"} ]""",
+            """[ {"name":"Tulip Festival","startsOn":"2026-05-16","location":"RBG","latitude":43.29,"longitude":-79.8763,"address":"680 Plains Rd W","url":"https://example.com/source"} ]""",
             IngestionType.Events).Items, IngestionType.Events, default);
         await app.Db.SaveChangesAsync();
 
@@ -43,8 +43,8 @@ public class CatalogUpserterLocationTests
         await sut.UpsertAsync(Parser.Parse(
             """
             [
-              {"name":"Nowhere Park","category":"Park","latitude":91,"longitude":-79.7,"address":"x"},
-              {"name":"Half Park","category":"Park","latitude":43.4}
+              {"name":"Nowhere Park","category":"Park","latitude":91,"longitude":-79.7,"address":"x","sourceUrl":"https://example.com/source"},
+              {"name":"Half Park","category":"Park","latitude":43.4,"sourceUrl":"https://example.com/source"}
             ]
             """,
             IngestionType.Activities).Items, IngestionType.Activities, default);

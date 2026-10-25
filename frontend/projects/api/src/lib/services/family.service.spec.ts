@@ -1,4 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
+import { DEFAULT_PLANNING } from '../api/planning-presentation';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
@@ -119,6 +120,7 @@ describe('FamilyService', () => {
         access: 'None',
         email: null,
         subtitle: 'Parent · 38',
+        interests: [],
       },
       {
         id: 'm2',
@@ -130,6 +132,7 @@ describe('FamilyService', () => {
         access: 'None',
         email: null,
         subtitle: 'Parent · 36',
+        interests: [],
       },
       {
         id: 'm4',
@@ -141,6 +144,7 @@ describe('FamilyService', () => {
         access: 'None',
         email: null,
         subtitle: 'Kid · 9',
+        interests: [],
       },
       {
         id: 'm3',
@@ -152,6 +156,7 @@ describe('FamilyService', () => {
         access: 'None',
         email: null,
         subtitle: 'Kid · 5',
+        interests: [],
       },
     ]);
   });
@@ -168,6 +173,8 @@ describe('FamilyService', () => {
         endTime: '10:00',
         subtitle: 'Saturdays · 9:00am to 10:00am',
         icon: 'lock',
+        attendeeMemberIds: [],
+        where: null,
       },
       {
         id: 'c2',
@@ -178,6 +185,8 @@ describe('FamilyService', () => {
         endTime: '11:45',
         subtitle: 'Sundays · 10:30am to 11:45am',
         icon: 'lock',
+        attendeeMemberIds: [],
+        where: null,
       },
       {
         id: 'c3',
@@ -188,6 +197,8 @@ describe('FamilyService', () => {
         endTime: '18:00',
         subtitle: 'Saturdays · 5:00pm to 6:00pm',
         icon: 'lock',
+        attendeeMemberIds: [],
+        where: null,
       },
     ]);
   });
@@ -279,8 +290,11 @@ describe('FamilyService', () => {
       dayOfWeek: 'Saturday',
       startTime: '09:00',
       endTime: '10:00',
+      attendeeMemberIds: [],
+      where: null,
     });
     expect(editable.preferences).toHaveLength(5);
+    expect(editable.planning).toEqual(DEFAULT_PLANNING);
   });
 
   it('PUTs the full profile with ids, trimmed names and seconds on times, then applies the reply', async () => {
@@ -299,6 +313,7 @@ describe('FamilyService', () => {
         { id: 'c1', title: ' Swim ', dayOfWeek: 'Saturday', startTime: '09:00', endTime: '10:00' },
       ],
       preferences: [{ kind: 'Like', value: 'Hiking' }],
+      planning: { ...DEFAULT_PLANNING, excludedThemes: ['halloween'], dayStart: '10:00' },
     });
     const req = httpMock.expectOne(FAMILY);
     expect(req.request.method).toBe('PUT');
@@ -319,9 +334,20 @@ describe('FamilyService', () => {
           dayOfWeek: 'Saturday',
           startTime: '09:00:00',
           endTime: '10:00:00',
+          attendeeMemberIds: [],
+          location: null,
         },
       ],
       preferences: [{ kind: 'Like', value: 'Hiking' }],
+      maxDriveMinutes: 120,
+      excludedThemes: ['halloween'],
+      quietSunday: false,
+      dayStart: '10:00:00',
+      youngestBedtime: null,
+      clearYoungestBedtime: true,
+      sundayDinnerAtHome: true,
+      outingsPerDay: 2,
+      leaning: 'Either',
     });
     req.flush(family({ budgetEnabled: true, name: 'The Browns' }));
     await promise;
@@ -383,5 +409,55 @@ describe('FamilyService', () => {
     await Promise.resolve();
     httpMock.expectOne(FAMILY).flush(family());
     await expect(promise).resolves.toBeUndefined();
+  });
+
+  describe('how you plan (L2-197)', () => {
+    it('phrases each row from the stored boundaries', async () => {
+      await flushLoad(
+        family({
+          maxDriveMinutes: 90,
+          excludedThemes: ['halloween', 'alcohol'],
+          quietSunday: true,
+          dayStart: '10:00:00',
+          outingsPerDay: 1,
+        }),
+      );
+      expect(service.getFamily()().planning).toEqual({
+        maxDrive: 'Up to 1 h 30 each way',
+        celebrate: 'Not Halloween, Alcohol-focused · quiet Sunday',
+        dayShape: 'Starts 10:00 · 1 outing a day',
+      });
+    });
+
+    it('says who goes to a commitment and where, and sends both back on save', async () => {
+      const base = family();
+      const mae = base.members[0]!;
+      await flushLoad({
+        ...base,
+        commitments: [
+          {
+            ...base.commitments[0]!,
+            attendeeMemberIds: [mae.id],
+            location: {
+              latitude: 43.6,
+              longitude: -79.7,
+              address: '5980 McLaughlin Rd, Mississauga',
+            },
+          },
+        ],
+      });
+      expect(service.getFamily()().commitments[0]!.subtitle).toBe(
+        `Saturdays · 9:00am to 10:00am · ${mae.name} · 5980 McLaughlin Rd`,
+      );
+
+      const save = service.saveProfile(service.getEditableProfile()()!);
+      const req = httpMock.expectOne(FAMILY);
+      expect(req.request.body.commitments[0]).toMatchObject({
+        attendeeMemberIds: [mae.id],
+        location: { address: '5980 McLaughlin Rd, Mississauga' },
+      });
+      req.flush(base);
+      await save;
+    });
   });
 });

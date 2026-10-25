@@ -875,6 +875,9 @@
   .cover .media__credit { bottom: auto; top: 12px; left: 12px; right: auto; }
   @media (min-width: 45rem) { .cover { aspect-ratio: 21 / 8; } .cover__body { padding: 64px 24px 20px; } }
   .cover-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 24px; }
+  .cover-actions__chip { margin-inline-end: auto; }
+  body[data-page="weekend"] .cover-actions ~ .banner,
+  body[data-page="weekend"] .cover-actions ~ .status-row { margin-bottom: 16px; }
   .planner__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 16px; }
   .planner__toolbar .segments { flex: 1 1 220px; }
 
@@ -1044,10 +1047,14 @@
   body[data-page="admin"] .stat__fill--p80 { width: 80%; }
   body[data-page="admin"] .stat__fill--p79 { width: 79%; }
   body[data-page="admin"] .stat__fill--p56 { width: 56%; }
+  body[data-page="admin"] .stat__fill--p13 { width: 13%; }
+  body[data-page="admin"] .run__trace { display: flex; align-items: center; gap: 4px; margin-top: 8px; min-width: 0; }
+  body[data-page="admin"] .run__trace code { overflow-wrap: anywhere; }
   body[data-page="admin"] .stat__list { display: flex; flex-direction: column; margin-top: 4px; }
   body[data-page="admin"] .stat__link { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 0; border-top: 1px solid var(--sd-line); font-size: var(--sd-fs-ui); font-weight: var(--sd-fw-medium); color: var(--sd-ink); border-radius: var(--sd-r-sm); }
   body[data-page="admin"] .stat__link .chip--count { background: var(--sd-surface-2); }
   @media (min-width: 64rem) { body[data-page="admin"] .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+  @media (min-width: 80rem) { body[data-page="admin"] .stat-grid--four { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   /* admin: list rows, toolbar, pager */
   body[data-page="admin"] .toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
   body[data-page="admin"] .toolbar__count { font-size: var(--sd-fs-sm); color: var(--sd-ink-soft); margin: 12px 0; }

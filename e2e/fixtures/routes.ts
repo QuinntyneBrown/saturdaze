@@ -263,6 +263,12 @@ export const ROUTES = {
     guard: "admin",
     page: "admin",
   },
+  adminAgentRuns: {
+    app: "/agent-runs",
+    mock: "/pages/admin.agent-runs.html",
+    guard: "admin",
+    page: "admin",
+  },
   adminActivity: {
     app: "/activity",
     mock: "/pages/admin.activity.html",

@@ -46,7 +46,7 @@ public sealed class SetWeekendCoverCommandHandler : IRequestHandler<SetWeekendCo
             .FirstOrDefaultAsync(w => w.Id == request.WeekendId && w.FamilyId == familyId, ct)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
 
-        var forecast = await _forecast.GetAsync(weekend.WeekendOf, ct);
+        var forecast = await _forecast.GetAsync(weekend.WeekendOf, weekend.Home, ct);
         var previousUpload = weekend.CoverUploadKey;
         if (request.Source == CoverSource.Stop)
         {

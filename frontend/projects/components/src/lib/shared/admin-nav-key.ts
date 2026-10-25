@@ -2,7 +2,14 @@
  * The destinations of Saturdaze Admin (ADR-014). Shared by `sd-admin-nav`
  * and the admin app's route data so the shell can highlight the current one.
  */
-export type AdminNavKey = 'health' | 'places' | 'reviews' | 'skips' | 'activity' | 'invitations';
+export type AdminNavKey =
+  | 'health'
+  | 'places'
+  | 'reviews'
+  | 'skips'
+  | 'agents'
+  | 'activity'
+  | 'invitations';
 
 export interface AdminNavItem {
   readonly key: AdminNavKey;
@@ -16,6 +23,7 @@ export const ADMIN_NAV_ITEMS: readonly AdminNavItem[] = [
   { key: 'places', label: 'Places', icon: 'map', route: '/places' },
   { key: 'reviews', label: 'Review queue', icon: 'check', route: '/reviews' },
   { key: 'skips', label: 'Ingestion skips', icon: 'refresh', route: '/ingestion-skips' },
+  { key: 'agents', label: 'Agent runs', icon: 'sparkle', route: '/agent-runs' },
   { key: 'activity', label: 'Activity log', icon: 'calendar', route: '/activity' },
   { key: 'invitations', label: 'Invitations', icon: 'mail', route: '/invitations' },
 ];

@@ -107,4 +107,8 @@ export interface BlockRow {
    * Leg — the travel row shown before this block (L2-102); null when none.
    */
   readonly leg: LegView | null;
+  /**
+   * Picked By Agents — the block dialog titles its reason "Why this pick" (L2-211).
+   */
+  readonly pickedByAgents: boolean;
 }

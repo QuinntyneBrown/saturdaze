@@ -9,7 +9,11 @@
         Regenerating the weekend or the day leaves this block exactly where it is.
       </sd-well>
     }
-    <sd-well icon="sparkle" title="Why this">{{ why() }}</sd-well>
+    @if (block.pickedByAgents) {
+      <sd-well icon="sparkle" title="Why this pick">{{ why() }}</sd-well>
+    } @else {
+      <sd-well icon="sparkle" title="Why this">{{ why() }}</sd-well>
+    }
   }
 
   @if (block.commitment) {

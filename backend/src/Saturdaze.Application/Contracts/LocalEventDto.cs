@@ -11,4 +11,10 @@ public sealed record LocalEventDto(
     string Category,
     LocationDto? Location,
     PlacePhotoDto? Photo = null,
-    bool? Indoor = null);
+    bool? Indoor = null,
+    TimeOnly? StartTime = null,
+    TimeOnly? EndTime = null,
+    int? PriceTier = null,
+    int? MinAge = null,
+    int? MaxAge = null,
+    IReadOnlyList<string>? Themes = null);

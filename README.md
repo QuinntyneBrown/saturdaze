@@ -51,8 +51,18 @@ reference.
 
 - Weekend itinerary generation with locked blocks, regeneration, favourites,
   errands, restaurant picks, and saved weekend history.
-- Family profile management for household members, recurring commitments,
-  budget preferences, likes, and dislikes.
+- Family profile management for household members (with their interests),
+  recurring commitments (who goes and where), budget preferences, likes and
+  dislikes, and how the family plans: the furthest it will drive, what it
+  doesn't celebrate, and the shape of each day (L2-191 to L2-197).
+- Agent-drafted weekends (ADR-023): every Friday, and on demand from the
+  Weekend page's "Draft with agents", a curator and a drafter on Claude in
+  Microsoft Foundry propose picks from what's on near the family. A deterministic
+  validator applies the family's hard rules, and the planner places only the picks
+  that pass, each with its reason. When the agents are off, fail, run over budget
+  or propose nothing that fits, the family keeps the planner's weekend and is
+  told why. Saturdaze Admin lists every run with its cost and trace, and an
+  [ASSERT](evals/assert/README.md) suite evaluates the agents' behaviour.
 - Authentication flows for sign-up, login, verification, password reset, and
   sign-out, plus "Continue with Google", which creates the account on first use
   (ADR-019).
@@ -77,7 +87,8 @@ reference.
   See [Ingestion triggers](backend/deploy/webjobs/ingest/README.md) for scheduling options.
 - Static HTML design under `docs/mocks/` — the source of truth for the
   Angular implementation and the visual regression baselines (ADR-009, ADR-010).
-- Local CLI for database migration, seeding, reset, and catalog ingestion.
+- Local CLI for database migration, seeding, reset, catalog ingestion, and
+  the Friday agent drafts (`saturdaze draft-weekends`).
 - One-command fresh stack script for local verification.
 
 ## Getting started
@@ -211,6 +222,29 @@ Cloud console, outside this repo):
 the events written, and `Saturdaze:Calendar:PollSeconds` (default 60) how often
 the in-process `CalendarSyncService` retries writes that Google refused.
 
+#### Agent-drafted weekends (optional)
+
+Agent planning (ADR-023) is off by default, and every draft then falls back to
+the planner with the notice "Agent planning is off right now". To run the
+agents locally against the Claude deployment on Foundry, use the key, as
+ingestion does:
+
+```powershell
+$env:Saturdaze__AgentPlanning__Enabled = "true"
+$env:Saturdaze__AgentPlanning__Auth = "Key"
+$env:Saturdaze__AgentPlanning__FoundryResource = "<foundry account>"
+$env:ANTHROPIC_FOUNDRY_API_KEY = "<key>"   # never commit it
+```
+
+Then use **More options → Draft with agents** on the Weekend page, or run
+`saturdaze draft-weekends` for the Friday pass. `Saturdaze:AgentPlanning` also
+sets the model for each role, the per-run caps (model calls, tool calls, web
+searches, tokens), `MaxRunsPerDay`, `MonthlySpendCapUsd`, the prices used to
+cost a run, and `RunTimeoutSeconds`. Traces go to Application Insights when
+`APPLICATIONINSIGHTS_CONNECTION_STRING` is set. No test calls Foundry: the API
+tests use a scripted model. The [ASSERT suite](evals/assert/README.md) is how the
+real agents are evaluated.
+
 Run the design reference (static mocks):
 
 ```powershell
@@ -341,6 +375,8 @@ the API against LocalDB (`eng/Restart-Api.ps1`) still works for e2e.
 | Design reference | [docs/mocks](docs/mocks/index.html) and its [README](docs/mocks/README.md) |
 | Extracted design system | [docs/design-system](docs/design-system/README.md) |
 | Catalog ingestion triggers | [backend/deploy/webjobs/ingest](backend/deploy/webjobs/ingest/README.md) |
+| Friday agent drafts | [backend/deploy/webjobs/draft](backend/deploy/webjobs/draft/README.md) |
+| Agent evaluations (ASSERT) | [evals/assert](evals/assert/README.md) |
 | Perf test | [frontend/projects/perf-test](frontend/projects/perf-test/README.md) |
 
 ## Deployment
@@ -354,9 +390,10 @@ Every push to `main` runs `.github/workflows/deploy.yml` (ADR-017):
    (family app, admin, design system, marketing site), the Microsoft Foundry account with the
    Claude deployment (ADR-011), Log Analytics + Application Insights, and a
    monthly budget. Missing resources are created; existing ones are left alone.
-3. **API + ingestion WebJob** — publishes the API and `Saturdaze.Cli` (as a
-   scheduled WebJob under `App_Data/jobs/triggered/ingest`) into one zip and
-   deploys it.
+3. **API + WebJobs** — publishes the API and `Saturdaze.Cli` (as the scheduled
+   WebJobs `App_Data/jobs/triggered/ingest` and, for the Friday agent drafts,
+   `App_Data/jobs/triggered/draft`) into one zip and deploys it. The workflow
+   fails when the Web App does not list both.
 4. **Migrations** — `saturdaze migrate` from the runner, through a SQL firewall
    rule that exists only for the length of the job.
 5. **Static Web Apps** — the family app and Saturdaze Admin (ADR-014), with
@@ -445,6 +482,13 @@ domains), `Saturdaze:CuratedPhotos:PublicOrigin` and
 settings with `ANTHROPIC_FOUNDRY_API_KEY` read straight from the Foundry
 account. Change them in `eng/infra/main.bicep`, not in the portal. Tiers live
 in `eng/infra/main.bicepparam`.
+
+Agent planning (ADR-023) reaches Foundry with the Web App's managed identity,
+so no key is involved. It is behind two repository variables that default to
+`false`. `AGENT_PLANNING_GRANT_ROLE` grants the identity **Cognitive Services
+User** on the Foundry account, which needs a deploying principal that may write
+role assignments. `AGENT_PLANNING_ENABLED` turns the feature on. Set them once
+the grant is possible and the ASSERT run against the deployment has passed.
 
 ## Contributing
 

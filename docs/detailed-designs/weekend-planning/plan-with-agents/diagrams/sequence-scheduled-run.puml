@@ -1,0 +1,58 @@
+@startuml
+title UML sequence behaviour - Scheduled draft (Fridays 12:00 UTC)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "App Service scheduler" as cron
+box "Backend - Saturdaze API or CLI" #D1FADF
+ participant "DraftWeekendsCommand\nAgentDraftQueueProcessor" as host
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "WeekendDraftRunner" as runner
+ participant "WeekendDraftWorkflow" as wf
+ participant "AgentControlGate" as gate
+ participant "PlanValidator\nDraftAssembler" as val
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "ClaudeWebSearchClient\nAgentFrameworkRoleRunner" as model
+ database "AppDbContext" as db
+end box
+participant "Microsoft Foundry\n(Claude)" as foundry
+cron -> host : run.sh -> saturdaze draft-weekends
+host -> db : Families with Friday preview on (L2-203)
+db --> host : Family ids
+loop each family
+ host -> runner : QueueAsync(family, upcoming Saturday, Scheduled)
+ runner -> db : Insert AgentRun Queued
+ host -> runner : RunAsync(runId)
+ runner -> db : Count today's runs and month's spend under a lock (L2-207)
+ runner -> wf : DraftAsync(context, caps) within RunTimeoutSeconds
+ wf -> db : RegionResearch for cell + weekend?
+ alt no research in the last 6 days
+  wf -> model : Researcher prompt (cell centre and weekend only)
+  model -> foundry : POST /anthropic/v1/messages + web_search
+  foundry --> model : JSON rows + search results
+  wf -> gate : output: https URLs seen in the search results (L2-209)
+  wf -> db : Parse, theme-tag and upsert rows; save RegionResearch
+ end
+ wf -> gate : input: minimized profile, no names or address
+ wf -> model : Curator with PlanningToolset
+ model -> foundry : chat + tool calls (catalog, weather, daylight, drive)
+ model -> gate : pre_tool_call per call
+ foundry --> model : Shortlist JSON
+ wf -> gate : output: schema, catalog ids
+ loop round <= MaxCriticRounds + 1
+  wf -> model : Drafter (shortlist + last violations)
+  model -> foundry : chat
+  foundry --> model : Picks JSON
+  wf -> val : Assemble picks with WeekendPlanner, validate (L2-206)
+  val --> wf : Violations per pick
+ end
+ wf --> runner : Passing picks, shortlist, report, usage
+ runner -> db : Save WeekendDraft; apply to the weekend (locks stay); PlanSource=Agents
+ runner -> db : Close AgentRun Applied with tokens, cost, trace id
+end
+host --> cron : exit code 0
+@enduml

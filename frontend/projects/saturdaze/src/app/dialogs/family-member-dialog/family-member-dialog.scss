@@ -13,3 +13,14 @@
   flex-direction: column;
   gap: 6px;
 }
+
+.interests {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.interests__error {
+  margin: 0;
+  color: var(--colorStatusDangerForeground1);
+}

@@ -13,6 +13,7 @@ import {
   membersSummary,
 } from '../api/family-presentation';
 import { initialOf } from '../api/format';
+import { DEFAULT_PLANNING, planningRows } from '../api/planning-presentation';
 import { ChipView } from '../models/chip-view';
 import { CommitmentRow } from '../models/commitment-row';
 import { DayOfWeek } from '../models/day-of-week';
@@ -22,6 +23,7 @@ import { FamilyView } from '../models/family-view';
 import { MemberRow } from '../models/member-row';
 import { PlannedAroundRow } from '../models/planned-around-row';
 import { PreferenceToggle } from '../models/preference-toggle';
+import { PlanningSettings } from '../models/planning-settings';
 import {
   EditableFamilyProfile,
   FamilyInvite,
@@ -84,6 +86,7 @@ const LOADING_VIEW: FamilyView = {
     fridayPreviewEnabled: true,
   }),
   plannedAround: [],
+  planning: planningRows(DEFAULT_PLANNING),
 };
 
 /** "Port Credit. Every weekend is planned around this." */
@@ -102,13 +105,22 @@ function toMemberRow(m: FamilyDto['members'][number], index: number): MemberRow 
     access: m.access ?? 'None',
     email: m.email ?? null,
     subtitle: memberSubtitle(m),
+    interests: m.interests ?? [],
   };
 }
 
-function toCommitmentRow(c: FamilyDto['commitments'][number]): CommitmentRow {
+function toCommitmentRow(
+  c: FamilyDto['commitments'][number],
+  members: FamilyDto['members'],
+): CommitmentRow {
   const dayOfWeek = c.dayOfWeek as DayOfWeek;
   const startTime = c.startTime.substring(0, 5);
   const endTime = c.endTime.substring(0, 5);
+  const attendeeMemberIds = c.attendeeMemberIds ?? [];
+  const where = c.location?.address ?? null;
+  // "Mia · 5980 McLaughlin Rd": who goes, then the street (L2-197 AC4).
+  const who = members.filter((m) => attendeeMemberIds.includes(m.id)).map((m) => m.name);
+  const extra = [who.join(', '), where?.split(',')[0]?.trim() ?? ''].filter((s) => !!s);
   return {
     id: c.id,
     title: c.title,
@@ -116,8 +128,25 @@ function toCommitmentRow(c: FamilyDto['commitments'][number]): CommitmentRow {
     dayLabel: commitmentDayLabel(dayOfWeek),
     startTime,
     endTime,
-    subtitle: commitmentSubtitle({ dayOfWeek, startTime, endTime }),
+    subtitle: [commitmentSubtitle({ dayOfWeek, startTime, endTime }), ...extra].join(' · '),
     icon: 'lock',
+    attendeeMemberIds,
+    where,
+  };
+}
+
+/** The family's boundaries, the defaults filling anything an older API leaves out (L2-191). */
+function planningOf(dto: FamilyDto): PlanningSettings {
+  const d = DEFAULT_PLANNING;
+  return {
+    maxDriveMinutes: dto.maxDriveMinutes ?? d.maxDriveMinutes,
+    excludedThemes: dto.excludedThemes ?? d.excludedThemes,
+    quietSunday: dto.quietSunday ?? d.quietSunday,
+    dayStart: dto.dayStart?.substring(0, 5) ?? d.dayStart,
+    youngestBedtime: dto.youngestBedtime?.substring(0, 5) ?? null,
+    sundayDinnerAtHome: dto.sundayDinnerAtHome ?? d.sundayDinnerAtHome,
+    outingsPerDay: dto.outingsPerDay ?? d.outingsPerDay,
+    leaning: dto.leaning ?? d.leaning,
   };
 }
 
@@ -179,11 +208,12 @@ function mapFamily(dto: FamilyDto): FamilyView {
     isOwner: dto.isOwner ?? true,
     ownerEmail: dto.ownerEmail ?? null,
     members: sortedMembers.map(toMemberRow),
-    commitments: dto.commitments.map(toCommitmentRow),
+    commitments: dto.commitments.map((c) => toCommitmentRow(c, dto.members)),
     likes,
     dislikes,
     preferences: preferenceToggles(dto),
     plannedAround: plannedAround(dto, name, sortedMembers),
+    planning: planningRows(planningOf(dto)),
   };
 }
 
@@ -200,15 +230,33 @@ function mapEditable(dto: FamilyDto): EditableFamilyProfile {
     members: dto.members
       .slice()
       .sort((a, b) => b.age - a.age)
-      .map((m) => ({ id: m.id, name: m.name, age: m.age })),
+      .map((m) => ({ id: m.id, name: m.name, age: m.age, interests: m.interests ?? [] })),
     commitments: dto.commitments.map((c) => ({
       id: c.id,
       title: c.title,
       dayOfWeek: c.dayOfWeek as DayOfWeek,
       startTime: c.startTime.substring(0, 5),
       endTime: c.endTime.substring(0, 5),
+      attendeeMemberIds: c.attendeeMemberIds ?? [],
+      where: c.location?.address ?? null,
     })),
     preferences: dto.preferences.map((p) => ({ kind: p.kind, value: p.value })),
+    planning: planningOf(dto),
+  };
+}
+
+/** The boundaries as `PUT /api/family` takes them; a null bedtime clears it. */
+function planningPayload(s: PlanningSettings): Record<string, unknown> {
+  return {
+    maxDriveMinutes: s.maxDriveMinutes,
+    excludedThemes: [...s.excludedThemes],
+    quietSunday: s.quietSunday,
+    dayStart: normalizeTime(s.dayStart),
+    youngestBedtime: s.youngestBedtime ? normalizeTime(s.youngestBedtime) : null,
+    clearYoungestBedtime: s.youngestBedtime === null,
+    sundayDinnerAtHome: s.sundayDinnerAtHome,
+    outingsPerDay: s.outingsPerDay,
+    leaning: s.leaning,
   };
 }
 
@@ -285,6 +333,7 @@ export class FamilyService implements IFamilyService {
           id: m.id ?? null,
           name: m.name.trim(),
           age: m.age,
+          interests: m.interests,
         })),
         commitments: profile.commitments.map((c) => ({
           id: c.id ?? null,
@@ -292,8 +341,12 @@ export class FamilyService implements IFamilyService {
           dayOfWeek: c.dayOfWeek,
           startTime: normalizeTime(c.startTime),
           endTime: normalizeTime(c.endTime),
+          // Omitting these would clear them: a supplied commitment replaces the stored one.
+          attendeeMemberIds: c.attendeeMemberIds ?? [],
+          location: c.where?.trim() ? { address: c.where.trim() } : null,
         })),
         preferences: profile.preferences.map((p) => ({ kind: p.kind, value: p.value })),
+        ...planningPayload(profile.planning),
       }),
     );
     this.apply(dto);

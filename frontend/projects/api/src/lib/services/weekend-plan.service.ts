@@ -17,6 +17,10 @@ import { IdeaPlacementDto } from '../models/idea-placement.dto';
 import { IdeaPlacementView } from '../models/idea-placement-view';
 import { IdeaRequest } from '../models/idea-request';
 import { timeRange } from '../api/format';
+import { AgentDraftDto } from '../models/agent-draft.dto';
+
+/** How often an on-demand or scheduled draft is checked while it runs (L2-211). */
+export const DRAFT_POLL_MS = 3000;
 
 /**
  * Weekend Share Dto — `POST /api/weekends/{id}/share`.
@@ -39,6 +43,7 @@ export class WeekendPlanService implements IWeekendPlanService {
 
   private readonly _dto = signal<WeekendDto | null>(null);
   private readonly _loaded = signal(false);
+  private _poll: ReturnType<typeof setTimeout> | null = null;
 
   private readonly _view = computed<WeekendView>(() => {
     if (!this._loaded()) return projectWeekend(null, 'loading');
@@ -356,6 +361,59 @@ export class WeekendPlanService implements IWeekendPlanService {
     );
   }
 
+  async draftWithAgents(id?: string): Promise<string | null> {
+    const target = this.targetId(id);
+    try {
+      const draft = await firstValueFrom(
+        this.http.post<AgentDraftDto>(`${this.baseUrl}/api/weekends/${target}/drafts`, {}),
+      );
+      this.applyDraft(target, draft);
+      return null;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse && (err.status === 409 || err.status === 429)) {
+        return (
+          (err.error as { detail?: string } | null)?.detail ??
+          'The agents cannot draft this weekend right now.'
+        );
+      }
+      console.error('WeekendPlanService.draftWithAgents failed', err);
+      throw err;
+    }
+  }
+
+  /** Shows a run's state on the weekend and, while it runs, checks it again shortly. */
+  private applyDraft(weekendId: string, draft: AgentDraftDto): void {
+    const dto = this._dto();
+    if (dto?.id === weekendId) this._dto.set({ ...dto, agentDraft: draft });
+    this.watchDraft();
+  }
+
+  /** Polls the latest run while the loaded weekend's draft is queued or running; reloads when it ends. */
+  private watchDraft(): void {
+    const dto = this._dto();
+    const running = dto?.agentDraft?.status === 'Queued' || dto?.agentDraft?.status === 'Running';
+    if (!dto || !running || this._poll) return;
+    this._poll = setTimeout(() => void this.checkDraft(dto.id), DRAFT_POLL_MS);
+  }
+
+  private async checkDraft(weekendId: string): Promise<void> {
+    this._poll = null;
+    try {
+      const draft = await firstValueFrom(
+        this.http.get<AgentDraftDto>(`${this.baseUrl}/api/weekends/${weekendId}/drafts/latest`),
+      );
+      if (draft.status === 'Queued' || draft.status === 'Running') {
+        this.applyDraft(weekendId, draft);
+        return;
+      }
+      await this.loadCurrent();
+    } catch (err) {
+      // A failed check is retried on the next tick; the run is still going on the server.
+      console.error('WeekendPlanService.checkDraft failed', err);
+      this.watchDraft();
+    }
+  }
+
   /** The current weekend's id, loading it when nothing is cached yet. */
   private async currentId(): Promise<string> {
     if (!this._dto()) await this.loadCurrent();
@@ -382,6 +440,7 @@ export class WeekendPlanService implements IWeekendPlanService {
   private apply(dto: WeekendDto | null): void {
     this._dto.set(dto ? withApiOrigin(dto, this.baseUrl) : null);
     this._loaded.set(true);
+    this.watchDraft();
   }
 
   /**

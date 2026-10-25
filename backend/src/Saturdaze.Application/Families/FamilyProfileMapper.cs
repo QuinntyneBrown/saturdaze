@@ -27,14 +27,24 @@ internal static class FamilyProfileMapper
         family.Commitments
             .OrderBy(c => ((int)c.DayOfWeek + 1) % 7) // Sat=0, Sun=1, Mon=2, ...
             .ThenBy(c => c.StartTime)
-            .Select(c => new CommitmentDto(c.Id, c.Title, c.DayOfWeek, c.StartTime, c.EndTime))
+            .Select(c => new CommitmentDto(
+                c.Id, c.Title, c.DayOfWeek, c.StartTime, c.EndTime, c.AttendeeMemberIds.ToList(), LocationDto.From(c.Location)))
             .ToList(),
         family.Preferences
             .OrderBy(p => p.Kind).ThenBy(p => p.Value)
             .Select(p => new PreferenceDto(p.Id, p.Kind, p.Value))
             .ToList(),
         isOwner,
-        ownerEmail);
+        ownerEmail,
+        LocationDto.From(family.HomeCoordinates),
+        family.MaxDriveMinutes,
+        family.ExcludedThemes.ToList(),
+        family.QuietSunday,
+        family.DayStart,
+        family.YoungestBedtime,
+        family.SundayDinnerAtHome,
+        family.OutingsPerDay,
+        family.Leaning);
 
     private static FamilyMemberDto ToDto(
         FamilyMember member,
@@ -42,9 +52,9 @@ internal static class FamilyProfileMapper
         IReadOnlyDictionary<Guid, string> accounts)
     {
         if (member.UserId is { } userId && accounts.TryGetValue(userId, out var account))
-            return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Account, account);
+            return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Account, account, member.Interests.ToList());
         if (invited.TryGetValue(member.Id, out var email))
-            return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Invited, email);
-        return new FamilyMemberDto(member.Id, member.Name, member.Age);
+            return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Invited, email, member.Interests.ToList());
+        return new FamilyMemberDto(member.Id, member.Name, member.Age, Interests: member.Interests.ToList());
     }
 }
