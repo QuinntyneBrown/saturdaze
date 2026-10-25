@@ -146,6 +146,39 @@ public class FamilyInviteEmailTests : IClassFixture<SaturdazeApiFactory>
         (await InvitesTo(email)).Should().BeEmpty();
     }
 
+    [Fact]
+    public async Task An_unreachable_mail_server_does_not_lose_the_invite_or_its_link()
+    {
+        // Traces to: L2-183 #5, L2-142 #5
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var email = NewEmail("mail-down");
+        string token;
+        _factory.Mail.Fail = true;
+        try
+        {
+            var invite = await Invite(owner, "Sara", email);
+            token = invite.GetProperty("token").GetString()!;
+            invite.GetProperty("url").GetString().Should().EndWith($"/accept-invite?token={Uri.EscapeDataString(token)}");
+
+            var deadline = DateTime.UtcNow.AddSeconds(5);
+            while (DateTime.UtcNow < deadline && !_factory.Logs.Messages.Any(m => m.Contains("Email delivery failed") && m.Contains(owner.Email)))
+                await Task.Delay(25);
+
+            var logs = _factory.Logs.Messages;
+            logs.Should().Contain(m => m.Contains("Email delivery failed") && m.Contains(owner.Email));
+            logs.Should().NotContain(m => m.Contains(token) || m.Contains(Uri.EscapeDataString(token)));
+            logs.Should().NotContain(m => m.Contains(email));
+        }
+        finally
+        {
+            _factory.Mail.Fail = false;
+        }
+
+        var accept = await _factory.CreateClient().PostAsJsonAsync("/api/auth/accept-invitation",
+            new { Token = token, Password = SignedInClient.Password });
+        accept.StatusCode.Should().Be(HttpStatusCode.Created, await accept.Content.ReadAsStringAsync());
+    }
+
     /// <summary>Family invites that reached an address, after giving a stray one time to arrive.</summary>
     private async Task<IReadOnlyList<Saturdaze.Application.Email.EmailMessage>> InvitesTo(string address)
     {
