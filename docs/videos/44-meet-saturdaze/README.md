@@ -1,12 +1,12 @@
 # 44 · Meet Saturdaze
 
-> **Runtime:** ~1.3 min · **Audience:** families hearing about Saturdaze · **Where it plays:** the marketing site, www.saturdaze.ca (ADR-018, L2-150 AC7)
+> **Runtime:** ~1.3 min (1:20) · **Audience:** families hearing about Saturdaze · **Where it plays:** the marketing site, www.saturdaze.ca (ADR-018, L2-150 AC7)
 
 **Video:** [44-meet-saturdaze.mp4](44-meet-saturdaze.mp4) · [Slides](slides.html) · **Audio:** [44-meet-saturdaze.mp3](44-meet-saturdaze.mp3) · [Transcript](script.md) · [Clips](clips/clips.mjs)
 
 ## Why this video exists
 
-The brand video on the marketing site: what Saturdaze does for a family's weekend in about a minute, recorded from the real app and narrated with the same voice as Shelfie's brand video, Azure Speech `en-US-JennyNeural`, `cheerful` style, rate `-5%`.
+The brand video on the marketing site: what Saturdaze does for a family's weekend in about a minute, recorded from the real app and narrated with the same voice as Shelfie's brand video, Azure Speech `en-US-JennyNeural`, `cheerful` style, rate `-5%`, over the same background music at the same level ("On the Beach Intro Outro", see [Background music](../README.md#background-music)).
 
 ## Outline
 
@@ -16,7 +16,7 @@ The brand video on the marketing site: what Saturdaze does for a family's weeken
 4. **Ideas**: activities, food and events close to home, each with its drive time (clip `ideas`).
 5. **Make it yours**: swap a stop, lock a day (clip `make-it-yours`).
 6. **Share and look back**: the Share button, then rated past weekends (clip `share-and-past`).
-7. **Outro**: free during the beta at www.saturdaze.ca.
+7. **Outro**: free during the beta at www.saturdaze.ca, then the outro slide held for 3 s of music only.
 
 ## Run sheet
 
@@ -29,6 +29,7 @@ The brand video on the marketing site: what Saturdaze does for a family's weeken
 | 00:47-00:56 | Make it yours |
 | 00:56-01:06 | Share and look back |
 | 01:07-01:17 | Outro |
+| 01:17-01:20 | Music only, outro slide held, fade-out |
 
 ## Rebuild it
 
@@ -39,8 +40,8 @@ node tools/video-audio/generate-audio.mjs docs/videos/44-meet-saturdaze --dry-ru
 node tools/video-record/record-clips.mjs docs/videos/44-meet-saturdaze
 export AZURE_SPEECH_REGION=canadacentral AZURE_SPEECH_KEY=$(az cognitiveservices account keys list -n shelfie-speech -g shelfie-prod --query key1 -o tsv)
 node tools/video-audio/generate-audio.mjs docs/videos/44-meet-saturdaze --engine azure
-node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze --check
-node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze
+node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze --music docs/videos/assets/music/on-the-beach-intro-outro.mp3 --check
+node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze --music docs/videos/assets/music/on-the-beach-intro-outro.mp3
 cp docs/videos/44-meet-saturdaze/44-meet-saturdaze.mp4 marketing/assets/video/meet-saturdaze.mp4
 ffmpeg -y -ss 4 -i marketing/assets/video/meet-saturdaze.mp4 -frames:v 1 -q:v 3 marketing/assets/video/meet-saturdaze.jpg
 cp marketing/assets/video/meet-saturdaze.jpg docs/mocks/images/marketing/meet-saturdaze.jpg

@@ -9,10 +9,16 @@
 // MP4 overlaid on its .clip box for the slide's time: held on its last frame when the narration
 // runs longer, sped up evenly when it runs shorter. data-clip-delay="s" holds the first frame.
 //
+// --music <file> (opt-in, e.g. the brand video) mixes a track under the narration the way
+// Shelfie's brand video does: narration brought to MUSIC_VOICE_LUFS, the track looped
+// MUSIC_GAIN dB below its own level with no ducking,
+// faded in and out, and the last slide held MUSIC_TAIL seconds so the music plays out alone.
+// Without it the audio is the narration MP3 as before.
+//
 // Needs the manifest written by tools/video-audio (run it first), Chrome/Chromium (EDGE_PATH
 // or CHROME_PATH override; Playwright's bundled Chromium is found automatically) and ffmpeg
 // with libx264 and libass (FFMPEG_PATH override).
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -31,6 +37,12 @@ const ffprobe = process.env.FFPROBE_PATH ?? "ffprobe";
 const MAX_CLIP_RATE = 1.6;
 const MIN_SLIDE = 4;
 const MAX_SLIDE = 90;
+// Measured from Shelfie's meet-shelfie.mp4 (see docs/videos/README.md, "Background music").
+const MUSIC_GAIN = -11.43;
+const MUSIC_FADE_IN = 1.5;
+const MUSIC_FADE_OUT = 2;
+const MUSIC_TAIL = 3;
+const MUSIC_VOICE_LUFS = -18.3; // Shelfie's narration loudness, so the mix lands at its -18.6
 
 function findBrowser() {
   const override = process.env.EDGE_PATH ?? process.env.CHROME_PATH;
@@ -301,9 +313,23 @@ function renderSlides(slidesFile, slides, outDir) {
   process.stdout.write("\n");
 }
 
+/** EBU R128 integrated loudness of a file, in LUFS. */
+function integratedLoudness(file) {
+  const r = spawnSync(
+    ffmpeg,
+    ["-hide_banner", "-i", file, "-af", "ebur128", "-f", "null", "-"],
+    { encoding: "utf8" },
+  );
+  const m = r.stderr.match(/Integrated loudness:\s+I:\s+(-?[\d.]+) LUFS/);
+  if (!m) throw new Error(`could not measure the loudness of ${file}`);
+  return Number(m[1]);
+}
+
 function main() {
   const args = process.argv.slice(2);
-  const folder = resolve(args.find((a) => !a.startsWith("--")) ?? "");
+  const folder = resolve(
+    args.find((a, i) => !a.startsWith("--") && args[i - 1] !== "--music") ?? "",
+  );
   const name = basename(folder);
   const cache = join(repo, ".cache", name);
   const manifestFile = join(cache, "manifest.json");
@@ -315,9 +341,15 @@ function main() {
 
   const errors = resolveCues(slides, manifest);
   if (errors.length) throw new Error(errors.join("\n"));
+  const musicArg = args[args.indexOf("--music") + 1];
+  const music = args.includes("--music") ? resolve(musicArg ?? "") : null;
+  if (music && (!musicArg || !existsSync(music)))
+    throw new Error(`--music: ${musicArg ?? "(no file)"} not found`);
+  const duration = manifest.duration + (music ? MUSIC_TAIL : 0);
+  slides.at(-1).end = duration;
   const warnings = [];
   console.log(
-    `${manifest.title} — ${slides.length} slides, ${mmss(manifest.duration)}`,
+    `${manifest.title} — ${slides.length} slides, ${mmss(duration)}${music ? ` (${MUSIC_TAIL} s music-only tail)` : ""}`,
   );
   for (const s of slides) {
     const d = s.end - s.start;
@@ -444,6 +476,19 @@ function main() {
   });
   // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
   graph.push(`[${last}]ass=${basename(ass)},format=yuv420p[out]`);
+  // The music loops from the start at a fixed gain (no ducking) and ends with the video; the
+  // narration is padded with silence to the same length, so the tail is music alone.
+  if (music) {
+    const m = clips.length + 2;
+    const end = duration.toFixed(3);
+    const voiceGain = MUSIC_VOICE_LUFS - integratedLoudness(mp3);
+    graph.push(
+      `[1:a]aresample=48000,aformat=channel_layouts=stereo,volume=${voiceGain.toFixed(2)}dB,apad=whole_dur=${end}[voice]`,
+      `[${m}:a]aresample=48000,aformat=channel_layouts=stereo,volume=${MUSIC_GAIN}dB,atrim=0:${end},` +
+        `afade=t=in:d=${MUSIC_FADE_IN},afade=t=out:st=${(duration - MUSIC_FADE_OUT).toFixed(3)}:d=${MUSIC_FADE_OUT}[music]`,
+      `[voice][music]amix=inputs=2:duration=first:normalize=0[mix]`,
+    );
+  }
   execFileSync(
     ffmpeg,
     [
@@ -455,12 +500,13 @@ function main() {
       "-i",
       mp3,
       ...clips.flatMap((s) => ["-i", s.clipFile]),
+      ...(music ? ["-stream_loop", "-1", "-i", music] : []),
       "-filter_complex",
       graph.join(";"),
       "-map",
       "[out]",
       "-map",
-      "1:a",
+      music ? "[mix]" : "1:a",
       "-c:v",
       "libx264",
       "-preset",
@@ -471,7 +517,7 @@ function main() {
       "-c:a",
       "aac",
       "-b:a",
-      "96k",
+      music ? "128k" : "96k",
       "-movflags",
       "+faststart",
       "-shortest",

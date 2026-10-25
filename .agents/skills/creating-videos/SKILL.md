@@ -32,7 +32,7 @@ Before writing, read any existing video in the repo (tone, length, structure) an
 8. **Build the video** (needs Chrome/Edge - `EDGE_PATH` overrides - and ffmpeg with libx264 - `FFMPEG_PATH` overrides):
    - `--check`: every `data-cue` is found; prints the schedule.
    - `--slides-only`: renders PNGs to `.cache/<folder>/`. View them before encoding; overflowing code, clipped tables and unreadable text are the common failures.
-   - full build: encodes the 1920x1080 MP4 with burned-in captions.
+   - full build: encodes the 1920x1080 MP4 with burned-in captions. `--music <file>` (opt-in; the brand video only) mixes a background track under the narration with a 3 s music-only tail; see "Background music" in `docs/videos/README.md`.
 9. **Verify:** `ffprobe -v error -show_entries format=duration:stream=codec_name,width,height <mp4>` gives 1920x1080, h264 + audio, duration about equal to the MP3. Spot-check frames at cue times with `ffmpeg -ss <t> -i <mp4> -frames:v 1 <scratch>.png`.
 10. **Register** the video in the folder's index README, if one exists.
 11. **Commit** only the text files and media; no secrets, no `.cache/`.
