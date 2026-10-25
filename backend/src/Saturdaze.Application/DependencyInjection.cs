@@ -49,6 +49,7 @@ public static class DependencyInjection
         services.AddScoped<AgentPlanning.WeekendFactory>();
         services.AddScoped<AgentPlanning.DraftApplier>();
         services.AddScoped<AgentPlanning.WeekendDraftRunner>();
+        services.AddScoped<AgentPlanning.ScheduledDrafts>();
         services.AddScoped<IPlacePhotoReader, PlacePhotoReader>();
         services.AddScoped<Ideas.IdeaResolver>();
         services.AddScoped<Covers.WeekendEnrichment>();
