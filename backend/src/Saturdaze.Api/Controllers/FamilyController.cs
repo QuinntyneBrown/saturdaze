@@ -25,8 +25,8 @@ public sealed class FamilyController : ControllerBase
 
     /// <summary>
     /// The owner adds a member who will not sign in (L2-125), or invites them
-    /// to sign in when an email is given (L2-126). The invite link is returned
-    /// to the owner, who shares it (ADR-016).
+    /// to sign in when an email is given (L2-126). The invitee is emailed the
+    /// link (L2-183); it is also returned once to the owner as the fallback (ADR-016).
     /// </summary>
     [HttpPost("members")]
     public async Task<ActionResult<AddFamilyMemberResultDto>> AddMember(
