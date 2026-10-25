@@ -1,0 +1,36 @@
+@startuml
+title UML sequence behaviour - Save a commitment with a place and plan the drive
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "CommitmentDialog" as dlg
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "FamilyController\nWeekendsController" as ctrl
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "SaveFamilyProfileCommandHandler" as save
+ participant "WeekendPlanner" as planner
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "IGeocoder" as geo
+ database "AppDbContext" as db
+end box
+actor -> dlg : Who goes: Mia; Where: 5980 McLaughlin Rd
+dlg -> ctrl : PUT /api/family { commitments: [ { attendeeMemberIds, location } ] }
+ctrl -> save : SaveFamilyProfileCommand
+save -> save : Overlaps only with disjoint attendees and enough adults (L2-192)
+save -> geo : Geocode the place (L2-190 budget)
+geo --> save : coordinates
+save -> db : Save commitments
+ctrl --> dlg : 200 FamilyProfileDto
+== later ==
+ctrl -> planner : Plan(inputs)
+planner -> planner : Merge overlapping commitments into one fixed span
+planner -> planner : Drive to {title} before, drive home after; share drives under 30 min apart (L2-193)
+planner --> ctrl : Blocks
+@enduml

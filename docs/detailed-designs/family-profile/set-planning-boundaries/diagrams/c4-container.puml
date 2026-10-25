@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Set planning boundaries
+
+Person(family, "Family member", "Sets max drive, what the family celebrates, day shape and interests")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Family page: How you plan, D35-D37, member dialog")
+  Container(api, "Saturdaze API", "ASP.NET Core", "PUT /api/family; filters everywhere places surface")
+  ContainerDb(db, "Saturdaze database", "Azure SQL", "Families, members, catalog themes")
+}
+System_Ext(geo, "Geocoder", "OpenStreetMap Nominatim")
+Rel(family, web, "Uses", "HTTPS")
+Rel(web, api, "Saves the profile", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, geo, "Geocodes the home on save", "HTTPS, 5 s budget")
+@enduml

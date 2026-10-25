@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Plan a weekend with agents
+
+Person(family, "Family member", "Drafts a weekend")
+Person(admin, "Administrator", "Reviews runs")
+System_Boundary(saturdaze, "Saturdaze") {
+  Container(web, "Saturdaze web application", "Angular", "Weekend page: Draft with agents, drafting state, reasons, fallback notice")
+  Container(adminApp, "Saturdaze Admin", "Angular", "Agent runs page")
+  Container(api, "Saturdaze API", "ASP.NET Core", "Queues on-demand drafts and runs them in AgentDraftQueueProcessor")
+  Container(job, "draft WebJob", "saturdaze draft-weekends", "Fridays 12:00 UTC on the same B1 plan")
+  ContainerDb(db, "Saturdaze database", "Azure SQL", "AgentRuns, WeekendDrafts, RegionResearch, catalog, weekends")
+}
+System_Ext(foundry, "Microsoft Foundry", "Claude")
+System_Ext(insights, "Application Insights", "Traces")
+
+Rel(family, web, "Uses", "HTTPS")
+Rel(admin, adminApp, "Uses", "HTTPS")
+Rel(web, api, "POST /api/weekends/{id}/drafts, GET .../drafts/latest", "JSON/HTTPS")
+Rel(adminApp, api, "GET /api/admin/agent-runs", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(job, db, "Reads and writes", "EF Core")
+Rel(api, foundry, "Model calls", "Managed identity")
+Rel(job, foundry, "Model calls", "Managed identity")
+Rel(api, insights, "Spans", "OTLP / Azure Monitor exporter")
+Rel(job, insights, "Spans", "Azure Monitor exporter")
+@enduml

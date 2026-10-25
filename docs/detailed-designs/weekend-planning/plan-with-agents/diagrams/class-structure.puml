@@ -1,0 +1,169 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Plan a weekend with agents
+
+enum AgentRunStatus {
+  Queued
+  Running
+  Applied
+  FellBack
+}
+enum AgentRunTrigger {
+  Scheduled
+  OnDemand
+}
+enum AgentFallbackReason {
+  Disabled
+  Error
+  Timeout
+  Budget
+  Policy
+  Invalid
+}
+enum AgentRole {
+  Researcher
+  Curator
+  Drafter
+}
+enum PlanSource {
+  Planner
+  Agents
+}
+class AgentRun {
+  +Guid Id
+  +Guid FamilyId
+  +DateOnly WeekendOf
+  +AgentRunTrigger Trigger
+  +AgentRunStatus Status
+  +AgentFallbackReason? FallbackReason
+  +string? Error
+  +DateTimeOffset QueuedUtc
+  +DateTimeOffset? StartedUtc
+  +DateTimeOffset? FinishedUtc
+  +int Rounds
+  +int ModelCalls
+  +int ToolCalls
+  +int WebSearches
+  +int InputTokens
+  +int OutputTokens
+  +decimal CostUsd
+  +string? PolicyViolations
+  +string? TraceId
+}
+class WeekendDraft {
+  +Guid Id
+  +Guid AgentRunId
+  +Guid FamilyId
+  +DateOnly WeekendOf
+  +string ShortlistJson
+  +string PicksJson
+  +string ValidatorReport
+  +bool Applied
+  +DateTimeOffset CreatedUtc
+}
+class RegionResearch {
+  +Guid Id
+  +string CellKey
+  +DateOnly WeekendOf
+  +Guid AgentRunId
+  +DateTimeOffset CompletedUtc
+  +int ItemsUpserted
+}
+class Weekend {
+  +PlanSource PlanSource
+}
+class WeekendDraftRunner {
+  +QueueAsync(familyId, weekendOf, trigger): AgentRun
+  +RunAsync(runId): AgentRun
+}
+class WeekendDraftWorkflow {
+  +DraftAsync(context, budget): DraftOutcome
+}
+interface IAgentRoleRunner {
+  +RunAsync(request: AgentRoleRequest): AgentRoleResult
+}
+class AgentRoleRequest {
+  +AgentRole Role
+  +string Model
+  +string Instructions
+  +string Input
+  +IReadOnlyList<AgentTool> Tools
+  +int MaxModelCalls
+}
+class AgentRoleResult {
+  +string Text
+  +int ModelCalls
+  +int InputTokens
+  +int OutputTokens
+}
+class AgentTool {
+  +string Name
+  +string Description
+  +JsonElement Schema
+  +InvokeAsync(arguments): string
+}
+class AgentControlGate {
+  +CheckInput(role, prompt): Verdict
+  +CheckToolCall(role, name, args): Verdict
+  +CheckOutput(role, json): Verdict
+}
+class PlanValidator {
+  +Validate(plan, picks, context): ValidationReport
+}
+class DraftAssembler {
+  +Assemble(inputs, picks): IReadOnlyList<ItineraryBlock>
+}
+class DraftPick {
+  +DayOfWeekend Day
+  +PickKind Kind
+  +Guid Id
+  +TimeOnly? Start
+  +string Reason
+}
+class AgentFrameworkRoleRunner
+class AgentPlanningOptions {
+  +bool Enabled
+  +AgentAuth Auth
+  +string ResearcherModel
+  +string CuratorModel
+  +string DrafterModel
+  +int MaxCriticRounds
+  +int RunTimeoutSeconds
+  +int MaxModelCallsPerRun
+  +int MaxToolCallsPerRun
+  +int MaxWebSearchesPerRun
+  +int MaxTokensPerRun
+  +int MaxRunsPerDay
+  +int MaxOnDemandRunsPerWeekend
+  +decimal MonthlySpendCapUsd
+}
+
+AgentRun --> AgentRunStatus
+AgentRun --> AgentRunTrigger
+AgentRun --> AgentFallbackReason
+WeekendDraft --> AgentRun : produced by
+RegionResearch --> AgentRun : produced by
+Weekend --> PlanSource
+WeekendDraftRunner ..> WeekendDraftWorkflow
+WeekendDraftRunner ..> AgentPlanningOptions
+WeekendDraftRunner ..> WeekendDraft : stores and applies
+WeekendDraftWorkflow ..> IAgentRoleRunner
+WeekendDraftWorkflow ..> AgentControlGate
+WeekendDraftWorkflow ..> DraftAssembler
+WeekendDraftWorkflow ..> PlanValidator
+WeekendDraftWorkflow ..> DraftPick
+IAgentRoleRunner ..> AgentRoleRequest
+IAgentRoleRunner ..> AgentRoleResult
+AgentRoleRequest *-- AgentTool
+AgentRoleRequest --> AgentRole
+AgentFrameworkRoleRunner ..|> IAgentRoleRunner
+@enduml

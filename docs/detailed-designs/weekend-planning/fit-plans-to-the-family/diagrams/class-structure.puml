@@ -1,0 +1,84 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Fit plans to the family
+
+class PlannerInputs {
+  +IReadOnlyList<Commitment> Commitments
+  +IReadOnlyList<PlannerCandidate> Candidates
+  +PlannerProfile Profile
+  +GeoLocation Home
+  +IReadOnlyDictionary<DayOfWeekend,TimeOnly> Sunsets
+  +IReadOnlyList<DraftPick> Picks
+}
+class PlannerProfile {
+  +TimeOnly DayStart
+  +TimeOnly? YoungestBedtime
+  +int OutingsPerDay
+  +bool QuietSunday
+  +bool SundayDinnerAtHome
+  +PlanLeaning Leaning
+  +int MaxDriveMinutes
+  +IReadOnlySet<string> ExcludedThemes
+  +DayEnd(day): TimeOnly
+  +Outings(day): int
+}
+class PlannerCandidate {
+  +CandidateKind Kind
+  +Guid Id
+  +string Name
+  +bool? Indoor
+  +int DriveMinutes
+  +int DurationMinutes
+  +TimeOnly? OpensAt
+  +TimeOnly? ClosesAt
+  +int? SeasonStartMonth
+  +int? SeasonEndMonth
+  +DateOnly? StartsOn
+  +DateOnly? EndsOn
+  +TimeOnly? StartTime
+  +TimeOnly? EndTime
+  +IReadOnlyList<string> Themes
+  +GeoLocation? Geo
+}
+class CandidateFilter {
+  +IsEligible(candidate, profile, members, dislikes, date): bool
+}
+class WeekendPlanner {
+  +Plan(inputs): IReadOnlyList<ItineraryBlock>
+  +PlanWithPicks(inputs, picks): IReadOnlyList<ItineraryBlock>
+  -ReserveMeals(day)
+  -FillOutings(day, picked)
+  -CommitmentDrives(day)
+}
+class SunCalculator {
+  +Sunset(home, date, zone): TimeOnly
+}
+class FamilyDriveTime {
+  +Minutes(home, place, fallback): int
+}
+enum CandidateKind {
+  Activity
+  Event
+}
+enum PlanLeaning {
+  Either
+  Indoor
+  Outdoor
+}
+PlannerInputs *-- PlannerProfile
+PlannerInputs *-- PlannerCandidate
+PlannerCandidate --> CandidateKind
+PlannerProfile --> PlanLeaning
+WeekendPlanner ..> PlannerInputs
+WeekendPlanner ..> CandidateFilter
+CandidateFilter ..> PlannerProfile
+@enduml

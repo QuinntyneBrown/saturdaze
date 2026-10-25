@@ -1,0 +1,35 @@
+@startuml
+title UML sequence behaviour - Save planning settings
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family member" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage\nD35 / D36 / D37" as page
+ participant "FamilyService" as svc
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "FamilyController" as ctrl
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "SaveFamilyProfileCommandHandler" as handler
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "NominatimGeocoder" as geo
+ database "AppDbContext" as db
+end box
+actor -> page : Choose a row, change it, Save
+page -> svc : save({ maxDriveMinutes } | { excludedThemes, quietSunday } | { dayStart, ... })
+svc -> ctrl : PUT /api/family
+ctrl -> handler : SaveFamilyProfileCommand (validated: L2-191, L2-194, L2-195)
+alt home location changed and no coordinates supplied
+ handler -> geo : GeocodeAsync(address) within 5 s (L2-190)
+ geo --> handler : coordinates or null
+end
+handler -> db : Save family
+handler --> ctrl : FamilyProfileDto
+ctrl --> svc : 200 or 400 with field errors
+svc --> page : Row shows the saved value; dialog closes
+@enduml

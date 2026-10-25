@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Describe commitment attendees and places
+
+Container_Boundary(web, "Saturdaze web application") {
+  Component(dialog, "CommitmentDialog (D18)", "Angular", "Who goes, Where")
+}
+Container_Boundary(api, "Saturdaze API") {
+  Component(ctrl, "FamilyController", "ASP.NET Core", "PUT /api/family")
+}
+Container_Boundary(app, "Saturdaze Application") {
+  Component(validator, "SaveFamilyProfileCommandValidator", "FluentValidation", "Overlap allowed when attendees split and an adult takes each")
+  Component(handler, "SaveFamilyProfileCommandHandler", "MediatR", "Attendees in the family; geocodes the place")
+  Component(planner, "WeekendPlanner", "Domain service", "Merged spans; drives to and from the place")
+}
+Rel(dialog, ctrl, "Saves commitments", "JSON/HTTPS")
+Rel(ctrl, validator, "Validates")
+Rel(ctrl, handler, "Sends")
+Rel(planner, handler, "Reads the saved commitments at plan time")
+@enduml

@@ -1,0 +1,51 @@
+@startuml
+title UML sequence behaviour - Fallback to the planner
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Trigger" as trig
+box "Backend - Saturdaze API or CLI" #D1FADF
+ participant "DraftWeekendsCommand\nAgentDraftQueueProcessor" as host
+end box
+box "Backend - Saturdaze Application and Domain" #ECFDF3
+ participant "WeekendDraftRunner" as runner
+ participant "WeekendDraftWorkflow" as wf
+ participant "AgentControlGate" as gate
+ participant "PlanValidator\nDraftAssembler" as val
+end box
+box "Backend - Saturdaze Infrastructure" #FFF4E5
+ participant "ClaudeWebSearchClient\nAgentFrameworkRoleRunner" as model
+ database "AppDbContext" as db
+end box
+participant "Microsoft Foundry\n(Claude)" as foundry
+trig -> runner : RunAsync(runId)
+alt AgentPlanning:Enabled = false
+ runner -> db : Close run FellBack Disabled (no model call)
+else daily or monthly cap reached (L2-207)
+ runner -> db : Close run FellBack Budget (no model call)
+else
+ runner -> wf : DraftAsync within RunTimeoutSeconds
+ alt model or tool error
+  model -> foundry : request
+  foundry --> model : 429 / 5xx / timeout after retries
+  wf --> runner : AgentRoleException
+  runner -> db : FellBack Error
+ else run exceeds RunTimeoutSeconds
+  runner -> runner : cancel the workflow
+  runner -> db : FellBack Timeout
+ else gate denies input or output
+  gate --> wf : deny
+  runner -> db : FellBack Policy, violations recorded
+ else no pick passes after the last round
+  val --> wf : every pick violates a hard rule
+  runner -> db : FellBack Invalid
+ end
+end
+opt the weekend does not exist (scheduled)
+ runner -> val : WeekendPlanner.Plan (today's planner)
+ runner -> db : Save weekend PlanSource=Planner
+end
+runner -> db : The weekend's blocks are unchanged; agentDraft.notice per reason (L2-205)
+@enduml
