@@ -74,7 +74,7 @@ Constraints:
    - **Suite.** `evals/assert/` pins ASSERT 0.3.0 by commit and holds one `eval_config.yaml` per behaviour B1–B7 (L2-212), each with a "Permissible boundary" paragraph and a sample size.
    - **Target.** The target is a Python callable that drives the real workflow through the e2e API (`eng/Start-E2eApi.ps1`) with the real Foundry deployment. The judge and tester use Foundry Claude through LiteLLM (`azure_ai/claude-sonnet-5`).
    - **No key.** Without a key, every behaviour prints a skip message and exits 0.
-   - **CI.** `ci.yml` runs `responsibleai/assert-ai-action@v1.0.4` (pinned by SHA, `assert-ai-version: 0.3.0`) only when the Foundry secret is present and the pull request is not from a fork. `check_boundaries.py` then enforces the absolute boundaries the action's regression gate does not.
+   - **CI.** `.github/workflows/assert.yml` runs `evals/assert/run_evals.py` on pull requests that touch agent code or the suite, and on demand, only when the Foundry secret is present and the pull request is not from a fork. `check_boundaries.py` enforces the absolute boundaries. `responsibleai/assert-ai-action` (v1.0.4, `4e22663a…`) was the first plan. It is not used, because the target needs a per-behaviour environment and B7 needs the API restarted with failing tools, which a single action invocation cannot do.
    - **Deferred.** Foundry evaluators, User Simulation, multi-turn evaluation, intelligent sampling, traces-to-dataset, Agent Optimizer, ROI for agents and Purview runtime DLP are follow-ups.
 10. **Cost model and circuit-breakers (L2-207).**
     - **Per-run caps.** 12 model calls, 40 tool calls, 5 web searches, 250,000 tokens, 300 seconds.

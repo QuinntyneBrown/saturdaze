@@ -111,7 +111,7 @@ The API and the CLI call `AddAgentTelemetry(configuration)`. It registers `OpenT
 
 ### Runtime controls (ACS)
 
-`evals/assert/acs/manifest.yaml` (`agent_control_specification_version: 0.4.0-beta.1`) with Rego policies under `evals/assert/acs/policy/` is the policy source. `AgentControlGate` enforces the same rules in process, fail-closed:
+`evals/assert/acs/manifest.yaml` (`agent_control_specification_version: "0.3.0-alpha"`, the format of the pinned ASSERT's ACS examples) with Rego policies under `evals/assert/acs/policy/` is the policy source. `AgentControlGate` enforces the same rules in process, fail-closed:
 
 | ACS intervention point | Policy | `AgentControlGate` method | Verdict on failure |
 |---|---|---|---|
@@ -126,13 +126,13 @@ The API and the CLI call `AddAgentTelemetry(configuration)`. It registers `OpenT
 
 `evals/assert/` holds `requirements.txt` (pins `assert-ai` from the v0.3.0 commit), `.env.example`, `saturdaze_target.py`, `personas.py`, `run_evals.py`, `check_boundaries.py`, `behaviors/b1-…/eval_config.yaml` to `behaviors/b7-…/eval_config.yaml`, and `acs/`.
 - **Target.** `saturdaze_target.chat(message)` reads the scenario tags in the tester's message (`[variant: …] [weekend: …]`). It signs up a fresh persona on the e2e API, saves the variant's profile, posts a draft, polls it, and returns the plan as text with each block's facts (drive minutes, themes, hours, event times, sunset, reason, source URL) and `events` for the tool calls in the run.
-- **Runner.** `run_evals.py` skips every behaviour with the L2-212 message when `ANTHROPIC_FOUNDRY_API_KEY` is unset. Otherwise it runs `assert-ai run --config` per behaviour and then `check_boundaries.py`.
+- **Runner.** `run_evals.py` skips every behaviour with the L2-212 message when `ANTHROPIC_FOUNDRY_API_KEY` is unset. Otherwise it restarts the e2e API with agents on, runs `assert-ai run --config` per behaviour, restarts the API with an unreachable Foundry resource for B7, and then runs `check_boundaries.py`.
 
 ### Hosting, Bicep and CI
 
 - `backend/deploy/webjobs/draft/` (`run.sh`, `settings.job`, `README.md`) mirrors `ingest`. `deploy.yml` publishes the CLI into it and ships it as `App_Data/jobs/triggered/draft/`. The `webjob` job checks that both jobs are listed.
-- `eng/infra/main.bicep` adds the `Saturdaze__AgentPlanning__*` settings (`Enabled=true`, `Auth=ManagedIdentity`, `FoundryResource`, the models). It also adds a `Microsoft.Authorization/roleAssignments` resource that grants the Web App's principal **Cognitive Services User** (`a97b65f3-24c7-4388-baec-2e87135dc908`) on the Foundry account.
-- `ci.yml` adds an `assert` job gated on the secret and the pull request's origin, using `responsibleai/assert-ai-action` pinned to `4e22663a2b47db41712a01fb70cd66534410662e` with `assert-ai-version: 0.3.0`.
+- `eng/infra/main.bicep` adds the `Saturdaze__AgentPlanning__*` settings (`Enabled` from `AGENT_PLANNING_ENABLED`, `Auth=ManagedIdentity`, `FoundryResource`, the models, the caps). When `AGENT_PLANNING_GRANT_ROLE` is true it also adds a `Microsoft.Authorization/roleAssignments` resource that grants the Web App's principal **Cognitive Services User** (`a97b65f3-24c7-4388-baec-2e87135dc908`) on the Foundry account. Both repository variables default to false, so a merge neither fails `infra` nor turns on agents that cannot authenticate.
+- `.github/workflows/assert.yml` runs `run_evals.py` on pull requests that touch `AgentPlanning/**` or `evals/assert/**`, and on demand. It is gated on the secret and the pull request's origin, and is skipped, not failed, without them.
 
 ## Requirements
 

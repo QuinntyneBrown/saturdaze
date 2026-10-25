@@ -1,0 +1,3 @@
+# ASSERT 0.3.0, pinned by commit (ADR-023). Python 3.11 or later.
+assert-ai @ git+https://github.com/responsibleai/ASSERT@04b713fe73879208369750b3bd5ad53544f3eecc
+pyyaml>=6.0

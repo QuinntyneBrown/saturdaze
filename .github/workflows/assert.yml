@@ -1,0 +1,88 @@
+# ASSERT evaluation of agent-drafted weekends (L2-212, ADR-023).
+#
+# Runs evals/assert/run_evals.py against the real Foundry deployment: it starts
+# the e2e API (eng/Start-E2eApi.ps1) with agent planning on, runs one ASSERT
+# config per behaviour B1–B7, restarts the API with an unreachable Foundry
+# resource for B7, and gates on check_boundaries.py. Each case is a real draft
+# (about US$0.20 and one to three minutes), so it runs only when agent code or
+# the suite changes, or on demand.
+#
+# Without the ANTHROPIC_FOUNDRY_API_KEY secret, and on pull requests from forks
+# (which never receive secrets), the job is skipped, not failed.
+name: ASSERT
+
+on:
+  pull_request:
+    paths:
+      - backend/src/Saturdaze.Application/AgentPlanning/**
+      - backend/src/Saturdaze.Infrastructure/AgentPlanning/**
+      - evals/assert/**
+      - .github/workflows/assert.yml
+  workflow_dispatch:
+    inputs:
+      controls:
+        description: 'on (after) or off (the "before" baseline)'
+        type: choice
+        options: [ 'on', 'off' ]
+        default: 'on'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: assert-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  assert:
+    name: ASSERT agent evaluations
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      ANTHROPIC_FOUNDRY_API_KEY: ${{ secrets.ANTHROPIC_FOUNDRY_API_KEY }}
+      FOUNDRY_RESOURCE: ${{ vars.FOUNDRY_RESOURCE }}
+      AZURE_AI_API_KEY: ${{ secrets.ANTHROPIC_FOUNDRY_API_KEY }}
+      AZURE_AI_API_BASE: ${{ vars.AZURE_AI_API_BASE }}
+    steps:
+      - name: Skip without the Foundry secret
+        id: gate
+        run: |
+          if [ -z "$ANTHROPIC_FOUNDRY_API_KEY" ]; then
+            echo "Skipped: ANTHROPIC_FOUNDRY_API_KEY is not set; ASSERT evaluations need the real Foundry deployment." | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
+
+      - uses: actions/setup-dotnet@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          dotnet-version: '10.0.101'
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          python-version: '3.11'
+
+      - name: Build the API and CLI
+        if: steps.gate.outputs.run == 'true'
+        run: dotnet build backend/Saturdaze.sln --nologo
+
+      - name: Install ASSERT
+        if: steps.gate.outputs.run == 'true'
+        run: pip install -r evals/assert/requirements.txt
+
+      - name: Run the suite and check the boundaries
+        if: steps.gate.outputs.run == 'true'
+        run: python evals/assert/run_evals.py --controls "${{ inputs.controls || 'on' }}"
+
+      - uses: actions/upload-artifact@v4
+        if: always() && steps.gate.outputs.run == 'true'
+        with:
+          name: assert-results
+          path: evals/assert/artifacts/
+          if-no-files-found: ignore

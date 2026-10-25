@@ -1,0 +1,50 @@
+# Agent Control Specification for agent-drafted weekends (ADR-023, L2-209).
+#
+# The policy source. AgentControlGate enforces the same rules in process,
+# fail-closed (mapping table in docs/detailed-designs/weekend-planning/
+# plan-with-agents/README.md); `assert-ai acs validate` checks this manifest
+# against the violations an ASSERT run recorded. The version matches the ACS
+# examples at the pinned ASSERT commit.
+agent_control_specification_version: "0.3.0-alpha"
+metadata:
+  name: "saturdaze-agent-planning"
+
+policies:
+  saturdaze:
+    type: rego
+    bundle: ./policy
+    query: data.agent_control_specification.saturdaze.verdict
+
+intervention_points:
+  # A role's prompt carries only its own family (no_cross_family_data).
+  input:
+    policy_target: "$.input"
+    policy_target_kind: user_input
+    policy:
+      id: saturdaze
+      query: data.agent_control_specification.saturdaze.input_verdict
+
+  # Only the five family-bound tools, with arguments that fit their schema (tool_allow_list).
+  pre_tool_call:
+    policy_target: "$.tool_call.args"
+    policy_target_kind: tool_args
+    tool_name_from: "$.tool_call.name"
+    policy:
+      id: saturdaze
+      query: data.agent_control_specification.saturdaze.pre_tool_call_verdict
+
+  # Picks name catalog ids only; research cites only URLs the search returned
+  # (catalog_ids_only, verified_sources). Hard rules stay with PlanValidator.
+  output:
+    policy_target: "$.output"
+    policy_target_kind: agent_output
+    policy:
+      id: saturdaze
+      query: data.agent_control_specification.saturdaze.output_verdict
+
+tools:
+  search_catalog: {}
+  get_place: {}
+  get_weather: {}
+  get_daylight: {}
+  get_drive_minutes: {}
