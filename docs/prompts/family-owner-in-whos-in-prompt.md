@@ -148,7 +148,7 @@ What stays unchanged:
   - The data constraint: one member per `UserId`, with a filtered unique index and a migration.
   - The frontend service contract in `frontend/projects/api/`, the page and dialog changes, sequence diagrams,
     and the security rules (owner-only, family scope).
-- Record the decisions in the design's open-questions section, or as a new ADR in `docs/adr/` (ADR-023) if
+- Record the decisions in the design's open-questions section, or as a new ADR in `docs/adr/` (ADR-024) if
   the decision is architectural: where the name and age are captured, and why there is no auto-backfill.
 
 ## Phase 4: Incremental implementation (`implementing-incrementally`, test-first)
