@@ -1,5 +1,5 @@
 // Acceptance Test
-// Traces to: L2-191 AC4, AC5, L2-192 AC1, AC2, AC3, AC4, AC6, L2-194 AC6, L2-195 AC5, L2-196 AC2, AC3
+// Traces to: L2-191 AC4, AC5, L2-192 AC1, AC2, AC3, AC4, AC6, AC7, L2-194 AC6, L2-195 AC5, L2-196 AC2, AC3
 // Description: The family saves and reads its planning boundaries through PUT and GET /api/family.
 
 using System.Net;
@@ -245,5 +245,24 @@ public class PlanningBoundariesTests : IClassFixture<SaturdazeApiFactory>
         location.GetProperty("latitude").GetDecimal().Should().Be(43.6297m);
         location.GetProperty("longitude").GetDecimal().Should().Be(-79.7127m);
         location.GetProperty("address").GetString().Should().Be("5980 McLaughlin Rd, Mississauga");
+    }
+
+    [Fact]
+    public async Task A_place_the_geocoder_cannot_find_is_refused_rather_than_dropped()
+    {
+        // Traces to: L2-192 AC7
+        var session = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+
+        var (status, body) = await Put(session.Client, new
+        {
+            Commitments = new[]
+            {
+                new { Title = "Swim", DayOfWeek = "Sunday", StartTime = "16:20", EndTime = "16:50", Location = new { Address = "Nowhere Lane, Atlantis" } },
+            },
+        });
+
+        status.Should().Be(HttpStatusCode.BadRequest);
+        body.Should().Contain("Commitments[0].Location").And.Contain("We couldn't find that address.");
+        (await GetFamily(session.Client)).GetProperty("commitments").GetArrayLength().Should().Be(0);
     }
 }

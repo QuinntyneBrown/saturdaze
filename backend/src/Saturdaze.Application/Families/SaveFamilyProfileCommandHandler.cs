@@ -219,6 +219,8 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             throw new ValidationException("commitments", CommitmentOverlaps.Message);
     }
 
+    private const string UnknownAddress = "We couldn't find that address. Check the street and city, or leave Where empty.";
+
     /// <summary>
     /// The place of each commitment that has an address: as sent when it has coordinates,
     /// otherwise geocoded within the budget; unchanged addresses keep their stored place.
@@ -227,7 +229,7 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
         Family family, IReadOnlyList<SaveCommitmentInput> inputs, CancellationToken ct)
     {
         var resolved = new Dictionary<SaveCommitmentInput, GeoLocation?>(ReferenceEqualityComparer.Instance);
-        foreach (var input in inputs)
+        foreach (var (input, i) in inputs.Select((c, i) => (c, i)))
         {
             var address = input.Location?.Address?.Trim();
             if (string.IsNullOrEmpty(address))
@@ -242,7 +244,9 @@ public sealed class SaveFamilyProfileCommandHandler : IRequestHandler<SaveFamily
             }
             var stored = family.Commitments.FirstOrDefault(c => c.Location is not null
                 && string.Equals(c.Location.Address, address, StringComparison.OrdinalIgnoreCase));
-            resolved[input] = stored?.Location?.Copy() ?? await GeocodeWithinBudgetAsync(address, ct);
+            // A place without coordinates is no use to the planner; say so rather than drop it (L2-192 AC7).
+            resolved[input] = stored?.Location?.Copy() ?? await GeocodeWithinBudgetAsync(address, ct)
+                ?? throw new ValidationException($"Commitments[{i}].Location", UnknownAddress);
         }
         return resolved;
     }
