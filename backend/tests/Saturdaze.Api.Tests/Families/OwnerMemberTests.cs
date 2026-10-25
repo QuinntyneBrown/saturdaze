@@ -150,6 +150,185 @@ public class OwnerMemberTests : IClassFixture<SaturdazeApiFactory>
         family.GetProperty("selfMemberId").ValueKind.Should().Be(JsonValueKind.Null);
     }
 
+    [Fact]
+    public async Task The_owner_adds_themselves()
+    {
+        // Traces to: L2-216 #1
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = "Quinn", Age = 38, Self = true });
+        var body = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created, body);
+        var result = JsonDocument.Parse(body).RootElement;
+        result.GetProperty("member").GetProperty("access").GetString().Should().Be("Account");
+        result.GetProperty("member").GetProperty("email").GetString().Should().Be(owner.Email);
+        result.GetProperty("invite").ValueKind.Should().Be(JsonValueKind.Null);
+        var family = await GetFamily(owner.Client);
+        family.GetProperty("selfMemberId").GetGuid().Should().Be(result.GetProperty("member").GetProperty("id").GetGuid());
+        await using var scope = _factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        (await db.FamilyInvitations.AnyAsync(i => i.FamilyId == owner.FamilyId)).Should().BeFalse();
+        _factory.Mail.To(owner.Email).Should().NotContain(m => m.Subject.Contains("invited you"));
+    }
+
+    [Fact]
+    public async Task The_owner_claims_a_listed_member()
+    {
+        // Traces to: L2-216 #2
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var quinnId = await Add(owner.Client, new { Name = "Quinn", Age = 38 });
+
+        var response = await owner.Client.PostAsync($"/api/family/members/{quinnId}/claim", null);
+        var body = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, body);
+        var member = JsonDocument.Parse(body).RootElement;
+        member.GetProperty("id").GetGuid().Should().Be(quinnId);
+        member.GetProperty("access").GetString().Should().Be("Account");
+        member.GetProperty("email").GetString().Should().Be(owner.Email);
+        (await GetFamily(owner.Client)).GetProperty("selfMemberId").GetGuid().Should().Be(quinnId);
+    }
+
+    [Fact]
+    public async Task Only_the_owner_says_this_is_me()
+    {
+        // Traces to: L2-216 #3
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var maeId = await Add(owner.Client, new { Name = "Mae", Age = 5 });
+        var other = await SignedInClient.JoinAsync(_factory, owner.FamilyId!.Value);
+
+        var add = await other.Client.PostAsJsonAsync("/api/family/members", new { Name = "Sam", Age = 40, Self = true });
+        var claim = await other.Client.PostAsync($"/api/family/members/{maeId}/claim", null);
+
+        add.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await Code(add)).Should().Be("owner_only");
+        claim.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await Code(claim)).Should().Be("owner_only");
+        var family = await GetFamily(owner.Client);
+        family.GetProperty("members").GetArrayLength().Should().Be(1);
+        Member(family, "Mae").GetProperty("access").GetString().Should().Be("None");
+    }
+
+    [Fact]
+    public async Task A_member_of_another_family_cannot_be_claimed()
+    {
+        // Traces to: L2-216 #4
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var neighbour = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var theirs = await Add(neighbour.Client, new { Name = "Mae", Age = 5 });
+
+        (await owner.Client.PostAsync($"/api/family/members/{theirs}/claim", null)).StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await owner.Client.PostAsync($"/api/family/members/{Guid.NewGuid()}/claim", null)).StatusCode.Should().Be(HttpStatusCode.NotFound);
+        Member(await GetFamily(neighbour.Client), "Mae").GetProperty("access").GetString().Should().Be("None");
+    }
+
+    [Fact]
+    public async Task A_member_who_is_invited_or_signs_in_cannot_be_claimed()
+    {
+        // Traces to: L2-216 #5
+        var (owner, _) = await Register(null, null);
+        await Invite(owner, "Sara", NewEmail("sara"));
+        var vanessaToken = await Invite(owner, "Vanessa", NewEmail("vanessa"));
+        await Accept(vanessaToken);
+        var family = await GetFamily(owner);
+
+        foreach (var name in new[] { "Sara", "Vanessa" })
+        {
+            var response = await owner.PostAsync($"/api/family/members/{Member(family, name).GetProperty("id").GetGuid()}/claim", null);
+            response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            (await Code(response)).Should().Be("member_has_access");
+        }
+        (await GetFamily(owner)).GetProperty("selfMemberId").ValueKind.Should().Be(JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task An_owner_already_in_whos_in_cannot_add_or_claim_again()
+    {
+        // Traces to: L2-216 #6
+        var (owner, _) = await Register("Quinn", 38);
+        var maeId = await Add(owner, new { Name = "Mae", Age = 5 });
+
+        var add = await owner.PostAsJsonAsync("/api/family/members", new { Name = "Q", Age = 38, Self = true });
+        var claim = await owner.PostAsync($"/api/family/members/{maeId}/claim", null);
+
+        add.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(add)).Should().Be("already_in_family");
+        claim.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(claim)).Should().Be("already_in_family");
+        var family = await GetFamily(owner);
+        family.GetProperty("members").GetArrayLength().Should().Be(2);
+        Member(family, "Mae").GetProperty("access").GetString().Should().Be("None");
+    }
+
+    [Fact]
+    public async Task Adding_yourself_takes_no_email_and_a_free_name()
+    {
+        // Traces to: L2-216 #7
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        await Add(owner.Client, new { Name = "Quinn", Age = 38 });
+
+        var withEmail = await owner.Client.PostAsJsonAsync("/api/family/members",
+            new { Name = "Q", Age = 38, Self = true, Email = NewEmail("q") });
+        var takenName = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = "quinn", Age = 38, Self = true });
+
+        withEmail.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        takenName.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(takenName)).Should().Be("member_name_in_use");
+        (await GetFamily(owner.Client)).GetProperty("selfMemberId").ValueKind.Should().Be(JsonValueKind.Null);
+    }
+
+    [Fact]
+    public async Task Nobody_removes_the_owners_own_row()
+    {
+        // Traces to: L2-218 #1
+        var (owner, ownerEmail) = await Register("Quinn", 38);
+        var family = await GetFamily(owner);
+        var quinnId = family.GetProperty("selfMemberId").GetGuid();
+        var vanessa = await Accept(await Invite(owner, "Vanessa", NewEmail("vanessa")));
+
+        var byOwner = await owner.DeleteAsync($"/api/family/members/{quinnId}");
+        var byMember = await vanessa.DeleteAsync($"/api/family/members/{quinnId}");
+
+        byOwner.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(byOwner)).Should().Be("cannot_remove_owner");
+        byMember.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        (await Code(byMember)).Should().Be("owner_only");
+        Member(await GetFamily(owner), "Quinn").GetProperty("email").GetString().Should().Be(ownerEmail);
+    }
+
+    [Fact]
+    public async Task The_owner_renames_and_re_ages_their_own_row_through_the_profile_save()
+    {
+        // Traces to: L2-218 #2, L2-129 #4
+        var (owner, ownerEmail) = await Register("Quinn", 38);
+        var quinnId = (await GetFamily(owner)).GetProperty("selfMemberId").GetGuid();
+
+        var response = await owner.PutAsJsonAsync("/api/family", new { Members = new[] { new { Id = quinnId, Name = "Quinny", Age = 39 } } });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync());
+        var family = await GetFamily(owner);
+        var quinny = Member(family, "Quinny");
+        quinny.GetProperty("id").GetGuid().Should().Be(quinnId);
+        quinny.GetProperty("age").GetInt32().Should().Be(39);
+        quinny.GetProperty("access").GetString().Should().Be("Account");
+        quinny.GetProperty("email").GetString().Should().Be(ownerEmail);
+        family.GetProperty("selfMemberId").GetGuid().Should().Be(quinnId);
+    }
+
+    [Fact]
+    public async Task The_profile_save_does_not_drop_the_owners_own_row()
+    {
+        // Traces to: L2-218 #3, L2-129 #3
+        var (owner, _) = await Register("Quinn", 38);
+
+        var response = await owner.PutAsJsonAsync("/api/family", new { Members = new[] { new { Name = "Mae", Age = 5 } } });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        (await Code(response)).Should().Be("member_has_access");
+        Member(await GetFamily(owner), "Quinn").GetProperty("access").GetString().Should().Be("Account");
+    }
+
     // ---- helpers ---------------------------------------------------------
 
     private async Task<(HttpClient Client, string Email)> Register(string? name, int? age)
@@ -184,6 +363,20 @@ public class OwnerMemberTests : IClassFixture<SaturdazeApiFactory>
         var body = await response.Content.ReadAsStringAsync();
         response.StatusCode.Should().Be(HttpStatusCode.Created, body);
         return JsonDocument.Parse(body).RootElement.GetProperty("invite").GetProperty("token").GetString()!;
+    }
+
+    private static async Task<Guid> Add(HttpClient owner, object member)
+    {
+        var response = await owner.PostAsJsonAsync("/api/family/members", member);
+        var body = await response.Content.ReadAsStringAsync();
+        response.StatusCode.Should().Be(HttpStatusCode.Created, body);
+        return JsonDocument.Parse(body).RootElement.GetProperty("member").GetProperty("id").GetGuid();
+    }
+
+    private static async Task<string?> Code(HttpResponseMessage response)
+    {
+        var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+        return json.TryGetProperty("code", out var code) ? code.GetString() : null;
     }
 
     private static string NewEmail(string prefix) => $"{prefix}-{Guid.NewGuid():N}@example.com";
