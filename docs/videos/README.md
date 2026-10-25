@@ -159,3 +159,21 @@ SD_DEMO_RESET="node tools/video-record/admin-demo/reset.mjs" \
 ```
 
 The admin series records against a separate demo database and image host; see `tools/video-record/admin-demo/README.md`. The family members series records against a freshly reset database of its own; see `tools/video-record/family-demo/README.md`.
+
+### Background music
+
+`--music <file>` on the builder mixes a music bed under the narration. It is opt-in: only the brand video (44) passes it, and every other video builds exactly as before, narration only. The mix copies Shelfie's brand video (`meet-shelfie.mp4`), measured from that file:
+
+| | Value |
+| --- | --- |
+| Narration | brought to -18.3 LUFS integrated, Shelfie's narration loudness |
+| Music | looped from 0:00, -11.43 dB below the track's own level, no ducking |
+| Fades | 1.5 s fade-in at the start, 2 s fade-out at the end |
+| Tail | last slide held 3 s after the narration, music only |
+| Result | about -18.6 LUFS integrated, AAC 128 kb/s stereo at 48 kHz |
+
+```sh
+node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze --music docs/videos/assets/music/on-the-beach-intro-outro.mp3
+```
+
+The track is [assets/music/on-the-beach-intro-outro.mp3](assets/music/on-the-beach-intro-outro.mp3): "On the Beach Intro Outro" by NaturesEye (1:16, about 100 BPM, upbeat Caribbean/reggae feel), from [Pixabay](https://pixabay.com/music/happy-childrens-tunes-on-the-beach-intro-outro-10278/) under the [Pixabay Content License](https://pixabay.com/service/license-summary/). The licence allows free commercial use in a video without attribution. It does not allow distributing the track on its own, so use it only as a source for our videos. It is the same track Shelfie's brand video uses.
