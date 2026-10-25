@@ -32,6 +32,7 @@ public sealed class WeekendReplanner
         var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, ct);
 
         weekend.RegenerateCount++;
+        weekend.PlanSource = Domain.Enums.PlanSource.Planner;
         var seed = weekend.WeekendOf.DayNumber + weekend.RegenerateCount * 31;
 
         var pendingErrand = weekend.Errands.FirstOrDefault(e => !e.Done);

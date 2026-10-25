@@ -38,6 +38,7 @@ internal static class WeekendMapper
                 .ToList(),
             forecast,
             days.Select(d => new DayDto(d.Day, d.StopCount, d.DrivingMinutes, d.DrivingKm)).ToList(),
-            LocationDto.From(weekend.Home));
+            LocationDto.From(weekend.Home),
+            PlanSource: weekend.PlanSource);
     }
 }

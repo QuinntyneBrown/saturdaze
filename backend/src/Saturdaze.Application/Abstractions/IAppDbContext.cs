@@ -20,6 +20,9 @@ public interface IAppDbContext
     DbSet<RejectedPlacePhoto> RejectedPlacePhotos { get; }
     DbSet<PhotoAuditEntry> PhotoAuditEntries { get; }
     DbSet<IngestionRun> IngestionRuns { get; }
+    DbSet<AgentRun> AgentRuns { get; }
+    DbSet<WeekendDraft> WeekendDrafts { get; }
+    DbSet<RegionResearch> RegionResearch { get; }
     DbSet<Weekend> Weekends { get; }
     DbSet<ItineraryBlock> ItineraryBlocks { get; }
     DbSet<ShoppingErrand> ShoppingErrands { get; }

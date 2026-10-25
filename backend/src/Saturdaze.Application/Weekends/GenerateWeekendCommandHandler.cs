@@ -16,19 +16,22 @@ public sealed class GenerateWeekendCommandHandler : IRequestHandler<GenerateWeek
     private readonly IWeekendPlanner _planner;
     private readonly PlannerInputLoader _loader;
     private readonly WeekendForecastService _forecast;
+    private readonly AgentPlanning.WeekendFactory _factory;
 
     public GenerateWeekendCommandHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
         IWeekendPlanner planner,
         PlannerInputLoader loader,
-        WeekendForecastService forecast)
+        WeekendForecastService forecast,
+        AgentPlanning.WeekendFactory factory)
     {
         _db = db;
         _current = current;
         _planner = planner;
         _loader = loader;
         _forecast = forecast;
+        _factory = factory;
     }
 
     public async Task<WeekendDto> Handle(GenerateWeekendCommand request, CancellationToken cancellationToken)
@@ -44,6 +47,16 @@ public sealed class GenerateWeekendCommandHandler : IRequestHandler<GenerateWeek
         {
             var existingForecast = await _forecast.GetAsync(existing.WeekendOf, existing.Home, cancellationToken);
             return WeekendMapper.ToDto(existing, existingForecast);
+        }
+
+        var draft = await _db.WeekendDrafts
+            .Where(d => d.FamilyId == familyId && d.WeekendOf == request.WeekendOf && !d.Applied && d.PicksJson != "[]")
+            .OrderByDescending(d => d.CreatedUtc)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (draft is not null)
+        {
+            var (fromDraft, draftContext) = await _factory.GetOrCreateAsync(familyId, request.WeekendOf, draft, cancellationToken);
+            return WeekendMapper.ToDto(fromDraft, draftContext.Forecast);
         }
 
         var ctx = await _loader.LoadAsync(familyId, request.WeekendOf, cancellationToken);

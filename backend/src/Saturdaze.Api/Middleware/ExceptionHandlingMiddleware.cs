@@ -44,6 +44,10 @@ public sealed class ExceptionHandlingMiddleware
         {
             await WriteAsync(context, StatusCodes.Status404NotFound, "Not found", ex.Message);
         }
+        catch (TooManyRequestsException ex)
+        {
+            await WriteAsync(context, StatusCodes.Status429TooManyRequests, "Too many requests", ex.Message, code: ex.Code);
+        }
         catch (ConflictException ex)
         {
             // Auth-relevant conflicts (`email_in_use`, …) ship in the AuthError

@@ -16,7 +16,9 @@ public sealed record WeekendDto(
     IReadOnlyList<WeatherForecast> Weather,
     IReadOnlyList<DayDto>? Days = null,
     LocationDto? Home = null,
-    CoverDto? Cover = null);
+    CoverDto? Cover = null,
+    PlanSource PlanSource = PlanSource.Planner,
+    AgentPlanning.AgentDraftDto? AgentDraft = null);
 
 public sealed record ItineraryBlockDto(
     Guid Id,

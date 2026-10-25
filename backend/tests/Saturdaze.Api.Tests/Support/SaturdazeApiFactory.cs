@@ -14,7 +14,7 @@ namespace Saturdaze.Api.Tests.Support;
 /// Boots the API in-process against a per-fixture in-memory SQLite database (ADR-020).
 /// The API creates the schema on startup; the database goes when the fixture is disposed.
 /// </summary>
-public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public string DatabaseName { get; } = $"Saturdaze_Api_{Guid.NewGuid():N}";
 
@@ -33,6 +33,15 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
     public FakeGoogleCalendarClient GoogleCalendar { get; } = new();
     public FakeGeocoder Geocoder { get; } = new();
 
+    /// <summary>Claude behind the agents' chat client, scripted per test (ADR-023): never a network call.</summary>
+    public ScriptedChatClient Agent { get; } = new();
+
+    /// <summary>The regional researcher's web search.</summary>
+    public FakeWebSearchClient WebSearch { get; } = new();
+
+    /// <summary>A short run timeout so the timeout fallback (L2-205 AC3) is quick to prove.</summary>
+    public const int AgentRunTimeoutSeconds = 4;
+
     /// <summary>Where uploaded covers go for this fixture (deleted on disposal).</summary>
     public string PhotoDirectory { get; } = Path.Combine(Path.GetTempPath(), "saturdaze-photos-" + Guid.NewGuid().ToString("N"));
 
@@ -41,6 +50,9 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
 
     /// <summary>The curated store's public origin: the allow-listed test origin, so uploads project.</summary>
     public const string CuratedPublicOrigin = "https://images.example.com";
+
+    /// <summary>Settings a derived fixture changes, applied after the defaults (e.g. agent planning off).</summary>
+    protected virtual IDictionary<string, string?> OverrideSettings => new Dictionary<string, string?>();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -66,7 +78,13 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
                 ["Saturdaze:Share:AppOrigin"] = "https://app.example.com",
                 // The calendar sync service polls every second so retries come due inside a test.
                 ["Saturdaze:Calendar:PollSeconds"] = "1",
+                // Agent planning on, against the scripted chat client; the queue checks every second.
+                ["Saturdaze:AgentPlanning:Enabled"] = "true",
+                ["Saturdaze:AgentPlanning:FoundryResource"] = "sd-ai-test",
+                ["Saturdaze:AgentPlanning:QueuePollSeconds"] = "1",
+                ["Saturdaze:AgentPlanning:RunTimeoutSeconds"] = AgentRunTimeoutSeconds.ToString(),
             });
+            cfg.AddInMemoryCollection(OverrideSettings);
         });
         builder.ConfigureTestServices(services =>
         {
@@ -83,6 +101,10 @@ public sealed class SaturdazeApiFactory : WebApplicationFactory<Program>, IAsync
             services.AddSingleton<Saturdaze.Application.Authentication.IGoogleIdTokenVerifier>(Google);
             services.RemoveAll<Saturdaze.Application.Calendar.IGoogleCalendarClient>();
             services.AddSingleton<Saturdaze.Application.Calendar.IGoogleCalendarClient>(GoogleCalendar);
+            services.RemoveAllKeyed<Microsoft.Extensions.AI.IChatClient>(Saturdaze.Infrastructure.AgentPlanning.AgentFrameworkRoleRunner.ChatClientKey);
+            services.AddKeyedSingleton<Microsoft.Extensions.AI.IChatClient>(Saturdaze.Infrastructure.AgentPlanning.AgentFrameworkRoleRunner.ChatClientKey, Agent);
+            services.RemoveAll<Saturdaze.Application.Ingestion.IWebSearchClient>();
+            services.AddSingleton<Saturdaze.Application.Ingestion.IWebSearchClient>(WebSearch);
             services.RemoveAll<Saturdaze.Application.Geocoding.IGeocoder>();
             services.AddSingleton<Saturdaze.Application.Geocoding.IGeocoder>(Geocoder);
         });

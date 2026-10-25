@@ -2,6 +2,7 @@ using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Saturdaze.Application.AgentPlanning;
 using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Covers;
 using Saturdaze.Application.Exceptions;
@@ -35,6 +36,16 @@ public sealed class WeekendsController : ControllerBase
     [HttpPost("{id:guid}/regenerate")]
     public async Task<ActionResult<WeekendDto>> Regenerate(Guid id, CancellationToken ct)
         => Ok(await _sender.Send(new RegenerateWeekendCommand(id), ct));
+
+    /// <summary>Queues an on-demand agent draft of the weekend (L2-203); the API's processor runs it.</summary>
+    [HttpPost("{id:guid}/drafts")]
+    public async Task<ActionResult<AgentDraftDto>> RequestDraft(Guid id, CancellationToken ct)
+        => StatusCode(StatusCodes.Status202Accepted, await _sender.Send(new RequestWeekendDraftCommand(id), ct));
+
+    /// <summary>The weekend's latest agent run (L2-203, L2-205).</summary>
+    [HttpGet("{id:guid}/drafts/latest")]
+    public async Task<ActionResult<AgentDraftDto>> LatestDraft(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new GetLatestWeekendDraftQuery(id), ct));
 
     [HttpPost("{id:guid}/days/{day}/regenerate")]
     public async Task<ActionResult<WeekendDto>> RegenerateDay(Guid id, string day, CancellationToken ct)

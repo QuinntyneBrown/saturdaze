@@ -31,7 +31,22 @@ public sealed class WeekendEnrichment
     public async Task<WeekendDto> EnrichAsync(WeekendDto weekend, CancellationToken ct, bool shared = false)
     {
         var blocks = await WithPhotosAsync(weekend.Blocks, ct);
-        return weekend with { Blocks = blocks, Cover = await ResolveAsync(weekend.Id, blocks, shared, ct) };
+        return weekend with
+        {
+            Blocks = blocks,
+            Cover = await ResolveAsync(weekend.Id, blocks, shared, ct),
+            AgentDraft = shared ? null : await AgentDraftAsync(weekend.Id, ct),
+        };
+    }
+
+    /// <summary>The weekend's latest agent run (L2-202, L2-205), or null when none was ever requested.</summary>
+    private async Task<AgentPlanning.AgentDraftDto?> AgentDraftAsync(Guid weekendId, CancellationToken ct)
+    {
+        var owner = await _db.Weekends.AsNoTracking().Where(w => w.Id == weekendId)
+            .Select(w => new { w.FamilyId, w.WeekendOf }).SingleOrDefaultAsync(ct);
+        if (owner is null) return null;
+        var run = await AgentPlanning.GetLatestWeekendDraftQueryHandler.LatestAsync(_db, owner.FamilyId, owner.WeekendOf, ct);
+        return run is null ? null : AgentPlanning.AgentDraftDto.From(run);
     }
 
     /// <summary>The cover for a weekend summary in Past (L2-110 AC1, AC2), as the Weekend screen shows it.</summary>

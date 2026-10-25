@@ -1,3 +1,4 @@
+using Saturdaze.Application.AgentPlanning;
 using Saturdaze.Application.Catalog;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Common;
@@ -17,7 +18,14 @@ public sealed class WeekendPlanner : IWeekendPlanner
     /// <summary>The rating at or below which a weekend's activities are skipped (matches the /past strip).</summary>
     private const int SkipRatingCeiling = 2;
 
-    public IReadOnlyList<ItineraryBlock> Plan(PlannerInputs inputs)
+    public IReadOnlyList<ItineraryBlock> Plan(PlannerInputs inputs) => PlanWithPicks(inputs, Array.Empty<DraftPick>());
+
+    /// <summary>
+    /// The agents' picks placed first, each as an anchored outing at its start (or the first fit) with
+    /// its reason; then the day is filled as <see cref="Plan"/> fills it (L2-202, L2-206). A pick that
+    /// does not fit is left out; the validator reports why.
+    /// </summary>
+    public IReadOnlyList<ItineraryBlock> PlanWithPicks(PlannerInputs inputs, IReadOnlyList<DraftPick> picks)
     {
         var rng = new SeededRandomSource(inputs.Seed);
         var blocks = new List<ItineraryBlock>();
@@ -31,7 +39,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
         {
             var dayDate = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
             var forecast = ForecastFor(inputs.Forecast, dayDate);
-            blocks.AddRange(PlanDay(inputs, day, dayDate, forecast, rng, picked));
+            blocks.AddRange(PlanDay(inputs, day, dayDate, forecast, rng, picked, picks.Where(k => k.Day == day).ToList()));
         }
         return blocks;
     }
@@ -75,7 +83,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     private static IEnumerable<ItineraryBlock> PlanDay(
         PlannerInputs inputs, DayOfWeekend day, DateOnly date, WeatherForecast forecast, IRandomSource rng,
-        HashSet<Guid> rejected)
+        HashSet<Guid> rejected, IReadOnlyList<DraftPick> picks)
     {
         var profile = inputs.Boundaries;
         var (dayStart, dayEnd) = (profile.DayStart, profile.DayEnd(day));
@@ -95,6 +103,25 @@ public sealed class WeekendPlanner : IWeekendPlanner
         var outings = new List<ItineraryBlock>();
         var outingCount = 0;
         var pace = profile.Outings(day);
+
+        // Picks first (L2-202): anchored where the drafter asked, with its reason.
+        foreach (var pick in picks)
+        {
+            if (outingCount >= pace) break;
+            var c = pool.FirstOrDefault(x => x.Id == pick.Id
+                && (x.Kind == CandidateKind.Event) == (pick.Kind == PickKind.Event));
+            if (c is null || rejected.Contains(c.Id) || CandidateFilter.Exclusion(inputs, c, day) is not null) continue;
+            var placed = ComputeGaps(occupied, dayStart, dayEnd)
+                .Where(g => pick.Start is not { } at || (g.start <= at && at < g.end))
+                .Select(g => FitInGap(c, g, sunset, pick.Start))
+                .FirstOrDefault(f => f is not null);
+            if (placed is not { } pickFit) continue;
+            var pickBlocks = BuildOuting(c, pickFit, pick.Reason, day).ToList();
+            outings.AddRange(pickBlocks);
+            occupied.AddRange(pickBlocks);
+            rejected.Add(c.Id);
+            outingCount++;
+        }
         for (var pass = 0; pass < 2 && outingCount < pace; pass++)
         {
             var placedThisPass = false;
@@ -323,9 +350,7 @@ public sealed class WeekendPlanner : IWeekendPlanner
     private const int EventBonus = 3;
 
     /// <summary>The day's candidates: every activity, and the published events running that date (L2-201).</summary>
-    private static IEnumerable<PlannerCandidate> Candidates(PlannerInputs inputs, DateOnly date) =>
-        inputs.Activities.Select(PlannerCandidate.From)
-            .Concat(inputs.Events.Where(e => e.StartsOn <= date && date <= e.EndsOn).Select(PlannerCandidate.From));
+    private static IEnumerable<PlannerCandidate> Candidates(PlannerInputs inputs, DateOnly date) => CandidateFilter.All(inputs, date);
 
     /// <summary>
     /// The candidates that fit <paramref name="gap"/> on <paramref name="date"/>, best first, each
@@ -338,7 +363,6 @@ public sealed class WeekendPlanner : IWeekendPlanner
         var date = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
         var minutes = GapMinutes(gap);
         var likedTags = inputs.Preferences.Where(p => p.Kind == PreferenceKind.Like).Select(p => p.Value).ToList();
-        var dislikedTags = inputs.Preferences.Where(p => p.Kind == PreferenceKind.Dislike).Select(p => p.Value).ToList();
 
         // "Skipping next time" (L2-027 AC3): an activity from a weekend the family
         // rated 2★ or lower is not planned again.
@@ -354,13 +378,10 @@ public sealed class WeekendPlanner : IWeekendPlanner
         {
             if (alreadyPicked.Contains(c.Id)) continue;
             if (skipped.Contains(c.Id)) continue;
-            if (c.DriveMinutes > profile.MaxDriveMinutes) continue; // L2-191
-            if (c.Themes.Any(profile.ExcludedThemes.Contains)) continue; // L2-194
-            if (!c.InSeason(date)) continue; // L2-200
+            // Drive (L2-191), themes (L2-194), dislikes, ages, season (L2-200), event days (L2-201).
+            if (CandidateFilter.Exclusion(inputs, c, day) is not null) continue;
             if (c.Kind == CandidateKind.Activity && c.DurationMinutes > minutes) continue;
-            if (dislikedTags.Any(d => Disliked(c, d))) continue;
             var ageOutside = inputs.Members.Count(m => m.Age < c.MinAge || m.Age > c.MaxAge);
-            if (ageOutside >= 2) continue;
             if (FitInGap(c, gap, sunset) is not { } fit) continue;
 
             var score = 0;
@@ -385,8 +406,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
             // Leaning (L2-195), likes and interests (L2-196): two matching likes beat the rain bonus.
             if ((profile.Leaning == PlanLeaning.Indoor && c.Indoor == true) || (profile.Leaning == PlanLeaning.Outdoor && c.Indoor == false))
                 score += LeaningBonus;
-            score += LikeBonus * likedTags.Count(t => MatchesTag(c, t));
-            score += InterestBonus * inputs.Members.Count(m => m.Interests.Any(i => MatchesTag(c, i)));
+            score += LikeBonus * likedTags.Count(t => CandidateFilter.Matches(c, t));
+            score += InterestBonus * inputs.Members.Count(m => m.Interests.Any(i => CandidateFilter.Matches(c, i)));
             if (c.Kind == CandidateKind.Event) score += EventBonus;
 
             results.Add((c, score, fit));
@@ -453,18 +474,6 @@ public sealed class WeekendPlanner : IWeekendPlanner
             _ => 0
         };
     }
-
-    /// <summary>A dislike of "Indoor" or "Outdoor" reads the place's flag (L2-194 AC5); others match text.</summary>
-    private static bool Disliked(PlannerCandidate c, string dislike) =>
-        string.Equals(dislike.Trim(), "Indoor", StringComparison.OrdinalIgnoreCase) ? c.Indoor == true
-        : string.Equals(dislike.Trim(), "Outdoor", StringComparison.OrdinalIgnoreCase) ? c.Indoor == false
-        : MatchesTag(c, dislike);
-
-    private static bool MatchesTag(PlannerCandidate c, string tag) =>
-        c.Tags.Any(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase))
-        || string.Equals(c.Category, tag, StringComparison.OrdinalIgnoreCase)
-        || c.Name.Contains(tag, StringComparison.OrdinalIgnoreCase)
-        || c.Description.Contains(tag, StringComparison.OrdinalIgnoreCase);
 
     // ─── Outing placement with drive blocks ───────────────────────────────────
 

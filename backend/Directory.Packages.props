@@ -46,5 +46,16 @@
     <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.11" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.22.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
+    <!-- Agent planning (ADR-023): Microsoft Agent Framework over the official Anthropic SDK's IChatClient,
+         Foundry credentials (key or Entra), and OpenTelemetry to Application Insights. Versions checked on nuget.org 2026-10-25. -->
+    <PackageVersion Include="Microsoft.Agents.AI" Version="1.26.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI" Version="10.11.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.11.0" />
+    <PackageVersion Include="Anthropic" Version="13.3.0" />
+    <PackageVersion Include="Anthropic.Foundry" Version="1.0.0" />
+    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry" Version="1.20.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.20.1" />
+    <PackageVersion Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.10.0" />
   </ItemGroup>
 </Project>

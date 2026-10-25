@@ -9,6 +9,9 @@ public interface IWeekendPlanner
 {
     IReadOnlyList<ItineraryBlock> Plan(PlannerInputs inputs);
 
+    /// <summary>Plans the weekend around the agents' picks, placed first with their reasons (L2-202).</summary>
+    IReadOnlyList<ItineraryBlock> PlanWithPicks(PlannerInputs inputs, IReadOnlyList<AgentPlanning.DraftPick> picks);
+
     /// <summary>
     /// Returns the highest-scoring activity for a single gap, treating <paramref name="rejected"/>
     /// as ineligible. Used by the swap flow to pick the "next best" alternative for a slot.
