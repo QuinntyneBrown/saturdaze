@@ -408,7 +408,9 @@ export class WeekendPlanService implements IWeekendPlanService {
       }
       await this.loadCurrent();
     } catch (err) {
+      // A failed check is retried on the next tick; the run is still going on the server.
       console.error('WeekendPlanService.checkDraft failed', err);
+      this.watchDraft();
     }
   }
 

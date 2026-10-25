@@ -325,6 +325,27 @@ describe('WeekendPlanService', () => {
       expect(view.draftedByAgents).toBe(true);
     });
 
+    it('keeps polling after a failed check', async () => {
+      await loadCurrent();
+      vi.useFakeTimers();
+      try {
+        const pending = service.draftWithAgents();
+        httpMock.expectOne({ method: 'POST', url: DRAFTS }).flush(run('Queued'));
+        await pending;
+
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(null, { status: 502, statusText: 'Bad Gateway' });
+        await vi.advanceTimersByTimeAsync(3000);
+        httpMock.expectOne(LATEST).flush(run('FellBack', { fallbackReason: 'Error', notice: 'x' }));
+        await vi.advanceTimersByTimeAsync(0);
+        httpMock.expectOne(CURRENT).flush(weekendDto());
+        await vi.advanceTimersByTimeAsync(0);
+      } finally {
+        vi.useRealTimers();
+      }
+      expect(service.getWeekend()().agentDraft.drafting).toBe(false);
+    });
+
     it('gives back the refusal for a 409 or 429', async () => {
       await loadCurrent();
       const pending = service.draftWithAgents();
