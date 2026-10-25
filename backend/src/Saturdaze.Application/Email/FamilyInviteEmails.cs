@@ -19,12 +19,16 @@ public sealed class FamilyInviteEmails
             Subject: $"{invitedBy} invited you to Saturdaze",
             Eyebrow: "A family invitation",
             Title: $"Join {family} on Saturdaze",
-            Paragraphs: Array.Empty<string>(),
+            Paragraphs: new[]
+            {
+                $"{invitedBy} added you to {family} as {memberName} and invited you to sign in to Saturdaze, the family weekend planner.",
+                "See your family's weekend plans and choose your own password:",
+            },
             Cta: new EmailCta($"Join {family}", $"{_appOrigin}/accept-invite?token={Uri.EscapeDataString(token)}"),
             Note: null,
             Sample: null,
-            Small: null,
-            Footer: $"Sent to {to}.");
+            Small: "The link works for 7 days. If you weren't expecting this, ignore this email.",
+            Footer: $"Sent to {to} because {invitedBy} invited you to their family on Saturdaze.");
         return EmailLayout.Message(to, content);
     }
 }
