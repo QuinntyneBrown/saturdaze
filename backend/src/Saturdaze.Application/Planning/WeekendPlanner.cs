@@ -46,12 +46,14 @@ public sealed class WeekendPlanner : IWeekendPlanner
     {
         var dayDate = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
         var forecast = ForecastFor(inputs.Forecast, dayDate);
-        var scored = ScoreActivities(inputs, (gapStart, gapEnd), forecast, rejected.ToHashSet(), day);
+        var scored = ScoreCandidates(inputs, inputs.Activities.Select(PlannerCandidate.From), (gapStart, gapEnd),
+            forecast, rejected.ToHashSet(), day);
         if (scored.Count == 0) return null;
         var topScore = scored[0].score;
-        var topCandidates = scored.TakeWhile(s => s.score == topScore).Select(s => s.activity).ToList();
+        var topCandidates = scored.TakeWhile(s => s.score == topScore).Select(s => s.candidate.Id).ToList();
         rng ??= new SeededRandomSource(inputs.Seed);
-        return topCandidates[rng.Next(topCandidates.Count)];
+        var id = topCandidates[rng.Next(topCandidates.Count)];
+        return inputs.Activities.First(a => a.Id == id);
     }
 
     public IReadOnlyList<ItineraryBlock> BuildActivityBlocks(
@@ -61,7 +63,13 @@ public sealed class WeekendPlanner : IWeekendPlanner
         TimeOnly gapEnd,
         WeatherForecast forecast,
         bool tryNew)
-        => BuildActivityWithDrives(activity, (gapStart, gapEnd), forecast, tryNew, day).ToList();
+    {
+        var c = PlannerCandidate.From(activity);
+        var gap = (gapStart, gapEnd);
+        var fit = FitInGap(c, gap, null)
+            ?? (gapStart.AddMinutes(c.DriveMinutes), gapEnd.AddMinutes(-c.DriveMinutes));
+        return BuildOuting(c, fit, BuildReason(c, forecast, tryNew, gap, fit, null), day).ToList();
+    }
 
     // ─── Day pipeline ────────────────────────────────────────────────────────
 
@@ -73,7 +81,10 @@ public sealed class WeekendPlanner : IWeekendPlanner
         var (dayStart, dayEnd) = (profile.DayStart, profile.DayEnd(day));
 
         var fixedBlocks = BuildFixedBlocks(inputs, day, dayStart, dayEnd);
-        EnsureNoOverlap(fixedBlocks);
+        EnsureNoOverlap(fixedBlocks, inputs.Commitments);
+        fixedBlocks.AddRange(CommitmentDrives(inputs, day, fixedBlocks, dayStart, dayEnd));
+        var pool = Candidates(inputs, date).ToList();
+        var sunset = inputs.Sunsets?.GetValueOrDefault(day);
 
         // Meals first (L2-186, L2-187), so outings go around them rather than over them.
         var meals = ReserveMeals(inputs, day, fixedBlocks, dayStart, dayEnd);
@@ -91,16 +102,16 @@ public sealed class WeekendPlanner : IWeekendPlanner
                          .Where(g => GapMinutes(g) >= PlannerTimes.ActivityMinGapMinutes).ToList())
             {
                 if (outingCount >= pace) break;
-                var scored = ScoreActivities(inputs, gap, forecast, rejected, day);
+                var scored = ScoreCandidates(inputs, pool, gap, forecast, rejected, day);
                 if (scored.Count == 0) continue;
 
                 var topScore = scored[0].score;
-                var topCandidates = scored.TakeWhile(s => s.score == topScore).Select(s => s.activity).ToList();
-                var winner = topCandidates[rng.Next(topCandidates.Count)];
+                var top = scored.TakeWhile(s => s.score == topScore).ToList();
+                var (winner, _, fit) = top[rng.Next(top.Count)];
                 rejected.Add(winner.Id);
 
                 var firstTime = inputs.TryNew && inputs.History.All(h => h.ActivityId != winner.Id);
-                var blocks = BuildActivityWithDrives(winner, gap, forecast, firstTime, day).ToList();
+                var blocks = BuildOuting(winner, fit, BuildReason(winner, forecast, firstTime, gap, fit, sunset), day).ToList();
                 outings.AddRange(blocks);
                 occupied.AddRange(blocks);
                 outingCount++;
@@ -158,7 +169,8 @@ public sealed class WeekendPlanner : IWeekendPlanner
                 Kind = BlockKind.Commitment,
                 Title = c.Title,
                 IsLocked = true, // L2-011: commitments never move
-                Reason = "fixed commitment"
+                Reason = "fixed commitment",
+                Stop = c.Location?.Copy()
             });
         }
         foreach (var l in locked)
@@ -205,6 +217,64 @@ public sealed class WeekendPlanner : IWeekendPlanner
         return list.OrderBy(b => b.StartTime).ToList();
     }
 
+    private static bool Splittable(ItineraryBlock a, ItineraryBlock b, IReadOnlyList<Commitment> commitments)
+    {
+        if (a.Kind != BlockKind.Commitment || b.Kind != BlockKind.Commitment) return false;
+        var ca = commitments.FirstOrDefault(c => Represents(a, c) && c.Title == a.Title);
+        var cb = commitments.FirstOrDefault(c => Represents(b, c) && c.Title == b.Title);
+        return ca is { AttendeeMemberIds.Count: > 0 } && cb is { AttendeeMemberIds.Count: > 0 }
+               && !ca.AttendeeMemberIds.Intersect(cb.AttendeeMemberIds).Any();
+    }
+
+    /// <summary>Commitments at one place less than this apart share the drives (L2-193).</summary>
+    private const int SharedDriveGapMinutes = 30;
+
+    /// <summary>
+    /// "Drive to {title}" before and "Drive home from {title}" after each run of commitments at
+    /// one place (L2-193), as long as the family's drive, clipped so no drive overlaps a fixed block.
+    /// </summary>
+    private static IEnumerable<ItineraryBlock> CommitmentDrives(
+        PlannerInputs inputs, DayOfWeekend day, IReadOnlyList<ItineraryBlock> fixedBlocks, TimeOnly dayStart, TimeOnly dayEnd)
+    {
+        var located = fixedBlocks
+            .Where(b => b.Kind == BlockKind.Commitment && b.Stop is not null)
+            .OrderBy(b => b.StartTime)
+            .ToList();
+        var runs = new List<List<ItineraryBlock>>();
+        foreach (var b in located)
+        {
+            var run = runs.LastOrDefault();
+            if (run is not null && run[0].Stop!.SameAs(b.Stop) && Minutes(run.Max(r => r.EndTime), b.StartTime) < SharedDriveGapMinutes)
+                run.Add(b);
+            else
+                runs.Add(new List<ItineraryBlock> { b });
+        }
+
+        foreach (var run in runs)
+        {
+            var drive = Math.Max(1, FamilyDriveTime.Minutes(inputs.Home, run[0].Stop, 0));
+            var start = run.Min(r => r.StartTime);
+            var end = run.Max(r => r.EndTime);
+            var before = fixedBlocks.Where(b => b.EndTime <= start).Select(b => b.EndTime).DefaultIfEmpty(dayStart).Max();
+            var after = fixedBlocks.Where(b => b.StartTime >= end).Select(b => b.StartTime).DefaultIfEmpty(dayEnd).Min();
+
+            var leave = Max(start.AddMinutes(-drive), Max(before, dayStart));
+            if (leave < start)
+                yield return new ItineraryBlock
+                {
+                    Id = Guid.NewGuid(), Day = day, StartTime = leave, EndTime = start, Kind = BlockKind.Drive,
+                    Title = $"Drive to {run[0].Title}", Reason = $"{drive} min drive"
+                };
+            var home = Min(end.AddMinutes(drive), Min(after, dayEnd));
+            if (home > end)
+                yield return new ItineraryBlock
+                {
+                    Id = Guid.NewGuid(), Day = day, StartTime = end, EndTime = home, Kind = BlockKind.Drive,
+                    Title = $"Drive home from {run[^1].Title}", Reason = $"{drive} min drive"
+                };
+        }
+    }
+
     private static TimeOnly Max(TimeOnly a, TimeOnly b) => a > b ? a : b;
     private static TimeOnly Min(TimeOnly a, TimeOnly b) => a < b ? a : b;
 
@@ -212,10 +282,12 @@ public sealed class WeekendPlanner : IWeekendPlanner
         string.Equals(block.Title, commitment.Title, StringComparison.OrdinalIgnoreCase)
         || Overlaps(block.StartTime, block.EndTime, commitment.StartTime, commitment.EndTime);
 
-    private static void EnsureNoOverlap(IReadOnlyList<ItineraryBlock> blocks)
+    private static void EnsureNoOverlap(IReadOnlyList<ItineraryBlock> blocks, IReadOnlyList<Commitment> commitments)
     {
         for (var i = 1; i < blocks.Count; i++)
         {
+            // Commitments with different people going may overlap (L2-192): they share the span.
+            if (Splittable(blocks[i - 1], blocks[i], commitments)) continue;
             if (blocks[i].StartTime < blocks[i - 1].EndTime)
                 throw new ConflictException(
                     $"Commitments overlap on {blocks[i].Day}: '{blocks[i - 1].Title}' and '{blocks[i].Title}'.");
@@ -241,21 +313,32 @@ public sealed class WeekendPlanner : IWeekendPlanner
     private static int GapMinutes((TimeOnly start, TimeOnly end) g) =>
         (int)(g.end.ToTimeSpan() - g.start.ToTimeSpan()).TotalMinutes;
 
-    // ─── Activity scoring ─────────────────────────────────────────────────────
+    // ─── Candidates and scoring ───────────────────────────────────────────────
 
-    private static List<(Activity activity, int score)> ScoreActivities(
-        PlannerInputs inputs, (TimeOnly start, TimeOnly end) gap, WeatherForecast forecast,
-        ISet<Guid> alreadyPicked, DayOfWeekend day)
+    private const int LeaningBonus = 3;
+    private const int LikeBonus = 3;
+    private const int InterestBonus = 2;
+
+    /// <summary>"On this weekend only" (L2-201).</summary>
+    private const int EventBonus = 3;
+
+    /// <summary>The day's candidates: every activity, and the published events running that date (L2-201).</summary>
+    private static IEnumerable<PlannerCandidate> Candidates(PlannerInputs inputs, DateOnly date) =>
+        inputs.Activities.Select(PlannerCandidate.From)
+            .Concat(inputs.Events.Where(e => e.StartsOn <= date && date <= e.EndsOn).Select(PlannerCandidate.From));
+
+    /// <summary>
+    /// The candidates that fit <paramref name="gap"/> on <paramref name="date"/>, best first, each
+    /// with the window it would take (L2-200: hours, season, event times, daylight).
+    /// </summary>
+    private static List<(PlannerCandidate candidate, int score, (TimeOnly start, TimeOnly end) fit)> ScoreCandidates(
+        PlannerInputs inputs, IEnumerable<PlannerCandidate> pool, (TimeOnly start, TimeOnly end) gap,
+        WeatherForecast forecast, ISet<Guid> alreadyPicked, DayOfWeekend day)
     {
+        var date = day == DayOfWeekend.Saturday ? inputs.WeekendOf : inputs.WeekendOf.AddDays(1);
         var minutes = GapMinutes(gap);
-        var likedTags = inputs.Preferences
-            .Where(p => p.Kind == PreferenceKind.Like)
-            .Select(p => p.Value)
-            .ToList();
-        var dislikedTags = inputs.Preferences
-            .Where(p => p.Kind == PreferenceKind.Dislike)
-            .Select(p => p.Value)
-            .ToList();
+        var likedTags = inputs.Preferences.Where(p => p.Kind == PreferenceKind.Like).Select(p => p.Value).ToList();
+        var dislikedTags = inputs.Preferences.Where(p => p.Kind == PreferenceKind.Dislike).Select(p => p.Value).ToList();
 
         // "Skipping next time" (L2-027 AC3): an activity from a weekend the family
         // rated 2★ or lower is not planned again.
@@ -265,58 +348,94 @@ public sealed class WeekendPlanner : IWeekendPlanner
             .ToHashSet();
 
         var profile = inputs.Boundaries;
-        var results = new List<(Activity, int)>();
-        foreach (var act in inputs.Activities)
+        var sunset = inputs.Sunsets?.GetValueOrDefault(day);
+        var results = new List<(PlannerCandidate, int, (TimeOnly, TimeOnly))>();
+        foreach (var c in pool)
         {
-            if (alreadyPicked.Contains(act.Id)) continue;
-            if (skipped.Contains(act.Id)) continue;
-            if (act.DriveMinutes > profile.MaxDriveMinutes) continue; // L2-191
-            if (ThemeTagger.Of(act).Any(profile.ExcludedThemes.Contains)) continue; // L2-194
-            if (act.TypicalDurationMinutes > minutes) continue;
-            // Both drives plus a minimum stay must fit, otherwise the drive-clamp
-            // in BuildActivityWithDrives would produce an activity that ends
-            // before it starts.
-            if (act.DriveMinutes * 2 + PlannerTimes.ActivityMinMinutes > minutes) continue;
-
-            // Disqualifying conditions first.
-            if (dislikedTags.Any(d => Disliked(act, d))) continue;
-            var ageOutside = inputs.Members.Count(m => m.Age < act.MinAge || m.Age > act.MaxAge);
+            if (alreadyPicked.Contains(c.Id)) continue;
+            if (skipped.Contains(c.Id)) continue;
+            if (c.DriveMinutes > profile.MaxDriveMinutes) continue; // L2-191
+            if (c.Themes.Any(profile.ExcludedThemes.Contains)) continue; // L2-194
+            if (!c.InSeason(date)) continue; // L2-200
+            if (c.Kind == CandidateKind.Activity && c.DurationMinutes > minutes) continue;
+            if (dislikedTags.Any(d => Disliked(c, d))) continue;
+            var ageOutside = inputs.Members.Count(m => m.Age < c.MinAge || m.Age > c.MaxAge);
             if (ageOutside >= 2) continue;
+            if (FitInGap(c, gap, sunset) is not { } fit) continue;
 
-            int score = 0;
+            var score = 0;
 
             // Weather fit (only if forecast available).
             if (!forecast.Unavailable)
             {
-                if (forecast.Tags.Contains("rain") && act.Indoor) score += 3;
-                if ((forecast.Tags.Contains("sunny") || forecast.Tags.Contains("warm")) && !act.Indoor) score += 2;
-                if (forecast.Tags.Contains("snow") && act.Indoor) score += 3;
+                if (forecast.Tags.Contains("rain") && c.Indoor == true) score += 3;
+                if ((forecast.Tags.Contains("sunny") || forecast.Tags.Contains("warm")) && c.Indoor == false) score += 2;
+                if (forecast.Tags.Contains("snow") && c.Indoor == true) score += 3;
             }
 
             // Drive fit.
-            var roundTrip = act.DriveMinutes * 2;
-            if (roundTrip > minutes * 0.4) score -= 2;
+            if (c.DriveMinutes * 2 > minutes * 0.4) score -= 2;
 
             // Age fit.
             if (ageOutside == 0) score += 2;
 
-            // Recency.
-            score += RecencyScore(inputs, act.Id);
-
-            // Try-new.
-            if (inputs.TryNew && inputs.History.All(h => h.ActivityId != act.Id)) score += 3;
+            score += RecencyScore(inputs, c.Id);
+            if (inputs.TryNew && inputs.History.All(h => h.ActivityId != c.Id)) score += 3;
 
             // Leaning (L2-195), likes and interests (L2-196): two matching likes beat the rain bonus.
-            if ((profile.Leaning == PlanLeaning.Indoor && act.Indoor) || (profile.Leaning == PlanLeaning.Outdoor && !act.Indoor))
+            if ((profile.Leaning == PlanLeaning.Indoor && c.Indoor == true) || (profile.Leaning == PlanLeaning.Outdoor && c.Indoor == false))
                 score += LeaningBonus;
-            score += LikeBonus * likedTags.Count(t => MatchesTag(act, t));
-            score += InterestBonus * inputs.Members.Count(m => m.Interests.Any(i => MatchesTag(act, i)));
+            score += LikeBonus * likedTags.Count(t => MatchesTag(c, t));
+            score += InterestBonus * inputs.Members.Count(m => m.Interests.Any(i => MatchesTag(c, i)));
+            if (c.Kind == CandidateKind.Event) score += EventBonus;
 
-            results.Add((act, score));
+            results.Add((c, score, fit));
         }
 
-        // Stable sort: highest score first, tie-break by activity name for determinism before rng pick.
+        // Stable sort: highest score first, tie-break by name for determinism before rng pick.
         return results.OrderByDescending(r => r.Item2).ThenBy(r => r.Item1.Name).ToList();
+    }
+
+    /// <summary>
+    /// Where a candidate goes in a gap: after the drive, not before it opens or its event starts;
+    /// ending by the drive home, its closing time, its event's end and, outdoors and untimed,
+    /// sunset (L2-200, L2-201). Null when too little of it fits.
+    /// </summary>
+    internal static (TimeOnly start, TimeOnly end)? FitInGap(
+        PlannerCandidate c, (TimeOnly start, TimeOnly end) gap, TimeOnly? sunset, TimeOnly? preferredStart = null)
+    {
+        var drive = Math.Max(0, c.DriveMinutes);
+        if (gap.start.AddMinutes(drive) >= gap.end) return null;
+
+        var earliest = gap.start.AddMinutes(drive);
+        var latestEnd = gap.end.AddMinutes(-drive);
+        if (latestEnd <= earliest) return null;
+
+        if (c.OpensAt is { } opens && opens > earliest) earliest = opens;
+        if (c.ClosesAt is { } closes && closes < latestEnd) latestEnd = closes;
+        if (c.IsTimedEvent)
+        {
+            if (c.StartTime!.Value > earliest) earliest = c.StartTime.Value;
+            if (c.EndTime!.Value < latestEnd) latestEnd = c.EndTime.Value;
+        }
+        else if (c.Kind == CandidateKind.Event)
+        {
+            if (PlannerCandidate.UntimedEventFrom > earliest) earliest = PlannerCandidate.UntimedEventFrom;
+            if (PlannerCandidate.UntimedEventUntil < latestEnd) latestEnd = PlannerCandidate.UntimedEventUntil;
+        }
+        if (c.IsOutdoor && !c.IsTimedEvent && sunset is { } dusk && dusk < latestEnd) latestEnd = dusk;
+
+        if (preferredStart is { } wanted && wanted > earliest) earliest = wanted;
+        var want = c.Kind == CandidateKind.Event
+            ? PlannerCandidate.EventMinutes
+            : Math.Max(c.DurationMinutes, PlannerTimes.ActivityMinMinutes);
+        var start = earliest;
+        var end = start.AddMinutes(want);
+        if (end > latestEnd || end < start) end = latestEnd;
+
+        var least = c.Kind == CandidateKind.Event ? PlannerCandidate.EventMinMinutes : PlannerTimes.ActivityMinMinutes;
+        if (end <= start || Minutes(start, end) < least) return null;
+        return (start, end);
     }
 
     private static int RecencyScore(PlannerInputs inputs, Guid activityId)
@@ -335,43 +454,35 @@ public sealed class WeekendPlanner : IWeekendPlanner
         };
     }
 
-    private const int LeaningBonus = 3;
-    private const int LikeBonus = 3;
-    private const int InterestBonus = 2;
-
     /// <summary>A dislike of "Indoor" or "Outdoor" reads the place's flag (L2-194 AC5); others match text.</summary>
-    private static bool Disliked(Activity act, string dislike) =>
-        string.Equals(dislike.Trim(), "Indoor", StringComparison.OrdinalIgnoreCase) ? act.Indoor
-        : string.Equals(dislike.Trim(), "Outdoor", StringComparison.OrdinalIgnoreCase) ? !act.Indoor
-        : MatchesTag(act, dislike);
+    private static bool Disliked(PlannerCandidate c, string dislike) =>
+        string.Equals(dislike.Trim(), "Indoor", StringComparison.OrdinalIgnoreCase) ? c.Indoor == true
+        : string.Equals(dislike.Trim(), "Outdoor", StringComparison.OrdinalIgnoreCase) ? c.Indoor == false
+        : MatchesTag(c, dislike);
 
-    private static bool MatchesTag(Activity act, string tag) =>
-        act.WeatherTags.Any(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase))
-        || string.Equals(act.Category, tag, StringComparison.OrdinalIgnoreCase)
-        || act.Name.Contains(tag, StringComparison.OrdinalIgnoreCase)
-        || act.Description.Contains(tag, StringComparison.OrdinalIgnoreCase);
+    private static bool MatchesTag(PlannerCandidate c, string tag) =>
+        c.Tags.Any(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase))
+        || string.Equals(c.Category, tag, StringComparison.OrdinalIgnoreCase)
+        || c.Name.Contains(tag, StringComparison.OrdinalIgnoreCase)
+        || c.Description.Contains(tag, StringComparison.OrdinalIgnoreCase);
 
-    // ─── Activity placement with drive blocks ─────────────────────────────────
+    // ─── Outing placement with drive blocks ───────────────────────────────────
 
-    private static IEnumerable<ItineraryBlock> BuildActivityWithDrives(
-        Activity act, (TimeOnly start, TimeOnly end) gap, WeatherForecast forecast, bool tryNew, DayOfWeekend day)
+    /// <summary>The drive there, the outing, and the drive home, around the fitted window.</summary>
+    private static IEnumerable<ItineraryBlock> BuildOuting(
+        PlannerCandidate c, (TimeOnly start, TimeOnly end) fit, string reason, DayOfWeekend day)
     {
-        var drive = act.DriveMinutes;
-        var activityStart = gap.start.AddMinutes(drive);
-        var activityEnd = activityStart.AddMinutes(act.TypicalDurationMinutes);
-        if (activityEnd > gap.end.AddMinutes(-drive))
-            activityEnd = gap.end.AddMinutes(-drive);
-
+        var drive = Math.Max(0, c.DriveMinutes);
         if (drive > 0)
         {
             yield return new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
                 Day = day,
-                StartTime = gap.start,
-                EndTime = activityStart,
+                StartTime = fit.start.AddMinutes(-drive),
+                EndTime = fit.start,
                 Kind = BlockKind.Drive,
-                Title = $"Drive to {act.Name}",
+                Title = $"Drive to {c.Name}",
                 Reason = $"{drive} min drive"
             };
         }
@@ -380,44 +491,52 @@ public sealed class WeekendPlanner : IWeekendPlanner
         {
             Id = Guid.NewGuid(),
             Day = day,
-            StartTime = activityStart,
-            EndTime = activityEnd,
+            StartTime = fit.start,
+            EndTime = fit.end,
             Kind = BlockKind.Activity,
-            Title = act.Name,
-            RefId = act.Id,
-            Reason = BuildActivityReason(act, forecast, tryNew, GapMinutes(gap)),
-            Stop = act.Geo?.Copy()
+            Title = c.Name,
+            RefId = c.Id,
+            Reason = reason,
+            Stop = c.Geo?.Copy()
         };
 
-        if (drive > 0 && activityEnd.AddMinutes(drive) <= gap.end)
+        if (drive > 0)
         {
             yield return new ItineraryBlock
             {
                 Id = Guid.NewGuid(),
                 Day = day,
-                StartTime = activityEnd,
-                EndTime = activityEnd.AddMinutes(drive),
+                StartTime = fit.end,
+                EndTime = fit.end.AddMinutes(drive),
                 Kind = BlockKind.Drive,
-                Title = $"Drive home from {act.Name}",
+                Title = $"Drive home from {c.Name}",
                 Reason = $"{drive} min drive"
             };
         }
     }
 
     /// <param name="firstTime">True only when the try-new bonus applied: the family never had it (L2-189).</param>
-    private static string BuildActivityReason(Activity act, WeatherForecast forecast, bool firstTime, int gapMinutes)
+    private static string BuildReason(
+        PlannerCandidate c, WeatherForecast forecast, bool firstTime, (TimeOnly start, TimeOnly end) gap,
+        (TimeOnly start, TimeOnly end) fit, TimeOnly? sunset)
     {
         var parts = new List<string>();
+        if (c.Kind == CandidateKind.Event) parts.Add("on this weekend only");
         if (forecast.Unavailable) parts.Add("weather unavailable");
         else
         {
-            if (forecast.Tags.Contains("rain") && act.Indoor) parts.Add("indoor pick — rain in forecast");
-            else if ((forecast.Tags.Contains("sunny") || forecast.Tags.Contains("warm")) && !act.Indoor)
+            if (forecast.Tags.Contains("rain") && c.Indoor == true) parts.Add("indoor pick — rain in forecast");
+            else if ((forecast.Tags.Contains("sunny") || forecast.Tags.Contains("warm")) && c.Indoor == false)
                 parts.Add("outdoor pick — fair weather");
-            else if (forecast.Tags.Contains("snow") && act.Indoor) parts.Add("indoor pick — snow in forecast");
+            else if (forecast.Tags.Contains("snow") && c.Indoor == true) parts.Add("indoor pick — snow in forecast");
         }
         if (firstTime) parts.Add("first time trying this — variety on");
-        parts.Add($"fits {act.TypicalDurationMinutes}-min window in {gapMinutes}-min gap");
+        if (c.OpensAt is { } opens && c.ClosesAt is { } closes && (fit.start == opens || fit.end == closes))
+            parts.Add($"open {opens:H\\:mm}–{closes:H\\:mm}");
+        if (c.IsOutdoor && !c.IsTimedEvent && sunset is { } dusk && fit.end == dusk)
+            parts.Add($"back before sunset {dusk:H\\:mm}");
+        if (c.Kind == CandidateKind.Activity)
+            parts.Add($"fits {c.DurationMinutes}-min window in {GapMinutes(gap)}-min gap");
         return string.Join("; ", parts);
     }
 

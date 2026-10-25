@@ -22,7 +22,8 @@ public sealed record PlannerInputs(
     int Seed,
     IReadOnlyList<CalendarCommitment>? CalendarCommitments = null,
     PlannerProfile? Profile = null,
-    GeoLocation? Home = null)
+    GeoLocation? Home = null,
+    IReadOnlyDictionary<DayOfWeekend, TimeOnly>? Sunsets = null)
 {
     /// <summary>The family's boundaries, or the defaults when none were given.</summary>
     public PlannerProfile Boundaries => Profile ?? PlannerProfile.Default;

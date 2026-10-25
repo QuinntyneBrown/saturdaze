@@ -27,7 +27,8 @@ public sealed record PlannerContext(
     IReadOnlyList<HistoricalActivity> History,
     GeoLocation Home,
     IReadOnlyList<CalendarCommitment>? CalendarCommitments = null,
-    PlannerProfile? Profile = null)
+    PlannerProfile? Profile = null,
+    IReadOnlyDictionary<DayOfWeekend, TimeOnly>? Sunsets = null)
 {
     public PlannerInputs ToInputs(
         IReadOnlyList<ItineraryBlock> lockedBlocks,
@@ -50,7 +51,8 @@ public sealed record PlannerContext(
             Seed: seed,
             CalendarCommitments: CalendarCommitments,
             Profile: Profile,
-            Home: Home);
+            Home: Home,
+            Sunsets: Sunsets);
 
     public WeatherForecast ForecastFor(DayOfWeekend day)
     {
@@ -66,17 +68,20 @@ public sealed class PlannerInputLoader
     private readonly WeekendForecastService _forecast;
     private readonly HomeLocationOptions _home;
     private readonly ICalendarCommitmentSource _calendar;
+    private readonly CalendarOptions _zone;
 
     public PlannerInputLoader(
         IAppDbContext db,
         WeekendForecastService forecast,
         IOptions<HomeLocationOptions> home,
-        ICalendarCommitmentSource calendar)
+        ICalendarCommitmentSource calendar,
+        IOptions<CalendarOptions> zone)
     {
         _db = db;
         _forecast = forecast;
         _home = home.Value;
         _calendar = calendar;
+        _zone = zone.Value;
     }
 
     public async Task<PlannerContext> LoadAsync(Guid familyId, DateOnly weekendOf, CancellationToken ct)
@@ -135,6 +140,14 @@ public sealed class PlannerInputLoader
         // Weekend events from the family's connected calendars join the fixed blocks (L2-177).
         var calendar = await _calendar.GetAsync(familyId, weekendOf, ct);
 
-        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar, profile);
+        // Sunset at home each day, for "back before sunset" (L2-200).
+        var zone = TimeZoneInfo.FindSystemTimeZoneById(_zone.TimeZone);
+        var sunsets = new Dictionary<DayOfWeekend, TimeOnly>
+        {
+            [DayOfWeekend.Saturday] = SunCalculator.Sunset((double)home.Latitude, (double)home.Longitude, weekendOf, zone),
+            [DayOfWeekend.Sunday] = SunCalculator.Sunset((double)home.Latitude, (double)home.Longitude, weekendEnd, zone),
+        };
+
+        return new PlannerContext(family, weekendOf, activities, restaurants, events, forecast, history, home, calendar, profile, sunsets);
     }
 }
