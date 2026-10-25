@@ -37,6 +37,7 @@ const BASE_BLOCK: BlockRow = {
   lockable: true,
   stopNumber: null,
   leg: null,
+  pickedByAgents: false,
 };
 
 export const BLOCK: BlockRow = BASE_BLOCK;

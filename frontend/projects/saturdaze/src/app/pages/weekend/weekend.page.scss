@@ -55,3 +55,12 @@
     top: calc(var(--sd-topbar-h, 64px) + 16px);
   }
 }
+
+// "Drafted for your family" leads the action row (L2-211).
+.cover-actions__chip {
+  margin-inline-end: auto;
+}
+
+.standard-plan {
+  margin-bottom: 16px;
+}

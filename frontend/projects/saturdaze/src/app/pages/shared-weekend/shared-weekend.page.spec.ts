@@ -18,6 +18,8 @@ const READY: WeekendView = {
   cover: null,
   dateRange: '16 – 17 May',
   coverChoices: [],
+  draftedByAgents: false,
+  agentDraft: { drafting: false, notice: null, canRetry: false },
   days: [
     {
       day: 'Saturday',

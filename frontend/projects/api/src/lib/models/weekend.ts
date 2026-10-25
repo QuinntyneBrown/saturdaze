@@ -1,3 +1,10 @@
+export type { AgentDraftView } from './agent-draft-view';
+export type {
+  AgentDraftDto,
+  AgentFallbackReason,
+  AgentRunStatus,
+  PlanSource,
+} from './agent-draft.dto';
 export type { BlockKind } from './block-kind';
 export type { BlockRow } from './block-row';
 export type { CalendarExport } from './calendar-export';

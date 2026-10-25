@@ -68,4 +68,8 @@ export interface ItineraryBlockDto {
    * Photo — the place's primary photo, for thumbnails and the cover picker.
    */
   readonly photo?: PlacePhotoDto | null;
+  /**
+   * Picked By Agents — placed from an agent draft's pick; its reason is the agents' (L2-211).
+   */
+  readonly pickedByAgents?: boolean;
 }

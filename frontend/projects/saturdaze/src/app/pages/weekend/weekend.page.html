@@ -11,6 +11,12 @@
     </sd-button>
   </sd-cover>
   <div class="cover-actions">
+    @if (weekend().draftedByAgents) {
+      <sd-chip class="cover-actions__chip" tone="primary">
+        <sd-icon name="sparkle" [size]="13" [stroke]="2" />
+        Drafted for your family
+      </sd-chip>
+    }
     <sd-button variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
       <sd-icon name="calendar" />
       Add to calendar
@@ -60,6 +66,28 @@
 
 @if (error()) {
   <sd-banner class="error" tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+}
+
+@if (status() === 'ready') {
+  @if (drafting()) {
+    <sd-status-row class="status" icon="sparkle"
+      >Agents are drafting your weekend — researching what's on, checking it against your family,
+      then fitting it around your commitments. This usually takes a minute or two.</sd-status-row
+    >
+  } @else if (weekend().agentDraft.notice || draftRefusal()) {
+    <sd-banner class="standard-plan" tone="info" icon="alert">
+      @if (weekend().agentDraft.notice) {
+        <strong>This is the standard plan.</strong> {{ weekend().agentDraft.notice }}
+      }
+      {{ draftRefusal() }}
+      @if (weekend().agentDraft.canRetry && !draftRefusal()) {
+        <sd-button variant="quiet" size="sm" (click)="draftWithAgents()">
+          <sd-icon name="sparkle" />
+          Try again
+        </sd-button>
+      }
+    </sd-banner>
+  }
 }
 
 @switch (status()) {
@@ -132,6 +160,7 @@
         <div
           class="planner"
           role="tabpanel"
+          [attr.aria-busy]="drafting() || null"
           [id]="panelId(day.day)"
           [attr.aria-labelledby]="panelId(day.day) + '-tab'"
         >

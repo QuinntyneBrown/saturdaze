@@ -310,6 +310,51 @@ export class WeekendPage extends BasePage {
     return this.main.locator(".cover-actions");
   }
 
+  /* ---------- Agent drafts (L2-211) ---------- */
+
+  /** More options → "Draft with agents". */
+  async draftWithAgents(): Promise<void> {
+    await this.moreButton().click();
+    // The sheet under 720px names each row with its sub-line too.
+    await this.page
+      .locator(".cdk-overlay-container")
+      .getByRole("menuitem", { name: /^Draft with agents/ })
+      .filter({ visible: true })
+      .click();
+  }
+
+  /** Opens D1 for a block: its "Why this" button, or the row's chevron under 720px. */
+  async openBlockDetails(title: string, name?: DayName): Promise<void> {
+    const why = this.whyButton(title, name);
+    if (await why.isVisible()) await why.click();
+    else await this.blockChevron(this.block(title, name)).click();
+  }
+
+  /** The plan the agents are working on: the selected day's panel, marked busy while they draft. */
+  planner(): Locator {
+    return this.grid;
+  }
+
+  /** "Drafted for your family" at the start of the cover's action row. */
+  draftedChip(): Locator {
+    return this.coverActions().locator(".cover-actions__chip");
+  }
+
+  /** The "This is the standard plan" banner under the cover actions. */
+  standardPlanBanner(): Locator {
+    return this.banner("info").filter({ hasText: "This is the standard plan" });
+  }
+
+  /** The banner's "Try again" (Error, Timeout and Invalid only). */
+  tryAgainButton(): Locator {
+    return control(this.standardPlanBanner(), "Try again");
+  }
+
+  /** The well titles in the open block dialog: "Why this" or, for an agents' pick, "Why this pick". */
+  dialogWellTitles(): Locator {
+    return this.dialog().locator(".well__title");
+  }
+
   /** D29: one radio per stop photo, named by the stop. */
   coverPhotoOption(name: string): Locator {
     return this.dialog().getByRole("radio", { name, exact: true });
