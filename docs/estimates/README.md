@@ -1,13 +1,13 @@
 # Estimates
 
-- Overall effort: 229 days
+- Overall effort: 234 days
 - Complete: 94%
 
 | Subsystem | Effort | Complete |
 |---|---|---|
 | [weekend-planning](weekend-planning.md) | 52 days | 93% |
-| [identity-and-access](identity-and-access.md) | 44 days | 98% |
-| [family-profile](family-profile.md) | 21 days | 100% |
+| [identity-and-access](identity-and-access.md) | 48 days | 96% |
+| [family-profile](family-profile.md) | 22 days | 100% |
 | [weather](weather.md) | 3 days | 80% |
 | [discovery](discovery.md) | 46 days | 96% |
 | [administration](administration.md) | 32 days | 95% |
@@ -17,7 +17,7 @@
 
 ## Roadmap
 
-1. weekend-planning: agent-drafted weekends against the Foundry deployment (role grant, first ASSERT before-and-after run, then AGENT_PLANNING_ENABLED), and the calendar sync visual baselines
+1. weekend-planning: agent-drafted weekends against the Foundry deployment (role grant, first ASSERT before-and-after run, then AGENT_PLANNING_ENABLED), and the visual baselines on the Windows reference machine for calendar sync and for the owner's own row (Who's in, create-account, the D17 This is me specimens)
 2. weather and weekend-planning: production config warning, no-slot errand feedback, cover and map polish
 3. discovery: image srcset and place-imagery edge cases, add-idea-to-day edge cases
 4. administration and operations: CLI migrate and ingest tests, admin CORS, worker host tests, p95 performance budgets
