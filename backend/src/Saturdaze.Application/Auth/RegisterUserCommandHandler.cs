@@ -64,6 +64,19 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         };
         _db.Families.Add(family);
 
+        // The owner is the first one in "Who's in", linked to their account (L2-214, ADR-024).
+        if (request.OwnerName is { } ownerName && request.OwnerAge is { } ownerAge)
+        {
+            _db.FamilyMembers.Add(new FamilyMember
+            {
+                Id = Guid.NewGuid(),
+                FamilyId = family.Id,
+                Name = ownerName.Trim(),
+                Age = ownerAge,
+                UserId = userId,
+            });
+        }
+
         var user = new User
         {
             Id = userId,

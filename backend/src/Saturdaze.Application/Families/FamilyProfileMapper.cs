@@ -12,6 +12,7 @@ internal static class FamilyProfileMapper
         Family family,
         bool isOwner,
         string? ownerEmail,
+        Guid? selfMemberId,
         IReadOnlyDictionary<Guid, string> invited,
         IReadOnlyDictionary<Guid, string> accounts) => new(
         family.Id,
@@ -44,7 +45,8 @@ internal static class FamilyProfileMapper
         family.YoungestBedtime,
         family.SundayDinnerAtHome,
         family.OutingsPerDay,
-        family.Leaning);
+        family.Leaning,
+        selfMemberId);
 
     private static FamilyMemberDto ToDto(
         FamilyMember member,

@@ -48,6 +48,9 @@ public sealed class FamilyProfileReader
             .Where(u => accountIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, u => u.Email, ct);
 
-        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail, invited, accounts);
+        // The caller's own row in "Who's in", if any (L2-214).
+        var selfMemberId = family.Members.FirstOrDefault(m => m.UserId is not null && m.UserId == _user.UserId)?.Id;
+
+        return FamilyProfileMapper.ToDto(family, isOwner, ownerEmail, selfMemberId, invited, accounts);
     }
 }

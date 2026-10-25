@@ -22,7 +22,8 @@ public sealed record FamilyProfileDto(
     TimeOnly? YoungestBedtime = null,
     bool SundayDinnerAtHome = true,
     int OutingsPerDay = 2,
-    PlanLeaning Leaning = PlanLeaning.Either);
+    PlanLeaning Leaning = PlanLeaning.Either,
+    Guid? SelfMemberId = null);
 
 /// <param name="Email">The invited or signed-in address; null when <see cref="Access"/> is None.</param>
 public sealed record FamilyMemberDto(
