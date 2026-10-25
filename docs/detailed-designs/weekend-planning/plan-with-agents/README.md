@@ -104,7 +104,7 @@ API tests replace the keyed `IChatClient` with `ScriptedChatClient`. That fake a
 |---|---|---|
 | `plan_weekend` (root) | `AgentTelemetry.Source` (`Saturdaze.Agents`) | `saturdaze.run.id`, `saturdaze.run.trigger`, `saturdaze.run.status`, `saturdaze.run.fallback_reason`, `saturdaze.run.cost_usd` |
 | `invoke_agent researcher` and `chat {model}` | written by `RegionalResearcher` | `gen_ai.operation.name`, `gen_ai.provider.name=anthropic`, `gen_ai.request.model`, `gen_ai.usage.input_tokens`, `gen_ai.usage.output_tokens` |
-| `invoke_agent curator`, `invoke_agent drafter`, `chat {model}`, `execute_tool {tool}` | Agent Framework `UseOpenTelemetry` | the `gen_ai.*` set, sensitive data off |
+| `invoke_agent curator({agent id})`, `invoke_agent drafter({agent id})`, `chat {model}`, `execute_tool {tool}` | Agent Framework `UseOpenTelemetry` on the agent and `Microsoft.Extensions.AI` `UseOpenTelemetry` on the chat client | the `gen_ai.*` set, sensitive data off; the span name is the activity's display name |
 | `validate_plan` | `WeekendDraftWorkflow` | `saturdaze.round`, `saturdaze.violations` |
 
 The API and the CLI call `AddAgentTelemetry(configuration)`. It registers `OpenTelemetry` tracing for `Saturdaze.Agents` and, when `APPLICATIONINSIGHTS_CONNECTION_STRING` is set, `AddAzureMonitorTraceExporter`. API tests capture spans with an `ActivityListener` on the source.
