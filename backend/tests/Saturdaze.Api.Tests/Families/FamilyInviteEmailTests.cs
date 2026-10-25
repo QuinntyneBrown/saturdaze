@@ -91,6 +91,68 @@ public class FamilyInviteEmailTests : IClassFixture<SaturdazeApiFactory>
         html.Should().NotContain("<b>").And.NotContain("<i>");
     }
 
+    [Fact]
+    public async Task A_member_added_without_sign_in_gets_no_email()
+    {
+        // Traces to: L2-183 #4, L2-125
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var name = $"Mae {Guid.NewGuid():N}";
+
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = name, Age = 5 });
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        await Task.Delay(500);
+        _factory.Mail.Sent.Should().NotContain(m => m.Body.Contains(name));
+    }
+
+    [Fact]
+    public async Task An_invite_refused_because_the_email_signs_in_sends_no_email()
+    {
+        // Traces to: L2-183 #4, L2-126 #3
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var existing = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = "Sara", Age = 36, Email = existing.Email });
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        (await InvitesTo(existing.Email)).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task An_invite_refused_because_one_is_outstanding_sends_no_second_email()
+    {
+        // Traces to: L2-183 #4, L2-126 #4
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var email = NewEmail("sara");
+        await Invite(owner, "Sara", email);
+        (await _factory.Mail.WaitForAsync(email)).Should().ContainSingle();
+
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = "Sara Two", Age = 36, Email = email });
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+
+        (await InvitesTo(email)).Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task An_invite_to_a_malformed_email_sends_no_email()
+    {
+        // Traces to: L2-183 #4, L2-126 #5
+        var owner = await SignedInClient.CreateAsync(_factory, FamilyMode.Own);
+        var email = $"not-an-email-{Guid.NewGuid():N}";
+
+        var response = await owner.Client.PostAsJsonAsync("/api/family/members", new { Name = "Sara", Age = 36, Email = email });
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        (await InvitesTo(email)).Should().BeEmpty();
+    }
+
+    /// <summary>Family invites that reached an address, after giving a stray one time to arrive.</summary>
+    private async Task<IReadOnlyList<Saturdaze.Application.Email.EmailMessage>> InvitesTo(string address)
+    {
+        await Task.Delay(500);
+        return _factory.Mail.To(address).Where(m => m.Subject.EndsWith(" invited you to Saturdaze", StringComparison.Ordinal)).ToList();
+    }
+
     private async Task NameFamily(SignedInClient.Session owner, string name)
     {
         using var scope = _factory.Services.CreateScope();
