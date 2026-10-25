@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour — Add yourself or claim a member ("This is me")
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Family owner" as actor
+box "Frontend — Saturdaze Angular application" #E0F2FE
+ participant "FamilyPage / WelcomePage\nFamilyMemberDialog (D17, D17b)" as page
+ participant "FamilyService" as client
+end box
+box "Backend — Saturdaze API" #D1FADF
+ participant "FamilyController" as controller
+end box
+box "Backend — Saturdaze Application and Domain" #ECFDF3
+ participant "AddFamilyMemberCommandHandler\nClaimFamilyMemberCommandHandler\nFamilyOwnership" as handler
+end box
+box "Backend — Saturdaze Infrastructure" #FFF4E5
+ database "AppDbContext\nSQL Server" as db
+end box
+page -> client : load()
+client -> controller : GET /api/family (bearer)
+controller --> client : 200 FamilyProfileDto (isOwner, selfMemberId = null)
+page --> actor : "Add yourself" heads Who's in (L2-217)
+alt add yourself
+  actor -> page : Add yourself, name and age, This is me ticked, Add me
+  page -> client : addMember({name, age, email: null, self: true})
+  client -> controller : POST /api/family/members {name, age, self: true}
+  controller -> handler : AddFamilyMemberCommand(Self = true)
+else claim a listed member
+  actor -> page : Tap the member, This is me
+  page -> client : claimMember(id)
+  client -> controller : POST /api/family/members/{id}/claim
+  controller -> handler : ClaimFamilyMemberCommand(id)
+end
+handler -> db : Load caller's family with members
+alt caller is not the owner
+  controller --> client : 403 owner_only (L2-216 AC3)
+else member not in caller's family
+  controller --> client : 404 (L2-216 AC4)
+else caller already has a linked member
+  controller --> client : 409 already_in_family (L2-216 AC6)
+else member has an account or an outstanding invitation
+  controller --> client : 409 member_has_access (L2-216 AC5)
+else allowed
+  handler -> db : FamilyMember.UserId = caller (unique index on UserId)
+  controller --> client : 201 or 200 member, access Account, email = caller's (L2-216 AC1, AC2)
+  client -> controller : GET /api/family
+  controller --> client : 200 FamilyProfileDto (selfMemberId = member id)
+  page --> actor : "{name} · Parent · {age} · Signs in as {email}"; Add yourself row gone
+end
+@enduml

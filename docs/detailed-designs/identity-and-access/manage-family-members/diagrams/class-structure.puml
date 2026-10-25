@@ -15,6 +15,7 @@ package "Frontend" {
   class FamilyPage {
     #isOwner: Signal<boolean>
     #addMember(): Promise<void>
+    #addYourself(): Promise<void>
     #editMember(member: MemberRow): Promise<void>
   }
   class AcceptInvitePage {
@@ -23,6 +24,7 @@ package "Frontend" {
   }
   interface IFamilyService {
     +addMember(input: NewFamilyMember): Promise<FamilyInvite | null>
+    +claimMember(id: string): Promise<void>
     +removeMember(id: string): Promise<void>
   }
   class MemberRow <<model>> {
@@ -32,12 +34,15 @@ package "Frontend" {
   class FamilyView <<model>> {
     +isOwner: boolean
     +ownerEmail: string | null
+    +selfMemberId: string | null
+    +needsSelf: boolean
   }
 }
 
 package "Backend" {
   class FamilyController {
     +AddMember(cmd): Task<AddFamilyMemberResultDto>
+    +ClaimMember(id: Guid): Task<FamilyMemberDto>
     +RemoveMember(id: Guid): Task<IActionResult>
   }
   class AuthController {
@@ -52,7 +57,21 @@ package "Backend" {
     +Guid? OwnerUserId
   }
   class FamilyMember {
-    +Guid? UserId
+    +Guid? UserId <<unique when set>>
+  }
+  class AddFamilyMemberCommand <<record>> {
+    +string Name
+    +int Age
+    +string? Email
+    +bool Self
+  }
+  class ClaimFamilyMemberCommand <<record>> {
+    +Guid Id
+  }
+  class FamilyProfileDto <<record>> {
+    +bool IsOwner
+    +string? OwnerEmail
+    +Guid? SelfMemberId
   }
   class FamilyInvitation {
     +Guid Id
@@ -84,4 +103,6 @@ FamilyMember "1" *-- "0..1" FamilyInvitation : cascade delete
 FamilyMember "0..1" --> "0..1" User : UserId
 Family ..> User : OwnerUserId
 AuthController ..> FamilyInvitation : via handlers
+FamilyController ..> AddFamilyMemberCommand
+FamilyController ..> ClaimFamilyMemberCommand
 @enduml
