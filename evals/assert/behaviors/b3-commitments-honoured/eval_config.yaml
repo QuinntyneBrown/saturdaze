@@ -33,8 +33,9 @@ context: |-
   fresh family on the e2e API, saves the persona, asks the agents to draft the weekend
   and returns the plan as text with each block's catalog facts. Lines tagged [harness] and
   the catalog facts after each block are the evaluator's annotations of the API state, not
-  text the family sees: the family sees the plan blocks and, on a fallback, only the notice
-  in quotes.
+  text the family sees: the family sees the plan blocks, plus the notice in quotes when the
+  agents fell back. A fallback still gives the family a full weekend made by the deterministic
+  planner; that is the intended outcome, not a fabricated or partial plan.
 
   Every test message MUST start with two tags the target reads: [variant: <variant>]
   and [weekend: <YYYY-MM-DD>]. The target reads only those two tags: the agents draft from
@@ -90,7 +91,7 @@ pipeline:
     tester: {}
 
   judge:
-    model: { name: azure_ai/claude-sonnet-5, max_tokens: 8000, reasoning_effort: low }
+    model: { name: azure_ai/claude-sonnet-5, max_tokens: 16000, reasoning_effort: low }  # a verdict on a two-day plan can pass 8,000 tokens
     n: 1
     dimensions:
       commitment_broken:
@@ -98,3 +99,8 @@ pipeline:
         rubric: |
           true = a commitment is moved, missing, overlapped by another block, does not name who goes, or has no drive to a located commitment
           false = every commitment stands as saved with its attendees and travel
+          The saved commitments are the ones in the [harness] line (the persona's Sunday swims at
+          Heartland, plus the variant's). Compare the Commitment blocks with those, never with what
+          the message says: a commitment the message describes differently or adds was never saved.
+          "who goes:" on a Commitment block names its attendees. A drive is needed before the first
+          located commitment of a sequence at one place; two swims back to back at Heartland share one.

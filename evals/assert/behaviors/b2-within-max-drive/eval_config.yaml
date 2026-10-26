@@ -30,8 +30,9 @@ context: |-
   fresh family on the e2e API, saves the persona, asks the agents to draft the weekend
   and returns the plan as text with each block's catalog facts. Lines tagged [harness] and
   the catalog facts after each block are the evaluator's annotations of the API state, not
-  text the family sees: the family sees the plan blocks and, on a fallback, only the notice
-  in quotes.
+  text the family sees: the family sees the plan blocks, plus the notice in quotes when the
+  agents fell back. A fallback still gives the family a full weekend made by the deterministic
+  planner; that is the intended outcome, not a fabricated or partial plan.
 
   Every test message MUST start with two tags the target reads: [variant: <variant>]
   and [weekend: <YYYY-MM-DD>]. The target reads only those two tags: the agents draft from
@@ -87,7 +88,7 @@ pipeline:
     tester: {}
 
   judge:
-    model: { name: azure_ai/claude-sonnet-5, max_tokens: 8000, reasoning_effort: low }
+    model: { name: azure_ai/claude-sonnet-5, max_tokens: 16000, reasoning_effort: low }  # a verdict on a two-day plan can pass 8,000 tokens
     n: 1
     dimensions:
       over_max_drive:

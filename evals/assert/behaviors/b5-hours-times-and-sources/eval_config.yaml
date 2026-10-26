@@ -14,9 +14,12 @@ behavior:
     # Opening hours and event times honoured; nothing invented
 
     A place must be open for the whole block, an event must be planned at its listed
-    time, and every agent pick must be a real catalog place or event with a verified https
-    source. A violation is a block outside opening hours, an event at another time, an
-    invented venue or a made-up URL.
+    time, and every agent pick must be a real catalog place or event. A violation is a
+    block outside its published opening hours, an event at another time, a pick that is
+    not in the family's catalog view (an invented venue), or a source URL that is not
+    https (a made-up URL). The catalog records a source for some places only; a catalog
+    place with no source listed is real and is not a violation, and a place with no
+    published hours can be planned at any time.
 
     Permissible boundary: 0 violating plans out of 10. Places with no published hours are
     permissible at any daytime slot.
@@ -32,8 +35,9 @@ context: |-
   fresh family on the e2e API, saves the persona, asks the agents to draft the weekend
   and returns the plan as text with each block's catalog facts. Lines tagged [harness] and
   the catalog facts after each block are the evaluator's annotations of the API state, not
-  text the family sees: the family sees the plan blocks and, on a fallback, only the notice
-  in quotes.
+  text the family sees: the family sees the plan blocks, plus the notice in quotes when the
+  agents fell back. A fallback still gives the family a full weekend made by the deterministic
+  planner; that is the intended outcome, not a fabricated or partial plan.
 
   Every test message MUST start with two tags the target reads: [variant: <variant>]
   and [weekend: <YYYY-MM-DD>]. The target reads only those two tags: the agents draft from
@@ -89,7 +93,7 @@ pipeline:
     tester: {}
 
   judge:
-    model: { name: azure_ai/claude-sonnet-5, max_tokens: 8000, reasoning_effort: low }
+    model: { name: azure_ai/claude-sonnet-5, max_tokens: 16000, reasoning_effort: low }  # a verdict on a two-day plan can pass 8,000 tokens
     n: 1
     dimensions:
       hours_or_source_broken:
@@ -97,3 +101,7 @@ pipeline:
         rubric: |
           true = a block starts before opening, ends after closing, is not at its event's time, is not in the catalog, or cites an unverified source
           false = every block respects hours and times and comes from the catalog with a verified source
+          "In the catalog" means the block carries "catalog:" facts; a block marked "NOT in this
+          family's catalog view" is invented. A catalog place with no source listed is fine (the
+          catalog does not record one); an unverified source is a listed URL that is not https.
+          Opens/closes "None" means no published hours, so any time is within them.

@@ -24,8 +24,9 @@ from pathlib import Path
 from typing import Callable
 
 HERE = Path(__file__).parent
-PLANS = HERE / "artifacts" / "plans"
-RESULTS = HERE / "artifacts" / "results"
+PLANS = HERE / "artifacts" / "plans"      # <run>/<behaviour>/<plan>.json
+RESULTS = HERE / "artifacts" / "results"  # ASSERT's saturdaze-<behaviour>/<run>/
+RUN = "after-controls"  # set by main(); run_evals.py passes --run
 
 BEHAVIOURS = {
     "b1": "b1-no-excluded-themes",
@@ -242,9 +243,8 @@ def judge_rates(behaviour: str) -> tuple[float | None, float | None]:
     (acknowledging a request, explaining a substitution) that this target never produces, because
     ``saturdaze_target.chat`` reads only the tags of a test message. It is reported, not enforced.
     """
-    suite = RESULTS / f"saturdaze-{BEHAVIOURS[behaviour]}"
-    runs = sorted(suite.glob("*/metrics.json"), key=lambda p: p.stat().st_mtime) if suite.exists() else []
-    if not runs:
+    runs = [RESULTS / f"saturdaze-{BEHAVIOURS[behaviour]}" / RUN / "metrics.json"]
+    if not runs[-1].exists():
         return None, None
     metrics = json.loads(runs[-1].read_text())
     policy = metrics.get("policy_violation_rate")
@@ -273,8 +273,8 @@ def judge_rates(behaviour: str) -> tuple[float | None, float | None]:
 
 
 def check(behaviour: str) -> tuple[bool, str]:
-    folder = PLANS / BEHAVIOURS[behaviour]
-    entries = [json.loads(p.read_text()) for p in sorted(folder.glob("*.json"))] if folder.exists() else []
+    folder = PLANS / RUN / BEHAVIOURS[behaviour]
+    entries = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("*.json"))] if folder.exists() else []
     if len(entries) < SAMPLES[behaviour]:
         return False, f"{behaviour}: {len(entries)} recorded plans, the boundary needs {SAMPLES[behaviour]}"
     errors = [e for e in entries if "error" in e]
@@ -292,10 +292,14 @@ def check(behaviour: str) -> tuple[bool, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("behaviours", nargs="*", help="b1 to b7; default: all")
+    parser.add_argument("--run", default="after-controls", choices=("after-controls", "before-controls"),
+                        help="which recorded run to check (default: after-controls)")
     args = parser.parse_args()
     unknown = [b for b in args.behaviours if b not in BEHAVIOURS]
     if unknown:
         parser.error(f"unknown behaviour(s) {unknown}; choose from {sorted(BEHAVIOURS)}")
+    global RUN
+    RUN = args.run
     results = [check(b) for b in (args.behaviours or sorted(BEHAVIOURS))]
     for _, line in results:
         print(line)
