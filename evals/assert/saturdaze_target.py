@@ -137,11 +137,19 @@ def _facts(token: str, weekend_of: str) -> dict[str, dict]:
 
 
 def _describe(weekend: dict, run: dict, facts: dict[str, dict], p: Persona) -> str:
+    # The family sees the plan blocks and, on a fallback, the notice. Everything tagged
+    # [harness], and the catalog facts after each block, is the evaluator's annotation of
+    # the API state so the judge can check the hard rules; it is never shown to a family.
     lines = [
         f"Weekend of {weekend['weekendOf']} for a family of {len(p.members)} "
         f"(variant: {p.variant}, weather: {p.weather_note}).",
-        f"Agent run: {run['status']}" + (f", fell back ({run['fallbackReason']}): {run['notice']}" if run.get("fallbackReason") else ""),
-        f"Plan source: {weekend.get('planSource', 'Planner')}",
+        "[harness] Lines tagged [harness] and the catalog facts are the evaluator's annotations of the API "
+        "state, not text the family sees. The family sees the plan blocks and, on a fallback, only the notice in quotes.",
+        f"[harness] agent run status: {run['status']}"
+        + (f", fallback reason code: {run['fallbackReason']}" if run.get("fallbackReason") else "")
+        + f"; plan source: {weekend.get('planSource', 'Planner')}",
+        (f"Notice shown to the family: \"{run.get('notice') or ''}\"" if run.get("fallbackReason")
+         else "No notice shown to the family."),
     ]
     for b in sorted(weekend["blocks"], key=lambda b: (b["day"], b["startTime"])):
         f = facts.get(b.get("refId") or "", {})

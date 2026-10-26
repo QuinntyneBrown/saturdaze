@@ -72,6 +72,9 @@ def run_behaviour(key: str, controls: bool) -> int:
         shutil.rmtree(plans)
     run_name = "after-controls" if controls else "before-controls"
     text = config.read_text(encoding="utf-8").replace("run: after-controls", f"run: {run_name}")
+    # ASSERT resolves a relative artifacts_root against its own package, so pin it to this folder,
+    # where check_boundaries.py reads artifacts/results/<suite>/<run>/metrics.json.
+    text = f"artifacts_root: {(HERE / 'artifacts').as_posix()}\n" + text
     with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False, dir=config.parent, encoding="utf-8") as tmp:
         tmp.write(text)
     env = os.environ | {

@@ -570,7 +570,9 @@ jobs:
 
       - name: Marketing site serves its page and headers
         run: |
-          url="https://${{ needs.infra.outputs.marketing_host }}/"
+          # With www.saturdaze.ca set as the default domain (ADR-018), the *.azurestaticapps.net
+          # host answers 301 to it, so check the custom domain when there is one.
+          url="https://${{ vars.MARKETING_CUSTOM_DOMAIN || needs.infra.outputs.marketing_host }}/"
           body="$(curl -fsS --retry 5 --retry-delay 10 --retry-all-errors "$url")"
           grep -q 'Two days' <<<"$body" || { echo "::error::$url did not serve the marketing page"; exit 1; }
           curl -fsSI "$url" | grep -qi '^content-security-policy:' || { echo "::error::$url has no Content-Security-Policy"; exit 1; }
