@@ -65,7 +65,12 @@
   margin-bottom: 16px;
 }
 
-// "Try again" on its own line under the reason, not wrapped into the text.
+// The reason is its own block and "Try again" its own line below it, so the
+// button never sits in a line of text and stretches its line height.
+.standard-plan__text {
+  display: block;
+}
+
 .standard-plan__action {
   display: flex;
   margin-top: 10px;

@@ -76,10 +76,12 @@
     >
   } @else if (weekend().agentDraft.notice || draftRefusal()) {
     <sd-banner class="standard-plan" tone="info" icon="alert">
-      @if (weekend().agentDraft.notice) {
-        <strong>This is the standard plan.</strong> {{ weekend().agentDraft.notice }}
-      }
-      {{ draftRefusal() }}
+      <span class="standard-plan__text">
+        @if (weekend().agentDraft.notice) {
+          <strong>This is the standard plan.</strong> {{ weekend().agentDraft.notice }}
+        }
+        {{ draftRefusal() }}
+      </span>
       @if (weekend().agentDraft.canRetry && !draftRefusal()) {
         <span class="standard-plan__action">
           <sd-button variant="quiet" size="sm" (click)="draftWithAgents()">
