@@ -50,10 +50,12 @@
         }
       </div>
       @if (expandable()) {
-        <sd-button class="map__expand" variant="quiet" size="sm" (click)="openMap.emit()">
-          <sd-icon name="map" />
-          Open map
-        </sd-button>
+        <div class="map__expand">
+          <sd-button variant="quiet" size="sm" (click)="openMap.emit()">
+            <sd-icon name="map" />
+            Open map
+          </sd-button>
+        </div>
       }
       <p class="map__legend">
         <span>{{ legend() }}</span>

@@ -81,10 +81,12 @@
       }
       {{ draftRefusal() }}
       @if (weekend().agentDraft.canRetry && !draftRefusal()) {
-        <sd-button variant="quiet" size="sm" (click)="draftWithAgents()">
-          <sd-icon name="sparkle" />
-          Try again
-        </sd-button>
+        <span class="standard-plan__action">
+          <sd-button variant="quiet" size="sm" (click)="draftWithAgents()">
+            <sd-icon name="sparkle" />
+            Try again
+          </sd-button>
+        </span>
       }
     </sd-banner>
   }

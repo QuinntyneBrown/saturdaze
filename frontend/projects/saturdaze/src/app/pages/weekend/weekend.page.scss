@@ -64,3 +64,25 @@
 .standard-plan {
   margin-bottom: 16px;
 }
+
+// "Try again" on its own line under the reason, not wrapped into the text.
+.standard-plan__action {
+  display: flex;
+  margin-top: 10px;
+}
+
+// Phones: calendar and share split the row evenly beside "More", so the row
+// spans the cover's width instead of hugging the right edge. The smallest
+// phones (xsmall) keep the wrapping row: the labels don't fit side by side.
+@media (min-width: #{$bp-xsmall-max + 0.0625rem}) and (max-width: #{$bp-tablet - 0.0625rem}) {
+  .cover-actions {
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1fr) auto;
+    --sd-btn-w: 100%;
+  }
+
+  .cover-actions__chip {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
