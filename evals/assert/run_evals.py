@@ -4,6 +4,7 @@
     python evals/assert/run_evals.py --controls off     # the "before" baseline (L2-209)
     python evals/assert/run_evals.py b1 b3              # some behaviours
     python evals/assert/run_evals.py --no-api           # the e2e API is already running with agents on
+    python evals/assert/run_evals.py --rejudge b5       # score again only the rows whose judge failed
 
 Without ``ANTHROPIC_FOUNDRY_API_KEY`` every behaviour is skipped with the L2-212
 message and the command exits 0: the agents only exist on the real Foundry
@@ -21,6 +22,7 @@ deployment, so there is nothing honest to evaluate. With the key it
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -64,18 +66,37 @@ def start_api(controls: bool, broken: bool = False) -> None:
     subprocess.run([pwsh, "-NoProfile", "-File", str(REPO / "eng" / "Start-E2eApi.ps1")], env=env, check=True)
 
 
-def run_behaviour(key: str, controls: bool) -> int:
+def run_behaviour(key: str, controls: bool, rejudge: bool = False) -> int:
     name = BEHAVIOURS[key]
     config = HERE / "behaviors" / name / "eval_config.yaml"
-    plans = PLANS / name
-    if plans.exists():
-        shutil.rmtree(plans)
     run_name = "after-controls" if controls else "before-controls"
+    plans = PLANS / run_name / name
+    results = HERE / "artifacts" / "results" / f"saturdaze-{name}" / run_name
+    if rejudge:
+        # ASSERT skips every test case already in scores.jsonl, so dropping the rows whose judge
+        # failed (a verdict it could not validate) and running again scores only those, from the
+        # cached inference: no new drafts, the recorded plans stay.
+        scores = results / "scores.jsonl"
+        if scores.exists():
+            kept = [line for line in scores.read_text(encoding="utf-8").splitlines()
+                    if line.strip() and json.loads(line).get("judge_status", "ok") == "ok"]
+            scores.write_text("".join(f"{line}\n" for line in kept), encoding="utf-8")
+    else:
+        if plans.exists():
+            shutil.rmtree(plans)
+        # ASSERT resumes a run from its results folder (cached inference), which would leave the
+        # recorded plans above empty; a behaviour run here always starts from scratch.
+        if results.exists():
+            shutil.rmtree(results)
     text = config.read_text(encoding="utf-8").replace("run: after-controls", f"run: {run_name}")
+    # ASSERT resolves a relative artifacts_root against its own package, so pin it to this folder,
+    # where check_boundaries.py reads artifacts/results/<suite>/<run>/metrics.json.
+    text = f"artifacts_root: {(HERE / 'artifacts').as_posix()}\n" + text
     with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False, dir=config.parent, encoding="utf-8") as tmp:
         tmp.write(text)
     env = os.environ | {
         "SATURDAZE_EVAL_BEHAVIOR": name,
+        "SATURDAZE_EVAL_RECORD_DIR": str(PLANS / run_name),
         "PYTHONPATH": os.pathsep.join(filter(None, [str(HERE), os.environ.get("PYTHONPATH")])),
     }
     try:
@@ -91,6 +112,8 @@ def main() -> int:
     parser.add_argument("--controls", choices=("on", "off"), default="on",
                         help="off measures the 'before' baseline with the policy controls recording only")
     parser.add_argument("--no-api", action="store_true", help="use the API already running on SATURDAZE_API_URL")
+    parser.add_argument("--rejudge", action="store_true",
+                        help="score again only the test cases whose judge failed, from the recorded run (no drafts)")
     args = parser.parse_args()
     unknown = [b for b in args.behaviours if b not in BEHAVIOURS]
     if unknown:
@@ -109,6 +132,11 @@ def main() -> int:
         sys.exit("assert-ai is not installed: pip install -r evals/assert/requirements.txt")
 
     controls = args.controls == "on"
+    run_name = "after-controls" if controls else "before-controls"
+    if args.rejudge:
+        for key in keys:
+            run_behaviour(key, controls, rejudge=True)
+        return subprocess.run([sys.executable, str(HERE / "check_boundaries.py"), "--run", run_name, *keys]).returncode
     working = [k for k in keys if k != "b7"]
     if working:
         if not args.no_api:
@@ -121,7 +149,7 @@ def main() -> int:
         if not args.no_api:
             start_api(controls)  # leave a working API behind
 
-    return subprocess.run([sys.executable, str(HERE / "check_boundaries.py"), *keys]).returncode
+    return subprocess.run([sys.executable, str(HERE / "check_boundaries.py"), "--run", run_name, *keys]).returncode
 
 
 if __name__ == "__main__":
