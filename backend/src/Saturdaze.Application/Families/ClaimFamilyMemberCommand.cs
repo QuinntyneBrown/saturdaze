@@ -45,6 +45,6 @@ public sealed class ClaimFamilyMemberCommandHandler : IRequestHandler<ClaimFamil
         await _db.SaveChangesAsync(ct);
 
         var email = await _db.Users.AsNoTracking().Where(u => u.Id == caller).Select(u => u.Email).SingleAsync(ct);
-        return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Account, email);
+        return new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Account, email, member.Interests.ToList());
     }
 }

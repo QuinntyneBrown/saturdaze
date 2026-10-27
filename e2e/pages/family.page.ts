@@ -100,7 +100,7 @@ export class FamilyPage extends BasePage {
 
   /** The dialog's soft notes: how a member signs in, the "This is me" hint. */
   dialogNote(): Locator {
-    return this.dialog().locator(".dialog__body p.sd-text-xs");
+    return this.dialog().locator(".dialog__body p.sd-text-xs:not(.interests > p)");
   }
 
   /** Rows that open the member dialog — only the owner's are actionable (L2-124 #4). */

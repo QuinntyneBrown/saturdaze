@@ -218,7 +218,10 @@ describe('FamilyMemberDialog', () => {
       self: true,
     });
     expect(host.querySelector('sd-seg-radio')).toBeNull();
-    expect(notes()).toEqual(['Linked to your account, quinn@example.com. No invite is sent.']);
+    expect(notes()).toEqual([
+      'Picks that match get a boost for this person. Up to 8.',
+      'Linked to your account, quinn@example.com. No invite is sent.',
+    ]);
     expect(primary().textContent?.trim()).toBe('Add me');
     component['name'].set('Quinn');
     component['age'].set('38');
@@ -228,6 +231,7 @@ describe('FamilyMemberDialog', () => {
       name: 'Quinn',
       age: 38,
       email: null,
+      interests: [],
       self: true,
     });
   });
@@ -250,7 +254,10 @@ describe('FamilyMemberDialog', () => {
       access: 'None',
       selfEmail: 'quinn@example.com',
     });
-    expect(notes()).toEqual(['Links Quinn to your account, quinn@example.com.']);
+    expect(notes()).toEqual([
+      'Picks that match get a boost for this person. Up to 8.',
+      'Links Quinn to your account, quinn@example.com.',
+    ]);
     const claim = Array.from(host.querySelectorAll('.dialog__body sd-button button')).find(
       (b) => b.textContent?.trim() === 'This is me',
     ) as HTMLButtonElement;
@@ -267,7 +274,10 @@ describe('FamilyMemberDialog', () => {
       email: 'quinn@example.com',
       isSelf: true,
     });
-    expect(notes()).toEqual(['This is you. Signs in as quinn@example.com']);
+    expect(notes()).toEqual([
+      'Picks that match get a boost for this person. Up to 8.',
+      'This is you. Signs in as quinn@example.com',
+    ]);
     expect(host.querySelector('sd-button[slot="actions-left"]')).toBeNull();
     expect(primary().textContent?.trim()).toBe('Save');
   });

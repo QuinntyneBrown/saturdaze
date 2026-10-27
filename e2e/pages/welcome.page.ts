@@ -91,7 +91,7 @@ export class WelcomePage extends AuthCardPage {
 
   /** The dialog's soft notes: how a member signs in, the "This is me" hint. */
   dialogNote(): Locator {
-    return this.dialog().locator(".dialog__body p.sd-text-xs");
+    return this.dialog().locator(".dialog__body p.sd-text-xs:not(.interests > p)");
   }
 
 
