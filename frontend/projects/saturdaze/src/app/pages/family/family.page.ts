@@ -139,9 +139,20 @@ function addMemberError(err: unknown): string {
       return 'That email already has an invite to this family.';
     case 'member_name_in_use':
       return 'Someone in the family already has that name.';
+    case 'already_in_family':
+      return "You're already in Who's in.";
+    case 'member_has_access':
+      return 'That member is already invited or signs in.';
     default:
       return 'That did not save. Try again in a moment.';
   }
+}
+
+/** The "Add yourself" row's line (L2-217): points at "This is me" when someone could be them. */
+function addYourselfSubtitle(members: readonly MemberRow[]): string {
+  return members.some((m) => m.access === 'None')
+    ? "You're not in Who's in yet. Already listed? Tap your name and choose This is me."
+    : "You're not in Who's in yet. Weekends plan for you once you are.";
 }
 
 /** D21 body for removing a member, by how they sign in (L2-128). */
@@ -202,8 +213,14 @@ export class FamilyPage {
   protected readonly membersSubtitle = computed(() => {
     const view = this.view();
     if (view.isOwner) return 'Ages shape the picks. Tap a person to edit.';
-    return `Ages shape the picks. Only ${view.ownerEmail ?? 'the owner'} can change who's in.`;
+    const owner = view.ownerName ?? view.ownerEmail ?? 'the owner';
+    return `Ages shape the picks. Only ${owner} can change who's in.`;
   });
+  /** The owner's email while they are not in "Who's in" yet: offers "This is me" (L2-216). */
+  private readonly selfEmail = computed(() =>
+    this.view().needsSelf ? (this.user()?.email ?? null) : null,
+  );
+  protected readonly addYourselfSubtitle = computed(() => addYourselfSubtitle(this.view().members));
   protected readonly isAdmin = computed(() => this.user()?.role === 'Admin');
   protected readonly pendingCount = computed(() => this.submissions.pending()().length);
   protected readonly pendingSubtitle = computed(() => {
@@ -249,8 +266,18 @@ export class FamilyPage {
 
   // ---- members --------------------------------------------------------
 
-  protected async addMember(): Promise<void> {
-    const result = await this.openMember({ mode: 'add', existingNames: this.memberNames() });
+  /** "Add yourself" (L2-217): D17b with "This is me" ticked. */
+  protected addYourself(): Promise<void> {
+    return this.addMember(true);
+  }
+
+  protected async addMember(self = false): Promise<void> {
+    const result = await this.openMember({
+      mode: 'add',
+      existingNames: this.memberNames(),
+      selfEmail: this.selfEmail(),
+      self,
+    });
     if (result?.kind !== 'save') return;
     this.error.set('');
     let invite: FamilyInvite | null;
@@ -259,6 +286,7 @@ export class FamilyPage {
         name: result.name,
         age: result.age,
         email: result.email,
+        self: result.self,
       });
     } catch (err) {
       this.error.set(addMemberError(err));
@@ -288,8 +316,19 @@ export class FamilyPage {
       existingNames: this.memberNames(),
       access: member.access,
       email: member.email,
+      selfEmail: this.selfEmail(),
+      isSelf: member.id === this.view().selfMemberId,
     });
     if (!result) return;
+    if (result.kind === 'claim') {
+      this.error.set('');
+      try {
+        await this.familyService.claimMember(member.id);
+      } catch (err) {
+        this.error.set(addMemberError(err));
+      }
+      return;
+    }
     if (result.kind === 'remove') {
       const ok = await confirmWith(this.dialog, {
         title: `Remove ${member.name} from the family?`,

@@ -47,36 +47,58 @@
       @if (accessHint) {
         <p class="sd-text-xs sd-text-soft">{{ accessHint }}</p>
       }
+      @if (canClaim) {
+        <div class="sign-in">
+          <span class="claim__label">Is this you?</span>
+          <sd-button variant="quiet" type="button" (click)="claim()">
+            <sd-icon name="user" />
+            This is me
+          </sd-button>
+          <p class="sd-text-xs sd-text-soft">{{ claimHint }}</p>
+        </div>
+      }
     } @else {
-      <div class="sign-in">
-        <sd-seg-radio
-          label="Will they sign in?"
-          name="memberSignIn"
-          [options]="signInOptions"
-          [ngModel]="signIn()"
-          (ngModelChange)="signIn.set($event)"
-        />
-        <p class="sd-text-xs sd-text-soft">{{ signInHint() }}</p>
-      </div>
-      @if (inviting()) {
-        <sd-text-input
-          #emailField
-          label="Email"
-          name="memberEmail"
-          type="email"
-          required
-          autocomplete="off"
-          placeholder="name@example.com"
-          [error]="emailError()"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-        />
+      @if (canBeSelf) {
+        <div class="sign-in">
+          <sd-checkbox name="memberIsMe" [ngModel]="isMe()" (ngModelChange)="isMe.set($event)"
+            >This is me</sd-checkbox
+          >
+          @if (isMe()) {
+            <p class="sd-text-xs sd-text-soft">{{ selfHint }}</p>
+          }
+        </div>
+      }
+      @if (!isMe()) {
+        <div class="sign-in">
+          <sd-seg-radio
+            label="Will they sign in?"
+            name="memberSignIn"
+            [options]="signInOptions"
+            [ngModel]="signIn()"
+            (ngModelChange)="signIn.set($event)"
+          />
+          <p class="sd-text-xs sd-text-soft">{{ signInHint() }}</p>
+        </div>
+        @if (inviting()) {
+          <sd-text-input
+            #emailField
+            label="Email"
+            name="memberEmail"
+            type="email"
+            required
+            autocomplete="off"
+            placeholder="name@example.com"
+            [error]="emailError()"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+          />
+        }
       }
     }
     <button type="submit" hidden></button>
   </form>
 
-  @if (isEdit) {
+  @if (isEdit && !data.isSelf) {
     <sd-button slot="actions-left" variant="quiet" warnText type="button" (click)="remove()">
       <sd-icon name="trash" />
       Remove

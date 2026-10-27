@@ -4,7 +4,8 @@
     "password": "password123",
     "role": "User",
     "emailVerified": true,
-    "familyHomeLocation": "Port Credit, Mississauga, ON"
+    "familyHomeLocation": "Port Credit, Mississauga, ON",
+    "memberName": "Quinn"
   },
   {
     "email": "admin@saturdaze.ca",

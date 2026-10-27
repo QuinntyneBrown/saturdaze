@@ -70,9 +70,30 @@ export class WelcomePage extends AuthCardPage {
 
   /* ---------- Who's in (L2-168) ---------- */
 
+  /** The people in Who's in: rows with an avatar, so not the "Add yourself" row. */
   memberRows(state?: WelcomeStep): Locator {
-    return this.card(state).locator(".list__item");
+    return this.card(state).locator(".list__item").filter({ has: this.page.locator(".avatar") });
   }
+  /** The "Add yourself" row heading the owner's list while they are not in it (L2-217). */
+  addYourselfRow(): Locator {
+    return this.card().locator(".list__item").filter({ has: this.page.locator(".list__title", { hasText: /^Add yourself$/ }) });
+  }
+
+  /** D17b's "This is me" checkbox (L2-216). */
+  thisIsMeCheckbox(): Locator {
+    return this.dialog().getByRole("checkbox", { name: "This is me", exact: true });
+  }
+
+  /** D17's "This is me" button for a member with no access (L2-216). */
+  thisIsMeButton(): Locator {
+    return this.dialog().locator(".dialog__body").getByRole("button", { name: "This is me", exact: true });
+  }
+
+  /** The dialog's soft notes: how a member signs in, the "This is me" hint. */
+  dialogNote(): Locator {
+    return this.dialog().locator(".dialog__body p.sd-text-xs:not(.interests > p)");
+  }
+
 
   memberRow(name: string, state?: WelcomeStep): Locator {
     return this.memberRows(state).filter({ has: this.page.locator(".list__title", { hasText: name }) });
@@ -104,6 +125,14 @@ export class WelcomePage extends AuthCardPage {
     );
     await this.dialogAction(member.inviteEmail ? "Send invite" : "Add member").click();
     return (await posted).postDataJSON() as Record<string, unknown>;
+  }
+
+  /** The body of the next `POST /api/family/members`. */
+  async nextMemberPost(): Promise<Record<string, unknown>> {
+    const request = await this.page.waitForRequest(
+      (r) => r.url().endsWith("/api/family/members") && r.method() === "POST",
+    );
+    return request.postDataJSON() as Record<string, unknown>;
   }
 
   /** The accept-invite link shown in D30. */

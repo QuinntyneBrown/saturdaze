@@ -14,9 +14,11 @@ namespace Saturdaze.Application.Families;
 
 /// <summary>
 /// The owner adds a member: without <see cref="Email"/> they never sign in
-/// (L2-125); with it they are invited to (L2-126).
+/// (L2-125); with it they are invited to (L2-126); with <see cref="Self"/>
+/// the member is the owner, linked to their own account (L2-216).
 /// </summary>
-public sealed record AddFamilyMemberCommand(string Name, int Age, string? Email = null) : IRequest<AddFamilyMemberResultDto>;
+public sealed record AddFamilyMemberCommand(string Name, int Age, string? Email = null, bool Self = false)
+    : IRequest<AddFamilyMemberResultDto>;
 
 public sealed class AddFamilyMemberCommandValidator : AbstractValidator<AddFamilyMemberCommand>
 {
@@ -25,6 +27,8 @@ public sealed class AddFamilyMemberCommandValidator : AbstractValidator<AddFamil
         RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
         RuleFor(x => x.Age).InclusiveBetween(0, 120);
         RuleFor(x => x.Email!).EmailAddress().MaximumLength(256).When(x => !string.IsNullOrWhiteSpace(x.Email));
+        RuleFor(x => x.Email).Empty().When(x => x.Self)
+            .WithMessage("A member who is you signs in with your account, so no invite is sent.");
     }
 }
 
@@ -66,6 +70,16 @@ public sealed class AddFamilyMemberCommandHandler : IRequestHandler<AddFamilyMem
             throw new ConflictException("member_name_in_use", $"{name} is already in the family.");
 
         var member = new FamilyMember { Id = Guid.NewGuid(), FamilyId = family.Id, Name = name, Age = request.Age };
+        if (request.Self)
+        {
+            member.UserId = FamilyOwnership.EnsureNotYetInFamily(family, _user.UserId);
+            _db.FamilyMembers.Add(member);
+            await _db.SaveChangesAsync(ct);
+            var email = await _db.Users.AsNoTracking()
+                .Where(u => u.Id == member.UserId).Select(u => u.Email).SingleAsync(ct);
+            return new AddFamilyMemberResultDto(
+                new FamilyMemberDto(member.Id, member.Name, member.Age, MemberAccess.Account, email), null);
+        }
         _db.FamilyMembers.Add(member);
 
         FamilyInviteDto? invite = null;

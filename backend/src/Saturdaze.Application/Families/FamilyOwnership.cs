@@ -39,4 +39,16 @@ public sealed class FamilyOwnership
             throw new ForbiddenException("owner_only", "Only the family's owner can change who's in.");
         return family;
     }
+
+    /// <summary>
+    /// The caller's account, or 409 <c>already_in_family</c> when a member is
+    /// already linked to it: an account is one member (L2-216, ADR-024).
+    /// </summary>
+    public static Guid EnsureNotYetInFamily(Family family, Guid? userId)
+    {
+        var caller = userId ?? throw new InvalidCredentialsException("unauthenticated", "Sign in to continue.");
+        if (family.Members.Any(m => m.UserId == caller))
+            throw new ConflictException("already_in_family", "You're already in Who's in.");
+        return caller;
+    }
 }

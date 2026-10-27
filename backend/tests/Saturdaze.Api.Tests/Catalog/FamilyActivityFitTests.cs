@@ -1,7 +1,8 @@
 // Acceptance Test
-// Traces to: L2-145 AC1, AC2
+// Traces to: L2-145 AC1, AC2, L2-214 AC5
 // Description: Activity ideas for the family welcome its youngest and oldest child.
 
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FluentAssertions;
@@ -54,6 +55,30 @@ public class FamilyActivityFitTests : IClassFixture<SaturdazeApiFactory>, IAsync
 
         (await Names(client, "/api/activities?forFamily=true&take=100"))
             .Should().BeEquivalentTo(await Names(client, "/api/activities?take=100"));
+    }
+
+    [Fact]
+    public async Task The_owners_own_row_counts_like_any_member()
+    {
+        // The owner's member is an ordinary member, so their age shapes the
+        // picks too (L2-214 AC5). A five-year-old owner keeps it observable.
+        var anonymous = _factory.CreateClient();
+        var register = await anonymous.PostAsJsonAsync("/api/auth/register", new
+        {
+            Email = $"owner-{_suffix}@example.com",
+            Password = "Passw0rd!",
+            OwnerName = "Mae",
+            OwnerAge = 5,
+        });
+        var body = await register.Content.ReadAsStringAsync();
+        register.IsSuccessStatusCode.Should().BeTrue(body);
+        var client = _factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+            JsonDocument.Parse(body).RootElement.GetProperty("token").GetProperty("accessToken").GetString());
+
+        var names = await Names(client, "/api/activities?forFamily=true&take=100");
+
+        names.Should().NotContain(SixUp).And.Contain(UpToEight).And.Contain(FourUp);
     }
 
     private async Task<HttpClient> FamilyWith(params (string Name, int Age)[] members)

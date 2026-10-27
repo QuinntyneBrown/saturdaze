@@ -39,6 +39,18 @@ export interface FamilyView {
    */
   readonly ownerEmail: string | null;
   /**
+   * Owner Name — the owner's own row's name when they are in "Who's in" (L2-214).
+   */
+  readonly ownerName: string | null;
+  /**
+   * Self Member Id — the viewer's own row, if any (L2-214, L2-218).
+   */
+  readonly selfMemberId: string | null;
+  /**
+   * Needs Self — the viewer owns the family but is not in "Who's in" yet (L2-217).
+   */
+  readonly needsSelf: boolean;
+  /**
    * Members — oldest first.
    */
   readonly members: readonly MemberRow[];

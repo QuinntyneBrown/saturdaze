@@ -122,11 +122,15 @@ export interface EditableFamilyProfile {
 /**
  * I Family Service.
  */
-/** A member the owner adds: `email` invites them to sign in (L2-125, L2-126). */
+/**
+ * A member the owner adds: `email` invites them to sign in (L2-125, L2-126);
+ * `self` makes the member the owner, linked to their account (L2-216).
+ */
 export interface NewFamilyMember {
   readonly name: string;
   readonly age: number;
   readonly email: string | null;
+  readonly self?: boolean;
 }
 
 /** The invitation the owner shares with an invited member (L2-126). */
@@ -173,6 +177,14 @@ export interface IFamilyService {
    * @returns {Promise<FamilyInvite | null>} The invite to share, or `null` when they will not sign in
    */
   addMember(member: NewFamilyMember): Promise<FamilyInvite | null>;
+  /**
+   * Claim Member — "This is me": `POST /api/family/members/{id}/claim`, then reload. Owner only (L2-216).
+   *
+   * @param {string} id - The member id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  claimMember(id: string): Promise<void>;
   /**
    * Remove Member — `DELETE /api/family/members/{id}`, then reload. Owner only.
    *

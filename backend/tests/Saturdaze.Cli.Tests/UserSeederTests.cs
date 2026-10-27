@@ -107,6 +107,73 @@ public class UserSeederTests
     }
 
     [Fact]
+    public async Task SeedAsync_links_the_account_to_the_member_its_record_names()
+    {
+        // Traces to: L2-217 #5, ADR-024
+        using var db = TestDb.Create();
+        var family = SeededBrowns(db);
+        await db.SaveChangesAsync();
+        var json = UserWithMember("quinntynebrown@gmail.com", "Quinn");
+
+        await CreateSut().SeedAsync(db, AsStream(json), default);
+        await db.SaveChangesAsync();
+        await CreateSut().SeedAsync(db, AsStream(json), default);
+        await db.SaveChangesAsync();
+
+        var user = await db.Users.SingleAsync();
+        var quinn = await db.FamilyMembers.SingleAsync(m => m.Name == "Quinn");
+        quinn.UserId.Should().Be(user.Id);
+        (await db.FamilyMembers.CountAsync(m => m.UserId != null)).Should().Be(1);
+        family.OwnerUserId.Should().Be(user.Id);
+    }
+
+    [Fact]
+    public async Task SeedAsync_never_links_a_member_by_a_matching_name()
+    {
+        // Traces to: L2-217 #5
+        using var db = TestDb.Create();
+        SeededBrowns(db);
+        await db.SaveChangesAsync();
+        var json = """
+            [ { "email": "quinn@example.com", "password": "password123", "familyHomeLocation": "Port Credit, Mississauga, ON" } ]
+            """;
+
+        await CreateSut().SeedAsync(db, AsStream(json), default);
+        await db.SaveChangesAsync();
+
+        (await db.FamilyMembers.AnyAsync(m => m.UserId != null)).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task SeedAsync_leaves_a_member_who_already_signs_in_alone()
+    {
+        // Traces to: L2-217 #5
+        using var db = TestDb.Create();
+        SeededBrowns(db);
+        var someoneElse = Guid.NewGuid();
+        (db.FamilyMembers.Local.Single(m => m.Name == "Quinn")).UserId = someoneElse;
+        await db.SaveChangesAsync();
+
+        await CreateSut().SeedAsync(db, AsStream(UserWithMember("quinntynebrown@gmail.com", "Quinn")), default);
+        await db.SaveChangesAsync();
+
+        (await db.FamilyMembers.SingleAsync(m => m.Name == "Quinn")).UserId.Should().Be(someoneElse);
+    }
+
+    private static Family SeededBrowns(Saturdaze.Infrastructure.Persistence.AppDbContext db)
+    {
+        var family = new Family { Id = Guid.NewGuid(), HomeLocation = "Port Credit, Mississauga, ON" };
+        db.Families.Add(family);
+        db.FamilyMembers.Add(new FamilyMember { Id = Guid.NewGuid(), FamilyId = family.Id, Name = "Quinn", Age = 38 });
+        db.FamilyMembers.Add(new FamilyMember { Id = Guid.NewGuid(), FamilyId = family.Id, Name = "Sara", Age = 36 });
+        return family;
+    }
+
+    private static string UserWithMember(string email, string member) => $$"""
+        [ { "email": "{{email}}", "password": "password123", "familyHomeLocation": "Port Credit, Mississauga, ON", "memberName": "{{member}}" } ]
+        """;
+
+    [Fact]
     public async Task SeedAsync_updates_existing_user_and_re_hashes_password()
     {
         using var db = TestDb.Create();

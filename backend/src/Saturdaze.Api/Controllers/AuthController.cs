@@ -20,7 +20,14 @@ public class AuthController : ControllerBase
         _env = env;
     }
 
-    public record RegisterRequest(string Email, string Password, string? FamilyName, string? HomeLocation, bool? FridayPreview = null);
+    public record RegisterRequest(
+        string Email,
+        string Password,
+        string? FamilyName,
+        string? HomeLocation,
+        bool? FridayPreview = null,
+        string? OwnerName = null,
+        int? OwnerAge = null);
     public record LoginRequest(string Email, string Password);
     public record GoogleRequest(string Credential);
     public record ForgotPasswordRequest(string Email);
@@ -39,7 +46,9 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthSuccessDto>> Register([FromBody] RegisterRequest req, CancellationToken ct)
     {
         var dto = await _mediator.Send(
-            new RegisterUserCommand(req.Email, req.Password, req.FamilyName, req.HomeLocation, req.FridayPreview ?? true), ct);
+            new RegisterUserCommand(
+                req.Email, req.Password, req.FamilyName, req.HomeLocation, req.FridayPreview ?? true,
+                req.OwnerName, req.OwnerAge), ct);
         return CreatedAtAction(nameof(Me), null, dto);
     }
 

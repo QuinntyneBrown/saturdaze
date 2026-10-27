@@ -43,6 +43,11 @@ public sealed class FamilyController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, result);
     }
 
+    /// <summary>"This is me": the owner links a listed member to their own account (L2-216).</summary>
+    [HttpPost("members/{id:guid}/claim")]
+    public async Task<ActionResult<FamilyMemberDto>> ClaimMember(Guid id, CancellationToken ct)
+        => Ok(await _sender.Send(new ClaimFamilyMemberCommand(id), ct));
+
     /// <summary>The owner removes a member, revoking any invite or sign-in they have (L2-128).</summary>
     [HttpDelete("members/{id:guid}")]
     public async Task<IActionResult> RemoveMember(Guid id, CancellationToken ct)

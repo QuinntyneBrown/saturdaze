@@ -4,7 +4,7 @@ import { PageSlug } from "../fixtures/routes.js";
 
 /**
  * Create account — pages/create-account.html (single state).
- * Family name · Email · Password (+ .strength meter) · Terms checkbox
+ * Family name · Your first name · Your age (L2-215) · Email · Password (+ .strength meter) · Terms checkbox
  * (required, gates the primary) · Friday preview checkbox · [Create account].
  */
 export class CreateAccountPage extends AuthCardPage {
@@ -16,6 +16,14 @@ export class CreateAccountPage extends AuthCardPage {
 
   familyNameInput(): Locator {
     return this.field("Family name");
+  }
+
+  ownerNameInput(): Locator {
+    return this.field("Your first name");
+  }
+
+  ownerAgeInput(): Locator {
+    return this.field("Your age");
   }
 
   emailInput(): Locator {
@@ -50,8 +58,16 @@ export class CreateAccountPage extends AuthCardPage {
     return this.card().locator(".check").getByRole("link", { name: "Privacy Policy", exact: true });
   }
 
-  async fill(input: { familyName: string; email: string; password: string }): Promise<void> {
+  async fill(input: {
+    familyName: string;
+    ownerName?: string;
+    ownerAge?: number;
+    email: string;
+    password: string;
+  }): Promise<void> {
     await this.familyNameInput().fill(input.familyName);
+    if (input.ownerName !== undefined) await this.ownerNameInput().fill(input.ownerName);
+    if (input.ownerAge !== undefined) await this.ownerAgeInput().fill(String(input.ownerAge));
     await this.emailInput().fill(input.email);
     await this.passwordInput().fill(input.password);
   }

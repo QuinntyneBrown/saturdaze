@@ -29,7 +29,7 @@ describe('DialogsPage', () => {
 
   it('renders the page header and every specimen in the mock order', () => {
     expect(host.querySelector('.page-header__title')?.textContent?.trim()).toBe('Dialogs');
-    expect(specimens().length).toBe(43);
+    expect(specimens().length).toBe(46);
     expect(specimens().map((s) => s.id)).toEqual([
       'dialog-block',
       'dialog-block-locked',
@@ -51,6 +51,9 @@ describe('DialogsPage', () => {
       'dialog-member-add',
       'dialog-member-invite',
       'dialog-member-account',
+      'dialog-member-self-add',
+      'dialog-member-claim',
+      'dialog-member-self',
       'dialog-commitment',
       'dialog-commitment-add',
       'dialog-home',
@@ -79,7 +82,7 @@ describe('DialogsPage', () => {
 
   it('renders each dialog specimen statically inside the sd-dialog shell', () => {
     const dialogs = specimens().filter((s) => !s.classList.contains('specimen--menu'));
-    expect(dialogs.length).toBe(41);
+    expect(dialogs.length).toBe(44);
     for (const section of dialogs) {
       const shell = section.querySelector('sd-dialog');
       expect(shell, section.id).not.toBeNull();
@@ -115,6 +118,6 @@ describe('DialogsPage', () => {
     ).click();
     (host.querySelector('#dialog-share .dialog__close button') as HTMLButtonElement).click();
     fixture.detectChanges();
-    expect(specimens().length).toBe(43);
+    expect(specimens().length).toBe(46);
   });
 });

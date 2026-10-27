@@ -32,6 +32,9 @@ const VIEW: FamilyView = {
   home: { location: '', hint: 'Weather and drive times start here' },
   isOwner: true,
   ownerEmail: 'quinntynebrown@gmail.com',
+  ownerName: null,
+  selfMemberId: null,
+  needsSelf: false,
   members: [],
   commitments: [],
   likes: [],
@@ -259,7 +262,12 @@ describe('WelcomePage', () => {
       });
       await mount('family');
       await component['addMember']();
-      expect(dialogData(FamilyMemberDialog)).toEqual({ mode: 'add', existingNames: [] });
+      expect(dialogData(FamilyMemberDialog)).toEqual({
+        mode: 'add',
+        existingNames: [],
+        selfEmail: null,
+        self: false,
+      });
       expect(familyService.addMember).toHaveBeenCalledWith({
         name: 'Sara',
         age: 36,

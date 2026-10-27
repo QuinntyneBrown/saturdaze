@@ -14,6 +14,7 @@ import { AbstractControl, FormsModule } from '@angular/forms';
 import { MemberAccess } from 'api';
 import {
   Button,
+  Checkbox,
   ChipInput,
   Dialog as DialogShell,
   ErrorSummary,
@@ -39,6 +40,16 @@ export interface FamilyMemberDialogData {
   readonly email?: string | null;
   /** Add mode: the preselected sign-in choice (the gallery's D17b invite specimen). */
   readonly signIn?: 'none' | 'invite';
+  /**
+   * The owner's sign-in email while they are not in "Who's in" (L2-216): add
+   * mode offers the "This is me" checkbox, edit mode of a member with no
+   * access offers the "This is me" button. Unset once the owner is linked.
+   */
+  readonly selfEmail?: string | null;
+  /** Add mode: open with "This is me" ticked (the "Add yourself" row, L2-217). */
+  readonly self?: boolean;
+  /** Edit mode: the row is the viewer's own; it is never removed (L2-218). */
+  readonly isSelf?: boolean;
 }
 
 export type FamilyMemberDialogResult =
@@ -50,7 +61,10 @@ export type FamilyMemberDialogResult =
       readonly email: string | null;
       /** Up to 8; picks that match get a boost for this person (L2-196). */
       readonly interests: readonly string[];
+      /** Add mode: "This is me" was ticked; the member is the owner (L2-216). */
+      readonly self?: boolean;
     }
+  | { readonly kind: 'claim' }
   | { readonly kind: 'remove' };
 
 /** The API keeps at most eight interests per member (L2-196). */
@@ -69,12 +83,25 @@ const SIGN_IN_OPTIONS: readonly SegRadioOption[] = [
  * default (L2-125), or "Invite to sign in" with an email (L2-126). Edit mode
  * names how the member signs in and offers Remove on the left; the page runs
  * the D21 confirmation. When adding, the action stays enabled: pressing it
- * with a gap shows an error summary instead (L2-134).
+ * with a gap shows an error summary instead (L2-134). While the owner is not
+ * in "Who's in", adding offers a "This is me" checkbox and editing a member
+ * with no access a "This is me" button (L2-216); the owner's own row has no
+ * Remove (L2-218).
  */
 @Component({
   selector: 'app-family-member-dialog',
   standalone: true,
-  imports: [Button, ChipInput, DialogShell, ErrorSummary, FormsModule, Icon, SegRadio, TextInput],
+  imports: [
+    Button,
+    Checkbox,
+    ChipInput,
+    DialogShell,
+    ErrorSummary,
+    FormsModule,
+    Icon,
+    SegRadio,
+    TextInput,
+  ],
   templateUrl: './family-member-dialog.html',
   styleUrl: './family-member-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,11 +121,13 @@ export class FamilyMemberDialog {
     : 'Add a family member';
   protected readonly signInOptions = SIGN_IN_OPTIONS;
   protected readonly accessHint =
-    this.data.email && this.data.access === 'Account'
-      ? `Signs in as ${this.data.email}`
-      : this.data.email && this.data.access === 'Invited'
-        ? `Invite sent to ${this.data.email}`
-        : '';
+    this.data.isSelf && this.data.email
+      ? `This is you. Signs in as ${this.data.email}`
+      : this.data.email && this.data.access === 'Account'
+        ? `Signs in as ${this.data.email}`
+        : this.data.email && this.data.access === 'Invited'
+          ? `Invite sent to ${this.data.email}`
+          : '';
 
   protected readonly name = signal(this.data.initial?.name ?? '');
   protected readonly signIn = signal<SignIn>(this.data.signIn ?? 'none');
@@ -107,9 +136,22 @@ export class FamilyMemberDialog {
   protected readonly interestsError = computed(() =>
     this.interests().length > MAX_INTERESTS ? `Keep it to ${MAX_INTERESTS} interests.` : '',
   );
-  protected readonly inviting = computed(() => !this.isEdit && this.signIn() === 'invite');
+  /** Add mode: the "This is me" checkbox is offered (L2-216). */
+  protected readonly canBeSelf = !this.isEdit && !!this.data.selfEmail;
+  /** Edit mode: the "This is me" button is offered for a member with no access (L2-216). */
+  protected readonly canClaim =
+    this.isEdit &&
+    !!this.data.selfEmail &&
+    !this.data.isSelf &&
+    (this.data.access ?? 'None') === 'None';
+  protected readonly selfHint = `Linked to your account, ${this.data.selfEmail ?? ''}. No invite is sent.`;
+  protected readonly claimHint = `Links ${this.data.initial?.name ?? 'them'} to your account, ${this.data.selfEmail ?? ''}.`;
+  protected readonly isMe = signal(this.canBeSelf && !!this.data.self);
+  protected readonly inviting = computed(
+    () => !this.isEdit && !this.isMe() && this.signIn() === 'invite',
+  );
   protected readonly submitLabel = computed(() =>
-    this.isEdit ? 'Save' : this.inviting() ? 'Send invite' : 'Add member',
+    this.isEdit ? 'Save' : this.isMe() ? 'Add me' : this.inviting() ? 'Send invite' : 'Add member',
   );
   protected readonly signInHint = computed(() =>
     this.inviting()
@@ -190,6 +232,10 @@ export class FamilyMemberDialog {
     this.dialogRef.close({ kind: 'remove' });
   }
 
+  protected claim(): void {
+    this.dialogRef.close({ kind: 'claim' });
+  }
+
   protected submit(event?: Event): void {
     event?.preventDefault();
     this.attempted.set(true);
@@ -205,6 +251,7 @@ export class FamilyMemberDialog {
       age: Number(this.age()),
       email,
       interests: this.interests(),
+      ...(this.isMe() ? { self: true } : {}),
     });
   }
 }

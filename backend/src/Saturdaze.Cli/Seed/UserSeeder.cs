@@ -63,6 +63,7 @@ public sealed class UserSeeder : IJsonSeeder
                     CreatedAtUtc = now,
                     UpdatedAtUtc = now,
                 });
+                await LinkMemberAsync(db, family, userId, record.MemberName, ct);
             }
             else
             {
@@ -75,12 +76,35 @@ public sealed class UserSeeder : IJsonSeeder
                     ? existing.EmailVerifiedUtc ?? now
                     : existing.EmailVerifiedUtc;
                 existing.UpdatedAtUtc = now;
+                if (family is not null) await LinkMemberAsync(db, family, existing.Id, record.MemberName, ct);
             }
 
             written++;
         }
 
         return written;
+    }
+
+    /// <summary>
+    /// Links the account to the member its record names, so a seeded owner is
+    /// in "Who's in" (ADR-024). Only an explicit <c>memberName</c> links, and
+    /// only when neither the member nor the account is linked yet: names are
+    /// never matched on their own.
+    /// </summary>
+    private static async Task LinkMemberAsync(
+        AppDbContext db, Family family, Guid userId, string? memberName, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(memberName)) return;
+
+        var members = db.FamilyMembers.Local.Where(m => m.FamilyId == family.Id)
+            .Concat(await db.FamilyMembers.Where(m => m.FamilyId == family.Id).ToListAsync(ct))
+            .Distinct()
+            .ToList();
+        if (members.Any(m => m.UserId == userId)) return;
+
+        var member = members.FirstOrDefault(m =>
+            string.Equals(m.Name, memberName.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (member is { UserId: null }) member.UserId = userId;
     }
 
     private static Family NewFamily(AppDbContext db, string? homeLocation)
@@ -112,5 +136,6 @@ public sealed class UserSeeder : IJsonSeeder
         string Password,
         UserRole? Role,
         bool EmailVerified,
-        string? FamilyHomeLocation);
+        string? FamilyHomeLocation,
+        string? MemberName = null);
 }

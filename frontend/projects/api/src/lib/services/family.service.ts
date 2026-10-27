@@ -76,6 +76,9 @@ const LOADING_VIEW: FamilyView = {
   home: { location: '', hint: HOME_HINT },
   isOwner: false,
   ownerEmail: null,
+  ownerName: null,
+  selfMemberId: null,
+  needsSelf: false,
   members: [],
   commitments: [],
   likes: [],
@@ -200,13 +203,22 @@ function mapFamily(dto: FamilyDto): FamilyView {
   const dislikes: ChipView[] = dto.preferences
     .filter((p) => p.kind === 'Dislike')
     .map((p) => ({ tone: 'warn', icon: 'close', label: p.value }));
+  const isOwner = dto.isOwner ?? true;
+  const ownerEmail = dto.ownerEmail ?? null;
+  const selfMemberId = dto.selfMemberId ?? null;
+  const ownerRow = ownerEmail
+    ? dto.members.find((m) => m.access === 'Account' && m.email === ownerEmail)
+    : undefined;
   return {
     status: 'ready',
     headline: name ?? HEADLINE_UNNAMED,
     subtitle: subtitleFor(dto.homeLocation),
     home: { location: dto.homeLocation, hint: HOME_HINT },
-    isOwner: dto.isOwner ?? true,
-    ownerEmail: dto.ownerEmail ?? null,
+    isOwner,
+    ownerEmail,
+    ownerName: ownerRow?.name ?? null,
+    selfMemberId,
+    needsSelf: isOwner && selfMemberId === null,
     members: sortedMembers.map(toMemberRow),
     commitments: dto.commitments.map((c) => toCommitmentRow(c, dto.members)),
     likes,
@@ -365,10 +377,28 @@ export class FamilyService implements IFamilyService {
         name: member.name.trim(),
         age: member.age,
         email: member.email?.trim() || null,
+        ...(member.self ? { self: true } : {}),
       }),
     );
     await this.load();
     return result.invite ?? null;
+  }
+
+  /**
+   * Claim Member.
+   *
+   * @param {string} id - The member id
+   *
+   * @returns {Promise<void>} The result of the operation
+   */
+  async claimMember(id: string): Promise<void> {
+    await firstValueFrom(
+      this.http.post<unknown>(
+        `${this.baseUrl}/api/family/members/${encodeURIComponent(id)}/claim`,
+        null,
+      ),
+    );
+    await this.load();
   }
 
   /**

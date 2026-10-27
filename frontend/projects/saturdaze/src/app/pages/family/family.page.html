@@ -11,6 +11,17 @@
     <div class="family-grid__col">
       <sd-section title="Who's in" [subtitle]="membersSubtitle()">
         <sd-list card>
+          @if (view().needsSelf) {
+            <sd-list-item
+              action
+              chevron
+              title="Add yourself"
+              [subtitle]="addYourselfSubtitle()"
+              (pressed)="addYourself()"
+            >
+              <sd-disc slot="leading" icon="user" tone="primary" />
+            </sd-list-item>
+          }
           @for (member of view().members; track member.id) {
             @if (view().isOwner) {
               <sd-list-item

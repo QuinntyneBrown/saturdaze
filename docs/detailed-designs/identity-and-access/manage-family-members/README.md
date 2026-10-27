@@ -8,13 +8,17 @@ Saturdaze is a web application that plans personalized family weekends. Each acc
 
 *member* — a person on the family profile, with a name and an age that shape the planner's picks
 
+*owner's own row* — the member linked to the owner's account (`FamilyMember.UserId` = the owner), so the owner appears in "Who's in" like everyone else
+
+*This is me* — the owner saying which member is them: adding themselves as a new member, or claiming a listed member that has no account and no invitation
+
 *member access* — whether a member signs in: `None` (planned for, never signs in, such as a young child), `Invited` (an invitation is outstanding) or `Account` (signs in with their own email and password)
 
 *invitation* — a single-use capability link, valid for 7 days, that lets the invited person create their own sign-in for the owner's family
 
 *family invite email* — the branded message (L2-162) that carries the invitation link to the invited address, so the owner does not have to pass it on by hand
 
-This feature lets the owner add members who will not sign in, invite members who will, and remove members. Every account in a family shares the same profile and weekends. Only the owner changes who belongs to the family. ADR-016 records the decisions behind the design.
+This feature lets the owner add members who will not sign in, invite members who will, and remove members. Every account in a family shares the same profile and weekends. Only the owner changes who belongs to the family. The owner is a member too: their own row signs in as them, can be edited and is never removed, and an owner who is not yet in the list adds or claims themselves. ADR-016 records the decisions behind the design, and ADR-024 those behind the owner's own row.
 
 ## Description
 
@@ -29,6 +33,12 @@ This feature lets the owner add members who will not sign in, invite members who
 `IFamilyService` gains `addMember(input: NewFamilyMember): Promise<FamilyInvite | null>` and `removeMember(id: string): Promise<void>`. `FamilyService` sends `POST /api/family/members` and `DELETE /api/family/members/{id}` and reloads the family after each.
 
 `AcceptInvitePage` is the bare-shell route `/accept-invite`, with no guard (like `/verify-email`, both signed-in and signed-out people reach it from a link). It reads the `token` query parameter and calls `ISessionStore.previewInvitation(token)`. While the call is in flight it shows a status row. A usable invitation shows the `join` state: an `sd-auth-card` titled "Join {familyName} on Saturdaze", the subtitle "{invitedByEmail} invited you. Choose a password to sign in with your own account.", a read-only Email field, Password and Confirm password fields with the existing password-rule checklist, and the primary action "Join the family". An unusable invitation shows the `invalid` state: "This invite no longer works", "Ask whoever invited you for a new link.", and a "Sign in" link. `ISessionStore.acceptInvitation({ token, password })` persists the returned session exactly as `signUp` does; the page then navigates to `/weekend`. A `token_invalid` or `token_expired` response switches to the `invalid` state.
+
+#### The owner's own row (L2-214, L2-216 to L2-218)
+
+`FamilyView` gains `selfMemberId` (the member linked to the caller, from the API) and `needsSelf` (`isOwner` and `selfMemberId` is `null`). `membersSubtitle` names the owner by the `Account` member whose email is `ownerEmail` when there is one ("Only Quinn can change who's in."), else by `ownerEmail`. While `needsSelf`, the owner's "Who's in" list on `/family` and on the wizard's "Who's in?" step starts with an `sd-list-item` "Add yourself" (leading `sd-disc` `user`, tone `primary`), subtitled "You're not in Who's in yet. Already listed? Tap your name and choose This is me." when some member has access `None`, else "You're not in Who's in yet. Weekends plan for you once you are." Pressing it opens D17b with `self: true` preselected.
+
+`FamilyMemberDialogData` gains `selfEmail` (the caller's email, set only while `needsSelf`), `self` (D17b opens with "This is me" ticked) and `isSelf` (edit mode for the owner's own row). In add mode with `selfEmail`, an `sd-checkbox` "This is me" sits below the age; ticked, it hides "Will they sign in?" and the email field, shows "Linked to your account, {email}. No invite is sent." and relabels the action "Add me"; the dialog closes with `{ kind: 'save', name, age, email: null, self: true }`. In edit mode with `selfEmail` and access `None`, an "Is this you?" field holds an `sd-button` "This is me" and the hint "Links {name} to your account, {email}."; it closes with `{ kind: 'claim' }`. With `isSelf`, the access line reads "This is you. Signs in as {email}" and "Remove" is not rendered. The pages route `claim` to `IFamilyService.claimMember(id)` and `self` to `addMember({ ..., self: true })`; `FamilyService` sends `POST /api/family/members/{id}/claim` and `self: true` respectively and reloads.
 
 ### Backend
 
@@ -55,6 +65,22 @@ This feature lets the owner add members who will not sign in, invite members who
 - **Inviter.** Accounts carry no display name, so the email names the owner by their email, as `/accept-invite` already does ("{invitedByEmail} invited you"). The subject therefore carries the owner's email, and the dispatcher's failure log carries that subject; the invitee's address and the token never reach the log.
 - **No resend.** No resend or re-invite path exists today (`FamilyController` has only add and remove); removing the member and inviting again is the way to send a fresh email.
 
+#### The owner's own row
+
+`RegisterUserCommand` gains `OwnerName` and `OwnerAge`; its validator requires both or neither, a trimmed name of 1–100 characters and an age of 0–120 (`register-family-account`). The handler adds `FamilyMember { Name, Age, UserId = owner }` to the new family in the same save. Google sign-in, platform-invitation acceptance and the first profile save create no member (ADR-024 decision 2).
+
+`FamilyProfileDto` gains `Guid? SelfMemberId`: `FamilyProfileReader` takes the member whose `UserId` is the caller from the members it already loaded. No query is added.
+
+`AddFamilyMemberCommand` gains `bool Self`. The validator refuses `Self` with an `Email` (400). With `Self`, the handler (after `EnsureOwnerAsync` and the name check) raises `409 already_in_family` when a member of the family already has the caller's `UserId`, then adds the member with `UserId` = caller and answers `201` with `access: Account` and the caller's email, no invite and no email. `ClaimFamilyMemberCommand(Id)` (`POST /api/family/members/{id}/claim`, `200 FamilyMemberDto`) runs `EnsureOwnerAsync`, raises `404` for a member outside the family, `409 already_in_family` when the caller is already linked, and `409 member_has_access` when the member has a `UserId` or an unaccepted `FamilyInvitation`, then sets `UserId` = caller. The unique filtered index on `FamilyMembers.UserId` backs the one-member-per-account rule; no migration is needed (it exists since `AddFamilyOwnershipAndInvitations`).
+
+The owner's row is protected by rules that already exist: `RemoveFamilyMemberCommandHandler` answers `409 cannot_remove_owner`, and `SaveFamilyProfileCommandHandler` counts it among the members with access (`member_has_access` when dropped) while a match by id keeps its `UserId` through a rename or re-age. `UserSeeder` links a seeded account to the seeded member named by `users.json` `memberName` when both are unlinked, so the seeded owner "Quinn" signs in as quinntynebrown@gmail.com; nothing links by name otherwise.
+
+### Decisions for the owner's own row
+
+- **Capture point.** The create-account form asks for the owner's first name and age; Google and invitation owners use "Add yourself" (ADR-024 decision 2).
+- **No backfill.** No migration invents or links members, not even on an exact name match (ADR-024 decision 3).
+- **Security.** Both "This is me" requests are owner-only (`owner_only`), scoped to the caller's family (404 elsewhere), and link only the caller's own account, never one named in the request.
+
 `SaveFamilyProfileCommandHandler` compares the requested members with the stored ones before syncing. A non-owner whose request differs by name or age raises `403 owner_only`. Any request that leaves an `Invited` or `Account` member unmatched raises `409 member_has_access`.
 
 ## Requirements
@@ -68,6 +94,11 @@ This feature lets the owner add members who will not sign in, invite members who
 | `L2-127` | `L1-037`, `L1-001`, `L1-012` | The invite link shall open `/accept-invite`, which shall create a verified account for the invited email with the chosen password, belonging to the inviting family, linked to the invited member, and sign the new member in. |
 | `L2-128` | `L1-037`, `L1-012` | The owner shall be able to remove any member except themselves; removing an invited member shall revoke the invitation, and removing a member with an account shall delete that account and end its sessions immediately. |
 | `L2-129` | `L1-037`, `L1-002`, `L1-012` | `PUT /api/family` shall keep saving the rest of the profile for every member, but only the owner shall change the member list through it, and a save that drops an invited member or a member with an account shall be refused. |
+| `L2-214` | `L1-037`, `L1-002` | The owner shall be a member linked to their account, shown to every account of the family as "{name} · {role} · {age} · Signs in as {email}"; `GET /api/family` shall return `selfMemberId`, and an account shall be linked to at most one member. |
+| `L2-215` | `L1-037`, `L1-001`, `L1-039` | The sign-up form shall ask for the owner's first name and age and registration shall create the owner's member; Google sign-in, platform-invitation acceptance and the first profile save create none. |
+| `L2-216` | `L1-037`, `L1-002`, `L1-012` | The owner shall add themselves (`POST /api/family/members` with `self: true`) or claim a member with no account and no invitation (`POST /api/family/members/{id}/claim`); owner only, family-scoped, one linked member per account (`409 already_in_family`). |
+| `L2-217` | `L1-037`, `L1-039` | While the owner has no linked member, the owner view of "Who's in" shall start with "Add yourself"; no migration shall create or link members. |
+| `L2-218` | `L1-037`, `L1-002`, `L1-012` | The owner's own row shall be editable (name and age) but never removed, through the member endpoints or the profile save. |
 | `L2-008` | `L1-001`, `L1-012` | Every endpoint except the listed anonymous routes, including `POST /api/auth/invitation` and `POST /api/auth/accept-invitation`, shall reject requests that lack a valid bearer token. |
 | `L2-010` | `L1-002` | Adding a member from `/family` shall open a CDK dialog and call `POST /api/family/members` once; editing a member's name or age shall call `PUT /api/family` once. |
 
@@ -108,6 +139,12 @@ Adding without an email creates a member with access `None` and sends no mail; a
 The invitee previews the invitation, chooses a password and is signed in to the inviting family (`L2-127`).
 
 ![Sequence diagram for accepting an invitation](diagrams/sequence-accept-invitation.png)
+
+### Behaviour — add yourself or claim a member
+
+While the owner has no linked member, "Add yourself" heads the list; the owner either adds a new member linked to their account or claims a listed one, and the row then signs in as them (`L2-216`, `L2-217`).
+
+![Sequence diagram for adding yourself or claiming a member](diagrams/sequence-add-yourself-or-claim.png)
 
 ### Behaviour — remove a member
 
