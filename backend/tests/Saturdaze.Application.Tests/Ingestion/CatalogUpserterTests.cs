@@ -31,6 +31,23 @@ public class CatalogUpserterTests
     }
 
     [Fact]
+    public async Task Stores_an_ingested_breakfast_restaurant_as_breakfast()
+    {
+        // Traces to: L2-220 AC3
+        await using var app = TestApp.Create();
+        var sut = new CatalogUpserter(app.Db);
+        var items = Parser.Parse("""
+            [
+              {"name":"Breakfast Social","style":"Breakfast","slot":"Breakfast","wifeApproved":true,"driveMinutes":4,"notes":"Eggs and pancakes."}
+            ]
+            """, IngestionType.Restaurants).Items;
+
+        await sut.UpsertAsync(items, IngestionType.Restaurants, default);
+
+        (await app.Db.Restaurants.SingleAsync(r => r.Name == "Breakfast Social")).Slot.Should().Be(MealSlot.Breakfast);
+    }
+
+    [Fact]
     public async Task Records_whether_an_ingested_event_is_indoor()
     {
         // Traces to: L2-146 AC2

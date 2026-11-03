@@ -62,9 +62,9 @@ public class AdminPhotoHealthTests : IClassFixture<SaturdazeApiFactory>, IAsyncL
             N(activities, "missingAlt").Should().Be(1);
 
             var restaurants = Catalog(health, "restaurants");
-            N(restaurants, "places").Should().Be(8);
+            N(restaurants, "places").Should().Be(10);
             N(restaurants, "withPrimary").Should().Be(1);
-            N(restaurants, "noPhoto").Should().Be(7);
+            N(restaurants, "noPhoto").Should().Be(9);
 
             var events = Catalog(health, "upcomingEvents");
             events.GetProperty("kind").GetString().Should().Be("LocalEvent");
@@ -113,7 +113,7 @@ public class AdminPhotoHealthTests : IClassFixture<SaturdazeApiFactory>, IAsyncL
             var restaurants = Catalog(health, "restaurants");
             N(restaurants, "withPrimary").Should().Be(2, "an unreviewed provider photo still projects");
             N(restaurants, "unreviewed").Should().Be(1);
-            N(restaurants, "noPhoto").Should().Be(6);
+            N(restaurants, "noPhoto").Should().Be(8);
             health.GetProperty("pendingReviews").GetInt32().Should().Be(1);
         }
         finally

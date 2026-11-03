@@ -7,6 +7,9 @@ public static class PlannerTimes
     public static readonly TimeOnly DayEnd = new(21, 0);
     public static readonly TimeOnly SundayWindDownStart = new(19, 30);
 
+    // Breakfast (L2-220): not a weekend meal; a breakfast lock starts here, and dates use 8:00–10:30.
+    public static readonly TimeOnly BreakfastWindowStart = new(8, 30);
+
     // Meal windows (L2-186): a meal starts between its earliest and latest start,
     // searched from the preferred start; it never moves outside the window.
     public static readonly TimeOnly LunchEarliestStart = new(11, 30);

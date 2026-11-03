@@ -101,7 +101,12 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
         {
             // Start at the slot's usual time, or after whatever locked block or
             // commitment sits there: locks never overlap (L2-148 AC4, L1-004).
-            var start = slot == MealSlot.Lunch ? PlannerTimes.LunchWindowStart : PlannerTimes.DinnerWindowStart;
+            var start = slot switch
+            {
+                MealSlot.Breakfast => PlannerTimes.BreakfastWindowStart,
+                MealSlot.Lunch => PlannerTimes.LunchWindowStart,
+                _ => PlannerTimes.DinnerWindowStart,
+            };
             foreach (var held in weekend.Blocks.Where(b => b.Day == day && b.IsLocked).OrderBy(b => b.StartTime))
             {
                 if (held.StartTime < start.AddMinutes(PlannerTimes.MealMinutes) && held.EndTime > start)
@@ -127,8 +132,11 @@ public sealed class LockRestaurantCommandHandler : IRequestHandler<LockRestauran
         meal.Reason = "restaurant locked by family vote";
     }
 
-    private static bool IsSlot(TimeOnly startTime, MealSlot slot)
-        => slot == MealSlot.Lunch
-            ? startTime < new TimeOnly(15, 0)
-            : startTime >= new TimeOnly(15, 0);
+    /// <summary>Breakfast before 11:00, lunch until 15:00, dinner after (L2-220 AC4).</summary>
+    private static bool IsSlot(TimeOnly startTime, MealSlot slot) => slot switch
+    {
+        MealSlot.Breakfast => startTime < new TimeOnly(11, 0),
+        MealSlot.Lunch => startTime >= new TimeOnly(11, 0) && startTime < new TimeOnly(15, 0),
+        _ => startTime >= new TimeOnly(15, 0),
+    };
 }

@@ -73,12 +73,12 @@ public static class IngestionPrompts
                 "\"seasonEndMonth\"?: integer, \"priceTier\"?: integer, \"themes\"?: [string]}]",
 
             IngestionType.Restaurants =>
-                $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Lunch\" or \"Dinner\". " +
+                $"{preamble}\n\nFind family-friendly restaurants. \"slot\" is \"Breakfast\", \"Lunch\" or \"Dinner\". " +
                 $"\"wifeApproved\" is true for relaxed, quality, not-too-loud places a discerning adult " +
                 $"would happily return to (as opposed to purely kid-driven chains). \"notes\" is a short " +
                 $"reason it earns its place. \"patio\" is true when it has outdoor seating.\n\n" +
                 $"{output}\n" +
-                "[{\"name\": string, \"style\": string, \"slot\": \"Lunch\"|\"Dinner\", " +
+                "[{\"name\": string, \"style\": string, \"slot\": \"Breakfast\"|\"Lunch\"|\"Dinner\", " +
                 "\"wifeApproved\": boolean, \"driveMinutes\": integer, \"notes\": string, \"patio\": boolean, " +
                 "\"latitude\": number, \"longitude\": number, \"address\": string}]",
 
@@ -98,7 +98,7 @@ public static class IngestionPrompts
                 $"List family-friendly activities and day-trip spots within {ctx.MaxDriveMinutes} minutes of " +
                 $"{ctx.HomeLocation}. Return the JSON array only.",
             IngestionType.Restaurants =>
-                $"List family-friendly lunch and dinner restaurants within {ctx.MaxDriveMinutes} minutes of " +
+                $"List family-friendly breakfast, lunch and dinner restaurants within {ctx.MaxDriveMinutes} minutes of " +
                 $"{ctx.HomeLocation}. Return the JSON array only.",
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unsupported ingestion type.")
         };

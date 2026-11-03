@@ -102,7 +102,7 @@ public class AdminPlacesListTests : IClassFixture<SaturdazeApiFactory>, IAsyncLi
         var names = Names(page);
         names.Should().NotContain("Snug Harbour");
         names.Should().Contain("Spice Lounge").And.Contain("Wild Wing");
-        names.Should().HaveCount(7);
+        names.Should().HaveCount(9);
         page.GetProperty("items").EnumerateArray().Should().OnlyContain(i => i.GetProperty("kind").GetString() == "Restaurant");
 
         Names(await Get("?flag=missing-alt")).Should().Equal("Jack Darling Memorial Park");
