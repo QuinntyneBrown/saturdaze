@@ -22,6 +22,8 @@ The slice combines block-level lock and swap endpoints with weekend regeneration
 
 Locked blocks, commitments among them, retain identity, time and content during regeneration (L2-011 AC2, L2-016 AC1). A commitment added to the profile after the weekend was planned gains a block on the next regeneration; a commitment removed from the profile keeps its locked block until the user unlocks the day or the weekend is regenerated from scratch through Repeat or Remix.
 
+**Date blocks (L2-222).** A block of kind `Date` stands for a couple's date (`plan-a-couples-date`). `LockBlockCommandHandler` refuses to unlock it with 409 `date_locked`, `LockWeekendDayCommandHandler` keeps it locked when the day is unlocked, `BlockSwapper` refuses it as a non-activity block, `ReuseWeekendCommandHandler` leaves it out of a repeated or remixed weekend, and `RegenerateWeekendDayCommandHandler` re-plans the day through `WeekendReplanner.ReplanDayAsync()`, which `DateWeekendSync` also uses after a date changes. Changes to the date itself go through its own endpoints.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

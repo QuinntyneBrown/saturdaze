@@ -57,6 +57,8 @@ Reserving lunch splits a free day into a morning gap (about 3 hours) and an afte
 
 `BlockSwapper` widens the swap window into the downtime touching the outing, so a replacement can use the free time that reserved meals leave in smaller gaps. It refills what remains as downtime, and adds each new block once. `PickActivityForGap` takes the weekend's other-day activities into `rejected` (L2-185). It uses the same eligibility, so a swap never brings back an excluded theme or an out-of-season place.
 
+**Couples dates (L2-224).** `DatePlanner` applies the same family boundaries to a date: drive times from the family's own home, `MaxDriveMinutes`, dislikes, excluded themes and, for the activity, `CandidateFilter.Exclusion()` evaluated for the two attendees, opening hours and sunset. Restaurants additionally rank by the family's lock for that day and meal, liked tags and votes (`plan-a-couples-date`).
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities.
