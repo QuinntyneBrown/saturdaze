@@ -44,6 +44,8 @@
     <!-- L2-202, L2-211: an agent-drafted weekend says so; each pick carries its reason. -->
     <span class="chip chip--primary cover-actions__chip"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg>Drafted for your family</span>
     <!-- With Google Calendar connected the label stays; the dialog says it is already synced (D6b, L2-176). -->
+    <!-- L2-219: plan a date for the two adults; disabled with a reason when the family has fewer than two (D38b). -->
+    <a class="btn btn--quiet" href="./dialogs.html#dialog-plan-date"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Plan a date</a>
     <a class="btn btn--quiet" href="./dialogs.html#dialog-calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
     <a class="btn btn--primary" href="./dialogs.html#dialog-share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Share</a>
     <a class="btn btn--quiet btn--icon" href="./dialogs.html#dialog-more" aria-label="More options"><svg class="icon" aria-hidden="true"><use href="#i-more"/></svg></a>
@@ -336,19 +338,20 @@
           <p class="leg__text"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>15 min · 12 km home<a class="leg__link" href="https://maps.example.com/directions/square-one/port-credit" target="_blank" rel="noopener">Directions<span class="visually-hidden"> home (opens in a new tab)</span></a></p>
         </li>
 
-        <li class="block">
-          <div class="block__time"><span class="block__clock">6:30pm</span><span class="block__dur">open</span></div>
-          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-bed"/></svg></span></div>
+        <!-- L2-222, L2-224: the couple's date is its own block, marked as a date, with who is going.
+             The family plan pauses for its window and says the kids need care; Saturdaze books nothing. -->
+        <li class="block block--locked">
+          <div class="block__time"><span class="block__clock">5:15pm</span><span class="block__dur">3h</span></div>
+          <div class="block__rail"><span class="block__disc"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span></div>
           <div class="block__body">
-            <h3 class="block__title">Dinner at home</h3>
-            <p class="block__sub clamp-1">Sunday dinner at home</p>
+            <h3 class="block__title">Dinner date at Snug Harbour</h3>
+            <p class="block__sub clamp-1">Quinn and Sara · then a walk at Memorial Park</p>
+            <div class="block__chips"><span class="chip chip--primary"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Date</span><span class="chip chip--warn">Kids need care 5:15–8:15pm</span></div>
           </div>
           <div class="block__actions">
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Why this: Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg></a>
-            <a class="btn btn--ghost btn--sm btn--icon" href="./dialogs.html#dialog-block" aria-label="Swap Dinner at home"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg></a>
-            <button class="btn btn--ghost btn--sm btn--icon" type="button" aria-label="Lock Dinner at home" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button>
+            <a class="btn btn--ghost btn--sm btn--icon" href="./weekend.date.html" aria-label="Open the date: Dinner date at Snug Harbour"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></a>
           </div>
-          <a class="block__chev" href="./dialogs.html#dialog-block" aria-label="Details for Dinner at home"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
+          <a class="block__chev" href="./weekend.date.html" aria-label="Details for Dinner date at Snug Harbour"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron_right"/></svg></a>
         </li>
       </ol>
       <a class="ghost-row" href="./dialogs.html#dialog-errand"><svg class="icon" aria-hidden="true"><use href="#i-bag"/></svg>Add an errand</a>

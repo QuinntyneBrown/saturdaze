@@ -644,6 +644,8 @@
   /* ---- well (note block) ---- */
   .well { display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px; border-radius: var(--sd-r-md); background: var(--sd-surface-2); font-size: var(--sd-fs-ui); color: var(--sd-ink); }
   .well .icon { width: 16px; height: 16px; flex: none; margin-top: 2px; color: var(--sd-ink-soft); }
+  /* A past weekend's date (L2-225). */
+  .card__date { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; font-size: var(--sd-fs-ui); color: var(--sd-ink-soft); }
   .well--accent { background: var(--sd-accent-soft); }
   .well--accent .icon { color: var(--sd-accent-ink); }
   .well--warn { background: var(--sd-warn-soft); }
