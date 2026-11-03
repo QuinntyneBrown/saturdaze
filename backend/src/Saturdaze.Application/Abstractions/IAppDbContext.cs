@@ -25,6 +25,7 @@ public interface IAppDbContext
     DbSet<RegionResearch> RegionResearch { get; }
     DbSet<Weekend> Weekends { get; }
     DbSet<ItineraryBlock> ItineraryBlocks { get; }
+    DbSet<CoupleDate> CoupleDates { get; }
     DbSet<ShoppingErrand> ShoppingErrands { get; }
     DbSet<User> Users { get; }
     DbSet<UserAvatar> UserAvatars { get; }

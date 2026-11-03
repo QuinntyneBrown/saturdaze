@@ -8,5 +8,8 @@ public enum BlockKind
     Drive = 4,
     Downtime = 5,
     Commitment = 6,
-    Errand = 7
+    Errand = 7,
+
+    /// <summary>A couple's date (L2-222): one locked block for its whole window.</summary>
+    Date = 8
 }
