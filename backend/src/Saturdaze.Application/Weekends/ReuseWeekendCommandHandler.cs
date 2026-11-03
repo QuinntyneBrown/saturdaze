@@ -6,6 +6,7 @@ using Saturdaze.Application.Contracts;
 using Saturdaze.Application.Exceptions;
 using Saturdaze.Application.Weather;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Weekends;
@@ -89,8 +90,8 @@ public sealed class ReuseWeekendCommandHandler : IRequestHandler<ReuseWeekendCom
         target.Rating = null;
         target.RegenerateCount = request.Remix ? source.RegenerateCount + 1 : source.RegenerateCount;
 
-        // A past weekend's calendar events are not this weekend's (L2-177).
-        foreach (var block in sourceBlocks.Where(b => !b.FromCalendar && !keptLocks.Any(k => Overlaps(k, b))))
+        // A past weekend's calendar events and dates are not this weekend's (L2-177, L2-222).
+        foreach (var block in sourceBlocks.Where(b => !b.FromCalendar && b.Kind != BlockKind.Date && !keptLocks.Any(k => Overlaps(k, b))))
         {
             _db.ItineraryBlocks.Add(new ItineraryBlock
             {

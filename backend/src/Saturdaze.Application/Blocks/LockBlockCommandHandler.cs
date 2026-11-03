@@ -41,6 +41,9 @@ public sealed class LockBlockCommandHandler : IRequestHandler<LockBlockCommand, 
         if (block.Kind == BlockKind.Commitment && !request.Locked)
             throw new ConflictException("commitment_locked", "Recurring commitments are always locked; edit them on the profile.");
 
+        if (block.Kind == BlockKind.Date && !request.Locked)
+            throw new ConflictException("date_locked", "A date stays on the weekend; change or cancel it from the date.");
+
         block.IsLocked = request.Locked;
         await _db.SaveChangesAsync(cancellationToken);
 

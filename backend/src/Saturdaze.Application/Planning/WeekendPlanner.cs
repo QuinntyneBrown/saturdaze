@@ -256,6 +256,14 @@ public sealed class WeekendPlanner : IWeekendPlanner
 
     private static bool Splittable(ItineraryBlock a, ItineraryBlock b, IReadOnlyList<Commitment> commitments)
     {
+        // A couple's date was planned clear of its attendees' commitments, so one it overlaps is for
+        // others, such as the children (L2-222).
+        if (a.Kind == BlockKind.Date || b.Kind == BlockKind.Date)
+        {
+            var other = a.Kind == BlockKind.Date ? b : a;
+            return other.Kind == BlockKind.Commitment
+                   && commitments.FirstOrDefault(c => Represents(other, c) && c.Title == other.Title) is { AttendeeMemberIds.Count: > 0 };
+        }
         if (a.Kind != BlockKind.Commitment || b.Kind != BlockKind.Commitment) return false;
         var ca = commitments.FirstOrDefault(c => Represents(a, c) && c.Title == a.Title);
         var cb = commitments.FirstOrDefault(c => Represents(b, c) && c.Title == b.Title);
