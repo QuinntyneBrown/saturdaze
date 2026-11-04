@@ -65,13 +65,28 @@ public sealed class GetWeekendHistoryQueryHandler
             })
             .ToListAsync(cancellationToken);
 
+        // Each weekend's dates, with who went (L2-225 AC7).
+        var ids = weekends.Select(w => w.Id).ToList();
+        var dates = await _db.CoupleDates.AsNoTracking().Where(d => ids.Contains(d.WeekendId)).ToListAsync(cancellationToken);
+        var restaurantIds = dates.Select(d => d.RestaurantId).Distinct().ToList();
+        var restaurants = await _db.Restaurants.AsNoTracking().Where(r => restaurantIds.Contains(r.Id))
+            .ToDictionaryAsync(r => r.Id, r => r.Name, cancellationToken);
+        var members = await _db.FamilyMembers.AsNoTracking().Where(m => m.FamilyId == familyId)
+            .ToDictionaryAsync(m => m.Id, cancellationToken);
+
         var summaries = new List<WeekendSummaryDto>(weekends.Count);
         foreach (var w in weekends)
         {
             var cover = await _enrichment.CoverAsync(w.Id, w.Stops, cancellationToken);
             summaries.Add(new WeekendSummaryDto(
                 w.Id, w.WeekendOf, w.IsFavourite, w.RegenerateCount, w.BlockCount, w.Highlights,
-                w.Title, w.Rating, cover));
+                w.Title, w.Rating, cover,
+                dates.Where(d => d.WeekendId == w.Id)
+                    .OrderBy(d => d.Day).ThenBy(d => d.StartTime)
+                    .Select(d => new DateSummaryDto(
+                        d.Day, d.Meal, restaurants.GetValueOrDefault(d.RestaurantId) ?? string.Empty,
+                        d.AttendeeMemberIds.Where(members.ContainsKey).Select(id => members[id].Name).ToList()))
+                    .ToList()));
         }
 
         return new WeekendHistoryPage(summaries, total);

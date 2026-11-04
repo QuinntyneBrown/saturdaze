@@ -9,4 +9,5 @@ public sealed record WeekendSummaryDto(
     IReadOnlyList<string> ActivityHighlights,
     string? Title,
     int? Rating,
-    CoverDto? Cover = null);
+    CoverDto? Cover = null,
+    IReadOnlyList<DateSummaryDto>? Dates = null);
