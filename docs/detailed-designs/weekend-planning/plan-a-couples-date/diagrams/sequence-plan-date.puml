@@ -16,7 +16,7 @@ box "Backend - Saturdaze Application" #ECFDF3
  participant "PlanDateCommandHandler" as handler
  participant "PlannerInputLoader" as loader
  participant "DatePlanner" as planner
- participant "DateWeekendSync" as sync
+ participant "DateWorkflow" as sync
  participant "WeekendReplanner" as replanner
 end box
 database "AppDbContext" as db
@@ -39,7 +39,7 @@ alt nothing fits
   handler --> controller : 409
 end
 handler -> db : add CoupleDate
-handler -> sync : ApplyAsync(weekend, date, [day])
+handler -> sync : PlanAsync(weekend, date, attendees, [day])
 sync -> db : replace the Date block
 sync -> replanner : ReplanDayAsync(day)
 replanner -> db : keep locked blocks; save the re-planned day

@@ -54,18 +54,19 @@ class DatePlanner {
   +Plan(request: DateRequest): DatePlan
 }
 class DatePlan <<record>> {
-  +RestaurantId: Guid
-  +ActivityId: Guid?
+  +Restaurant: Restaurant
+  +Activity: Activity?
   +Start: TimeOnly
   +End: TimeOnly
   +Steps: IReadOnlyList<DateStep>
 }
 class DateBusyTime <<static>> {
-  +For(ctx, weekend, day, attendees, otherDates): IReadOnlyList<BusyTime>
+  +For(ctx, weekend, day, attendees, exceptDateId): IReadOnlyList<BusyTime>
 }
-class DateWeekendSync {
-  +ApplyAsync(weekend, date, days, ct): Task
-  +RemoveAsync(weekend, date, ct): Task
+class DateWorkflow {
+  +PlanAsync(weekend, date, attendees, avoidRestaurantId, days, ct, check): Task
+  +RemoveFromWeekendAsync(weekend, date, ct): Task
+  +ToDtoAsync(date, ct): Task<CoupleDateDto>
 }
 class WeekendReplanner {
   +RegenerateAsync(weekend, familyId, ct): Task<PlannerContext>
@@ -85,7 +86,7 @@ CoupleDate --> MealSlot
 DatePlanner ..> DateRequest
 DatePlanner ..> DatePlan
 DateRequest ..> DateBusyTime
-DateWeekendSync ..> WeekendReplanner
-DateWeekendSync ..> CoupleDate
-DateWeekendSync ..> BlockKind
+DateWorkflow ..> WeekendReplanner
+DateWorkflow ..> CoupleDate
+DateWorkflow ..> BlockKind
 @enduml

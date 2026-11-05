@@ -15,7 +15,7 @@ end box
 box "Backend - Saturdaze Application" #ECFDF3
  participant "ChangeDateCommandHandler\nCancelDateCommandHandler" as handler
  participant "DatePlanner" as planner
- participant "DateWeekendSync" as sync
+ participant "DateWorkflow" as sync
 end box
 database "AppDbContext" as db
 actor -> page : Swap, drop, move, regenerate or cancel (dialog)
@@ -23,7 +23,7 @@ page -> controller : POST | PUT | DELETE …/dates/{dateId}
 controller -> handler : ChangeDateCommand(kind) or CancelDateCommand
 handler -> db : date by id, weekend and family (else 404)
 alt cancel
-  handler -> sync : RemoveAsync(weekend, date)
+  handler -> sync : RemoveFromWeekendAsync(weekend, date)
   sync -> db : remove Date block; re-plan the day
   handler -> db : remove CoupleDate
   handler --> controller : 204
@@ -36,7 +36,7 @@ else change
     planner --> handler : ConflictException
     handler --> controller : 409, date unchanged
   end
-  handler -> sync : ApplyAsync(weekend, date, affected days)
+  handler -> sync : PlanAsync(weekend, date, attendees, affected days)
   handler --> controller : 200 CoupleDateDto
 end
 controller --> page : result

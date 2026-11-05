@@ -9,5 +9,6 @@
 | generate-current-weekend | 5 days | 100% |
 | manage-shopping-errands | 3 days | 80% |
 | map-itinerary-and-travel-legs | 7 days | 90% |
+| plan-a-couples-date | 8 days | 90% |
 | plan-with-agents | 10 days | 90% |
 | sync-weekend-to-calendar | 7 days | 90% |

@@ -66,6 +66,12 @@ reference.
 - Authentication flows for sign-up, login, verification, password reset, and
   sign-out, plus "Continue with Google", which creates the account on first use
   (ADR-019).
+- Couples dates (ADR-025): "Plan a date" on the Weekend page pre-plans
+  breakfast, lunch or dinner for the family's two adults on Saturday or
+  Sunday, with a nearby activity when one fits, around their commitments.
+  The weekend is planned around the date, shows who is going and when the
+  kids need care, and the date can be swapped, moved, regenerated or
+  cancelled from its own screen. Saturdaze books nothing (L2-219 to L2-225).
 - Optional calendar sync from the Family page: connect Google Calendar to keep
   the weekend in it and plan around the events already there, or subscribe any
   other calendar app to a private, read-only link (ADR-022).
