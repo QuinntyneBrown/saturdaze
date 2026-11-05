@@ -32,10 +32,10 @@ const PATIO = 'Patio';
 const QUICK_MINUTES = 15;
 
 const DAYS: readonly WeekendDay[] = ['Saturday', 'Sunday'];
-const SLOTS: readonly MealSlot[] = ['Lunch', 'Dinner'];
+const SLOTS: readonly MealSlot[] = ['Breakfast', 'Lunch', 'Dinner'];
 
-/** Meal blocks starting in this window belong to lunch; later ones to dinner. */
-const LUNCH_FROM = 10 * 60;
+/** Meal blocks before 11:00 are breakfast (L2-220), then lunch until 15:00, then dinner. */
+const LUNCH_FROM = 11 * 60;
 const LUNCH_UNTIL = 15 * 60;
 
 export const DEFAULT_FOOD_FILTERS: FoodFilters = {
@@ -50,6 +50,8 @@ type ListKey = `${WeekendDay}:${MealSlot}`;
 type Lists = Readonly<Record<ListKey, readonly RestaurantDto[]>>;
 
 const EMPTY_LISTS: Lists = {
+  'Saturday:Breakfast': [],
+  'Sunday:Breakfast': [],
   'Saturday:Lunch': [],
   'Saturday:Dinner': [],
   'Sunday:Lunch': [],
@@ -149,7 +151,7 @@ function slotOf(block: BlockRow): MealSlot | null {
   const start = block.startMinutes;
   if (start >= LUNCH_FROM && start < LUNCH_UNTIL) return 'Lunch';
   if (start >= LUNCH_UNTIL) return 'Dinner';
-  return null;
+  return 'Breakfast';
 }
 
 /** The weekend's meal block for the day and slot, and the activity before it. */
@@ -312,13 +314,18 @@ export class RestaurantService implements IRestaurantService {
           console.error(`RestaurantService.load failed for ${dayIso} ${slot}`, err);
           return [];
         });
-    const [satLunch, satDinner, sunLunch, sunDinner] = await Promise.all([
-      fetch(saturday, 'Lunch'),
-      fetch(saturday, 'Dinner'),
-      fetch(sunday, 'Lunch'),
-      fetch(sunday, 'Dinner'),
-    ]);
+    const [satBreakfast, sunBreakfast, satLunch, satDinner, sunLunch, sunDinner] =
+      await Promise.all([
+        fetch(saturday, 'Breakfast'),
+        fetch(sunday, 'Breakfast'),
+        fetch(saturday, 'Lunch'),
+        fetch(saturday, 'Dinner'),
+        fetch(sunday, 'Lunch'),
+        fetch(sunday, 'Dinner'),
+      ]);
     this._lists.set({
+      'Saturday:Breakfast': satBreakfast,
+      'Sunday:Breakfast': sunBreakfast,
       'Saturday:Lunch': satLunch,
       'Saturday:Dinner': satDinner,
       'Sunday:Lunch': sunLunch,

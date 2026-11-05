@@ -1,0 +1,17 @@
+<sd-dialog
+  [title]="'Change ' + data.activity"
+  [subtitle]="
+    'Swap it for another place near the restaurant, or keep the date to just ' + data.meal + '.'
+  "
+>
+  <sd-well tone="accent" icon="tree" [title]="data.activity">{{ data.detail }}</sd-well>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="close('drop')">
+    <sd-icon name="close" />
+    Drop activity
+  </sd-button>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="close()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="close('swap')">
+    <sd-icon name="swap" />
+    Swap activity
+  </sd-button>
+</sd-dialog>

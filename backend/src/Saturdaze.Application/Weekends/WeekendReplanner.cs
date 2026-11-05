@@ -1,6 +1,7 @@
 using Saturdaze.Application.Abstractions;
 using Saturdaze.Application.Planning;
 using Saturdaze.Domain.Entities;
+using Saturdaze.Domain.Enums;
 using Saturdaze.Domain.ValueObjects;
 
 namespace Saturdaze.Application.Weekends;
@@ -73,6 +74,47 @@ public sealed class WeekendReplanner
         await _db.SaveChangesAsync(ct);
 
         weekend.Home = GeoLocation.Merge(weekend.Home, ctx.Home.Copy());
+        return ctx;
+    }
+
+    /// <summary>
+    /// Re-plans one day (L2-085): the other day is fixed wholesale and, on <paramref name="day"/>,
+    /// only locked blocks survive, commitments and date blocks among them (L2-011 AC2, L2-222). Saves.
+    /// </summary>
+    public async Task<PlannerContext> ReplanDayAsync(Weekend weekend, Guid familyId, DayOfWeekend day, int seed, CancellationToken ct)
+    {
+        var fixedBlocks = weekend.Blocks.Where(b => b.Day != day || b.IsLocked).ToList();
+        var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, ct);
+        var planned = _planner.Plan(ctx.ToInputs(fixedBlocks, weekend.Errands.FirstOrDefault(e => !e.Done), seed));
+
+        var fixedIds = fixedBlocks.Select(b => b.Id).ToHashSet();
+        foreach (var block in weekend.Blocks.Where(b => b.Day == day && !fixedIds.Contains(b.Id)).ToList())
+        {
+            weekend.Blocks.Remove(block);
+            _db.ItineraryBlocks.Remove(block);
+        }
+
+        foreach (var block in planned.Where(b => b.Day == day && !fixedIds.Contains(b.Id)))
+        {
+            _db.ItineraryBlocks.Add(new ItineraryBlock
+            {
+                Id = Guid.NewGuid(),
+                WeekendId = weekend.Id,
+                Day = block.Day,
+                StartTime = block.StartTime,
+                EndTime = block.EndTime,
+                Kind = block.Kind,
+                Title = block.Title,
+                RefId = block.RefId,
+                IsLocked = block.IsLocked,
+                Reason = block.Reason,
+                SortOrder = block.SortOrder,
+                Stop = block.Stop?.Copy(),
+                FromCalendar = block.FromCalendar
+            });
+        }
+
+        await _db.SaveChangesAsync(ct);
         return ctx;
     }
 }

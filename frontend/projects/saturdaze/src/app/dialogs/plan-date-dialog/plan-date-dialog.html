@@ -1,0 +1,64 @@
+<sd-dialog
+  title="Plan a date"
+  [subtitle]="
+    canPlan
+      ? 'A meal out for two, with a nearby walk or gallery if it fits. About two to three hours.'
+      : 'A meal out for two adults.'
+  "
+  wide
+>
+  <div class="form">
+    @if (!canPlan) {
+      <sd-well tone="warn" icon="alert" title="A date needs two adults">{{
+        data.planning.reason
+      }}</sd-well>
+    }
+    <sd-seg-radio
+      label="Meal"
+      name="meal"
+      [options]="meals"
+      [ngModel]="meal()"
+      [disabled]="!canPlan"
+      (ngModelChange)="meal.set($event)"
+    />
+    <sd-seg-radio
+      label="Day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      [disabled]="!canPlan"
+      (ngModelChange)="day.set($event)"
+    />
+    @if (canPlan) {
+      <fieldset class="field">
+        <legend class="field__label">Who is going</legend>
+        <div class="cluster">
+          @for (adult of data.planning.adults; track adult.id) {
+            <sd-checkbox
+              [name]="'going-' + adult.id"
+              [ngModel]="isGoing(adult.id)"
+              (ngModelChange)="toggle(adult.id, $event)"
+              >{{ adult.name }}</sd-checkbox
+            >
+          }
+        </div>
+        <p class="field__hint">
+          Two adults. Children stay on the family plan, and it says when they need care.
+        </p>
+      </fieldset>
+    }
+  </div>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">{{
+    canPlan ? 'Cancel' : 'Close'
+  }}</sd-button>
+  <sd-button
+    slot="actions"
+    variant="primary"
+    type="button"
+    [disabled]="!ready()"
+    (click)="confirm()"
+  >
+    <sd-icon name="heart" />
+    Plan the date
+  </sd-button>
+</sd-dialog>

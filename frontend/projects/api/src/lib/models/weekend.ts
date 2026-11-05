@@ -18,3 +18,4 @@ export type { MapPin, MapPoint } from './map-pin';
 export type { WeatherDay } from './weather-day';
 export type { WeekendDay } from './weekend-day';
 export type { WeekendStatus, WeekendView } from './weekend-view';
+export type { CoupleDateView, DatePlanningView, DateStepView } from './couple-date-view';

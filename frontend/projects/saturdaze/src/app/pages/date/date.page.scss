@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingVerticalL);
+}
+
+// The date's steps — `.day__list` in docs/mocks/pages/weekend.date.html.
+.date-steps {
+  display: flex;
+  flex-direction: column;
+}

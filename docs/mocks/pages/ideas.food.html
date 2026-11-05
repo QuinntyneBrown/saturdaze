@@ -46,6 +46,8 @@
     <button class="filter-chip" type="button" aria-pressed="true">Saturday</button>
     <button class="filter-chip" type="button" aria-pressed="false">Sunday</button>
     <span class="filters__divider" aria-hidden="true"></span>
+    <!-- L2-220: breakfast is a meal like lunch and dinner. -->
+    <button class="filter-chip" type="button" aria-pressed="false">Breakfast</button>
     <button class="filter-chip" type="button" aria-pressed="true">Lunch</button>
     <button class="filter-chip" type="button" aria-pressed="false">Dinner</button>
     <span class="filters__divider" aria-hidden="true"></span>
@@ -53,6 +55,35 @@
     <button class="filter-chip" type="button" aria-pressed="false">Under 15 min</button>
     <button class="filter-chip filter-chip--leaf" type="button" aria-pressed="false">Patio</button>
   </div>
+
+  <!-- ============ Breakfast (L2-220) ============ -->
+  <section class="section" aria-labelledby="g-breakfast">
+    <div class="section-header">
+      <div class="section-header__text">
+        <h2 class="section-header__title" id="g-breakfast">Breakfast</h2>
+        <p class="section-header__sub">Near home · 8:00am to 10:30am</p>
+      </div>
+    </div>
+    <ul class="grid-cards grid-cards--2">
+      <li class="card card--media">
+        <div class="media media--fallback media--sun card__media" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-fork"/></svg></div>
+        <div class="card__head">
+          <div class="card__head-text">
+            <h3 class="card__title">Breakfast Social</h3>
+            <p class="card__meta">Breakfast · Eggs and pancakes · 4 min from home</p>
+          </div>
+        </div>
+        <div class="card__chips">
+          <span class="chip chip--accent"><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>Wife-approved</span>
+          <span class="chip chip--sky"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>4 min</span>
+        </div>
+        <div class="card__footer cluster--between">
+          <a class="btn btn--quiet btn--sm" href="https://example.com/breakfast-social/menu" target="_blank" rel="noopener">See menu<span class="visually-hidden"> (opens in a new tab)</span></a>
+          <a class="btn btn--primary btn--sm" href="./dialogs.html#dialog-lock-in"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Lock it in</a>
+        </div>
+      </li>
+    </ul>
+  </section>
 
   <!-- ============ Lunch ============ -->
   <section class="section" aria-labelledby="g-lunch">

@@ -1,0 +1,43 @@
+@startuml
+title Behaviour - Change or cancel a date (L2-223)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Parent" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "DatePage\ndate dialogs" as page
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "DatesController" as controller
+end box
+box "Backend - Saturdaze Application" #ECFDF3
+ participant "ChangeDateCommandHandler\nCancelDateCommandHandler" as handler
+ participant "DatePlanner" as planner
+ participant "DateWorkflow" as sync
+end box
+database "AppDbContext" as db
+actor -> page : Swap, drop, move, regenerate or cancel (dialog)
+page -> controller : POST | PUT | DELETE …/dates/{dateId}
+controller -> handler : ChangeDateCommand(kind) or CancelDateCommand
+handler -> db : date by id, weekend and family (else 404)
+alt cancel
+  handler -> sync : RemoveFromWeekendAsync(weekend, date)
+  sync -> db : remove Date block; re-plan the day
+  handler -> db : remove CoupleDate
+  handler --> controller : 204
+else move to a taken meal and day
+  handler --> controller : 409 date_slot_taken
+else change
+  handler -> handler : add the current restaurant or activity to the rejected ids (swap),\nset ActivityDropped (drop), new day and meal (move)
+  handler -> planner : Plan(DateRequest)
+  alt nothing left
+    planner --> handler : ConflictException
+    handler --> controller : 409, date unchanged
+  end
+  handler -> sync : PlanAsync(weekend, date, attendees, affected days)
+  handler --> controller : 200 CoupleDateDto
+end
+controller --> page : result
+@enduml

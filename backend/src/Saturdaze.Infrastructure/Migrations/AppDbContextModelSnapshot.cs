@@ -328,6 +328,74 @@ namespace Saturdaze.Infrastructure.Migrations
                     b.ToTable("Commitments", (string)null);
                 });
 
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CoupleDate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ActivityDropped")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttendeeMemberIds")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("CreatedUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Meal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RegenerateCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RejectedActivityIds")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("RejectedRestaurantIds")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("RestaurantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("StepsJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("WeekendId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
+
+                    b.HasIndex("WeekendId", "Day", "Meal")
+                        .IsUnique();
+
+                    b.ToTable("CoupleDates", (string)null);
+                });
+
             modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1606,6 +1674,15 @@ namespace Saturdaze.Infrastructure.Migrations
                         });
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Saturdaze.Domain.Entities.CoupleDate", b =>
+                {
+                    b.HasOne("Saturdaze.Domain.Entities.Weekend", null)
+                        .WithMany()
+                        .HasForeignKey("WeekendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Saturdaze.Domain.Entities.EmailVerificationToken", b =>

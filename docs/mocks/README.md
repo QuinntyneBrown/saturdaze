@@ -27,7 +27,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 
 | Screen | File(s) |
 | --- | --- |
-| Weekend (cover photo, one day beside its map) | `weekend.html` (an agent-drafted weekend: "Drafted for your family", picks carry their reasons, Sunday dinner at home; L2-202, L2-211), `weekend.empty.html`, `weekend.generating.html`, `weekend.drafting.html` (agents drafting, the plan stays visible), `weekend.fallback.html` ("This is the standard plan" notice with Try again; L2-205) |
+| Weekend (cover photo, one day beside its map) | `weekend.html` (an agent-drafted weekend: "Drafted for your family", picks carry their reasons, Sunday dinner at home; L2-202, L2-211), `weekend.empty.html`, `weekend.generating.html`, `weekend.drafting.html` (agents drafting, the plan stays visible), `weekend.fallback.html` ("This is the standard plan" notice with Try again; L2-205), `weekend.date.html` (a couple's date: the plan and why each pick, swap restaurant or activity, move, regenerate, cancel; states: planning, no restaurant fits, activity dropped; L2-219 → L2-225). `weekend.html` has the "Plan a date" action and Sunday's date block with "Kids need care" |
 | Ideas (photo-led activities · food · events) | `ideas.html`, `ideas.food.html`, `ideas.events.html` |
 | Past weekends (cover photo per weekend) | `past.html`, `past.empty.html` |
 | Family | `family.html` (with "How you plan": max drive, what you celebrate, day shape; a commitment with who goes and where; L2-191 → L2-197; the owner's own row signs in as them, L2-214), `family.members.html` (owner: who signs in, and the "Add yourself" row shown while the owner is not in Who's in yet, L2-217), `family.member.html` (member view: the owner's row included), `family.calendar.html` (Calendar section states: not connected, Google not configured, Google connected, subscription link on, sync error, consent denied; L2-173 → L2-180) |
@@ -35,7 +35,7 @@ screenshots/          committed <slug>.<viewport>.png captures (390 / 820 / 1440
 | Auth | `sign-in.html` (2 states, each with "Continue with Google", L2-164), `welcome.html` (the onboarding wizard, 6 states: 2b is Who's in for an owner who has not added themselves, L2-217), `create-account.html` asks for the owner's first name and age (L2-215), `reset-password.html` (5 states), `verify-email.html` (3 states), `accept-invite.html` (2 states), `join.html` (3 states: an admin invite with its sample weekend, without one, no longer works) |
 | Public | `marketing.html`, `marketing.menu-open.html` (the static site at www.saturdaze.ca, ADR-018), `legal.html` (Terms + Privacy) |
 | Admin (Saturdaze Admin, ADR-014; bare shell with its own side navigation from 1024px) | `admin.sign-in.html` (2 states), `admin.html` (Photo health), `admin.places.html`, `admin.place.html`, `admin.reviews.html`, `admin.ingestion-skips.html`, `admin.agent-runs.html` (L2-210), `admin.activity.html`, `admin.invitations.html`, `admin.sample.new.html`, `admin.sample.html` (sample weekends and platform invitations, L1-038) |
-| Dialogs gallery | `dialogs.html` (D1–D37 and admin AD1–AD8 rendered inline; D31–D34 and D6b are calendar sync; D35 max drive, D36 what you celebrate, D37 day shape, D1d an agent's pick, D17 interests, D18 who goes and where, D25 "Draft with agents"; the D17 "this is me" and "you" specimens are the owner's own row, L2-216, L2-218) |
+| Dialogs gallery | `dialogs.html` (D1–D43 and admin AD1–AD8 rendered inline; D31–D34 and D6b are calendar sync; D35 max drive, D36 what you celebrate, D37 day shape, D1d an agent's pick, D17 interests, D18 who goes and where, D25 "Draft with agents"; D38–D43 a couple's date: plan (D38b: fewer than two adults), swap restaurant, change activity, move, regenerate, cancel; the D17 "this is me" and "you" specimens are the owner's own row, L2-216, L2-218) |
 | Emails (L2-162) | `emails/_layout.html` (the template), `emails/invitation.html`, `emails/invitation-plain.html`, `emails/family-invite.html`, `emails/verify-email.html`, `emails/reset-password.html`, `emails/suggestion-not-added.html` — standalone, table-based, inline styles only (mail clients load no stylesheet); the token values they inline are listed in the template |
 
 ## Photos and maps (Wanderlog layout study)
@@ -52,9 +52,9 @@ Past mocks on 2026-10-06. Requirements: `docs/specs/L1.md` L1-032 → L1-035,
 | --- | --- | --- |
 | Weekend | `weekend.html` | Cover photo with Change photo (D29); Saturday / Sunday tabs; the selected day beside its map (stacked under 1024px); numbered stops; travel legs with Directions over 10 min |
 | Ideas · Activities | `ideas.html` | Photo-led cards, fallback tile, "Add to day" (D28) |
-| Ideas · Food | `ideas.food.html` | Photo-led restaurant cards; "Lock it in" stays the way to place a restaurant |
+| Ideas · Food | `ideas.food.html` | Photo-led restaurant cards, breakfast spots first (L2-220); "Lock it in" stays the way to place a restaurant |
 | Ideas · Events | `ideas.events.html` | Photo-led event cards; this weekend's events get "Add to day" (D28) |
-| Past | `past.html` | Cover photo per weekend, "Your photo" vs "From {place}", "Add a photo" (D29) |
+| Past | `past.html` | A weekend with a date shows it (L2-225); cover photo per weekend, "Your photo" vs "From {place}", "Add a photo" (D29) |
 
 The Saturday / Sunday tabs on `weekend.html` work in the mock (`app.js` §5);
 `weekend.html#sun-panel` opens on Sunday.

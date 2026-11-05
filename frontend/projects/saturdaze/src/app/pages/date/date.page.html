@@ -1,0 +1,113 @@
+@switch (status()) {
+  @case ('loading') {
+    <sd-page-header
+      title="Your date"
+      subtitle="Opening the date."
+      backHref="/weekend"
+      backLabel="This weekend"
+    />
+  }
+  @case ('missing') {
+    <sd-page-header
+      class="date-missing"
+      title="Date not found"
+      subtitle="It may have been cancelled."
+      backHref="/weekend"
+      backLabel="This weekend"
+    />
+  }
+  @case ('ready') {
+    @if (date(); as d) {
+      <sd-page-header
+        [title]="d.headline"
+        [subtitle]="d.subtitle"
+        backHref="/weekend"
+        backLabel="This weekend"
+      >
+        <sd-button slot="actions" variant="quiet" [disabled]="busy()" (click)="move()">
+          <sd-icon name="calendar" />
+          Move
+        </sd-button>
+        <sd-button slot="actions" variant="quiet" [disabled]="busy()" (click)="regenerate()">
+          <sd-icon name="refresh" />
+          Regenerate
+        </sd-button>
+        <sd-button slot="actions" variant="quiet" [disabled]="busy()" (click)="cancel()">
+          <sd-icon name="trash" />
+          Cancel date
+        </sd-button>
+      </sd-page-header>
+
+      @if (error()) {
+        <sd-banner tone="warn" role="alert" icon="alert">{{ error() }}</sd-banner>
+      }
+      @if (d.careTitle) {
+        <sd-banner class="date-care" tone="warn" icon="alert"
+          ><strong>{{ d.careTitle }}</strong> {{ d.careBody }}</sd-banner
+        >
+      }
+      @if (busy()) {
+        <sd-status-row icon="heart">Planning your date…</sd-status-row>
+      }
+
+      <sd-section
+        class="date-plan"
+        title="The plan"
+        [subtitle]="
+          d.hasActivity
+            ? 'A meal and a nearby stop, with the drives.'
+            : 'Just the meal, with the drives.'
+        "
+      >
+        <div class="date-steps" role="list" [attr.aria-busy]="busy() || null">
+          @for (step of d.steps; track $index) {
+            <sd-block
+              class="date-step"
+              [class.date-step--meal]="step.kind === 'Meal'"
+              [class.date-step--activity]="step.kind === 'Activity'"
+              [time]="step.time"
+              [duration]="step.duration"
+              [icon]="step.icon"
+              [title]="step.title"
+              [subtitle]="step.reason"
+              [drive]="step.kind === 'Drive'"
+              (details)="stepAction(step)"
+            >
+              @if (step.kind === 'Meal') {
+                <sd-button
+                  slot="actions"
+                  variant="ghost"
+                  size="sm"
+                  icon
+                  [label]="'Swap restaurant: ' + d.restaurantName"
+                  tooltip="Swap restaurant"
+                  [disabled]="busy()"
+                  (click)="swapRestaurant()"
+                >
+                  <sd-icon name="swap" />
+                </sd-button>
+              }
+              @if (step.kind === 'Activity') {
+                <sd-button
+                  slot="actions"
+                  variant="ghost"
+                  size="sm"
+                  icon
+                  [label]="'Change activity: ' + step.title"
+                  tooltip="Change activity"
+                  [disabled]="busy()"
+                  (click)="changeActivity()"
+                >
+                  <sd-icon name="swap" />
+                </sd-button>
+              }
+            </sd-block>
+          }
+        </div>
+        @if (!d.hasActivity) {
+          <sd-ghost-row icon="plus" (pressed)="addActivity()">Add a nearby activity</sd-ghost-row>
+        }
+      </sd-section>
+    }
+  }
+}

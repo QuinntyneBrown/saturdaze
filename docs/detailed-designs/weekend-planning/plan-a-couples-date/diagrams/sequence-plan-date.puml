@@ -1,0 +1,49 @@
+@startuml
+title Behaviour - Plan a date (L2-219, L2-221, L2-222, L2-224)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "Parent" as actor
+box "Frontend - Saturdaze Angular application" #E0F2FE
+ participant "WeekendPage\nPlanDateDialog" as page
+end box
+box "Backend - Saturdaze API" #D1FADF
+ participant "DatesController" as controller
+end box
+box "Backend - Saturdaze Application" #ECFDF3
+ participant "PlanDateCommandHandler" as handler
+ participant "PlannerInputLoader" as loader
+ participant "DatePlanner" as planner
+ participant "DateWorkflow" as sync
+ participant "WeekendReplanner" as replanner
+end box
+database "AppDbContext" as db
+actor -> page : Plan a date (meal, day, who)
+page -> controller : POST /api/weekends/{id}/dates
+controller -> handler : PlanDateCommand
+handler -> db : weekend by id and family
+alt not the family's weekend
+  handler --> controller : 404
+end
+handler -> db : existing date for (weekend, day, meal)?
+alt already planned
+  handler --> controller : 200 existing date (ADR-003)
+end
+handler -> handler : DateAttendees.Resolve(), DateWindow.Check()
+handler -> loader : LoadAsync(familyId, weekendOf)
+handler -> planner : Plan(DateRequest with busy time, votes, lock)
+alt nothing fits
+  planner --> handler : ConflictException(no_restaurant_fits | date_clash)
+  handler --> controller : 409
+end
+handler -> db : add CoupleDate
+handler -> sync : PlanAsync(weekend, date, attendees, [day])
+sync -> db : replace the Date block
+sync -> replanner : ReplanDayAsync(day)
+replanner -> db : keep locked blocks; save the re-planned day
+handler --> controller : CoupleDateDto
+controller --> page : 200
+page -> actor : /weekend/dates/{id}
+@enduml

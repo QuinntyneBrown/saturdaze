@@ -36,7 +36,7 @@ public sealed class LockWeekendDayCommandHandler : IRequestHandler<LockWeekendDa
         foreach (var block in weekend.Blocks.Where(b => b.Day == request.Day))
         {
             // Commitments stay locked whatever the day-level toggle says (L2-011).
-            block.IsLocked = request.Locked || block.Kind == BlockKind.Commitment;
+            block.IsLocked = request.Locked || block.Kind is BlockKind.Commitment or BlockKind.Date;
         }
 
         await _db.SaveChangesAsync(cancellationToken);

@@ -17,6 +17,10 @@
         Drafted for your family
       </sd-chip>
     }
+    <sd-button variant="quiet" [disabled]="!actionsEnabled()" (click)="planDate()">
+      <sd-icon name="heart" />
+      Plan a date
+    </sd-button>
     <sd-button variant="quiet" [disabled]="!actionsEnabled()" (click)="calendar()">
       <sd-icon name="calendar" />
       Add to calendar
@@ -212,7 +216,20 @@
                       {{ chip.label }}
                     </sd-chip>
                   }
-                  @if (!block.drive) {
+                  @if (block.kind === 'Date') {
+                    <sd-button
+                      slot="actions"
+                      variant="ghost"
+                      size="sm"
+                      icon
+                      [label]="'Open the date: ' + block.title"
+                      tooltip="Open the date"
+                      (click)="openDate(block)"
+                    >
+                      <sd-icon name="heart" />
+                    </sd-button>
+                  }
+                  @if (!block.drive && block.kind !== 'Date') {
                     <sd-button
                       slot="actions"
                       variant="ghost"

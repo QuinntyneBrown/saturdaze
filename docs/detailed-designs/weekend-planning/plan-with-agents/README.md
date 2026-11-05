@@ -134,6 +134,8 @@ The API and the CLI call `AddAgentTelemetry(configuration)`. It registers `OpenT
 - `eng/infra/main.bicep` adds the `Saturdaze__AgentPlanning__*` settings (`Enabled` from `AGENT_PLANNING_ENABLED`, `Auth=ManagedIdentity`, `FoundryResource`, the models, the caps). When `AGENT_PLANNING_GRANT_ROLE` is true it also adds a `Microsoft.Authorization/roleAssignments` resource that grants the Web App's principal **Cognitive Services User** (`a97b65f3-24c7-4388-baec-2e87135dc908`) on the Foundry account. Both repository variables default to false, so a merge neither fails `infra` nor turns on agents that cannot authenticate.
 - `.github/workflows/assert.yml` runs `run_evals.py` on pull requests that touch `AgentPlanning/**` or `evals/assert/**`, and on demand. It is gated on the secret and the pull request's origin, and is skipped, not failed, without them.
 
+**Couples dates (ADR-025, decision 5).** Agents do not draft dates. A date's `Date` block is locked, so `DraftApplier` and the validator treat it like any other locked block and the drafted weekend is planned around it.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities.

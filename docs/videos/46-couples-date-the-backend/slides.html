@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 46 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="46" data-video-title="Couples dates: the backend" data-parts="Introduction|Requirement and decision|The aggregate|The endpoints|Who can go, and when|The planner|Keeping the weekend in step|Breakfast|The tests|Everything else|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Video 46</div>
+  <h1>Couples dates: the backend</h1>
+  <p class="lead">An aggregate of its own, a pure planner, and one locked block the weekend plans around.</p>
+</section>
+
+<section id="requirement" data-part="1" data-cue="Everything starts in the specs.">
+  <h2>L1-042 · Couples Date Planning</h2>
+  <ul>
+    <li>Two adults; breakfast, lunch or dinner; Saturday or Sunday; this weekend or next</li>
+    <li>A restaurant that serves the meal, an optional nearby activity, the drives: about 2–3 hours</li>
+    <li>Never clashes with the couple's commitments; the weekend plans around it</li>
+    <li>Saturdaze books nothing</li>
+  </ul>
+  <div class="row">
+    <span class="tag">L2-219 plan</span><span class="tag">L2-220 breakfast</span><span class="tag">L2-221 two adults</span><span class="tag">L2-222 fits</span><span class="tag">L2-223 change</span><span class="tag">L2-224 profile</span><span class="tag">L2-225 UI</span>
+  </div>
+  <p class="small muted"><span class="file">docs/specs/L1.md</span> · <span class="file">docs/specs/L2.md</span></p>
+</section>
+
+<section id="adr" data-part="1" data-cue="The architecture decision is">
+  <h2>ADR-025 · the two decisions that matter</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>1 · A date is its own aggregate</h3>
+      <p><code>CoupleDate</code> with <code>WeekendId</code>, not flagged itinerary blocks. Attendees, meal, rejected places, regenerate count and its own lifecycle live on it.</p>
+    </div>
+    <div class="card">
+      <h3>2 · The weekend sees one locked block</h3>
+      <p>Kind <code>Date</code>, spanning the date, <code>RefId</code> = the date's id. Every existing path already keeps a locked block fixed.</p>
+    </div>
+  </div>
+  <p class="small muted"><span class="file">docs/adr/ADR-025-couples-date-planning.md</span></p>
+</section>
+
+<section id="entity" data-part="2" data-cue="The entity is CoupleDate in the Domain project.">
+  <h2>CoupleDate</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,4,8,11,12,13">public class CoupleDate
+{
+    public Guid Id { get; set; }  public Guid FamilyId { get; set; }
+    public Guid WeekendId { get; set; }
+    public DayOfWeekend Day { get; set; }
+    public MealSlot Meal { get; set; }
+    public TimeOnly StartTime { get; set; }   // first drive
+    public TimeOnly EndTime { get; set; }     // last drive
+    public List&lt;Guid&gt; AttendeeMemberIds { get; set; } = new();
+    public Guid RestaurantId { get; set; }
+    public Guid? ActivityId { get; set; }
+    public List&lt;Guid&gt; RejectedRestaurantIds { get; set; } = new();
+    public List&lt;Guid&gt; RejectedActivityIds { get; set; } = new();
+    public string StepsJson { get; set; } = "[]";
+    public int RegenerateCount { get; set; }
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Domain/Entities/CoupleDate.cs</span> · unique index (WeekendId, Day, Meal) · migration <code>AddCoupleDates</code></p>
+</section>
+
+<section id="enums" data-part="2" data-cue="Two enums grew:">
+  <h2>Two enums grew, values appended</h2>
+  <div class="cols">
+    <pre class="code" data-lang="cs" data-mark="5">public enum MealSlot
+{
+    Lunch = 1,
+    Dinner = 2,
+    Breakfast = 3
+}</pre>
+    <pre class="code" data-lang="cs" data-mark="9">public enum BlockKind
+{
+    Activity = 1,
+    Meal = 2,
+    Event = 3,
+    Drive = 4,
+    Downtime = 5,
+    Commitment = 6,
+    Errand = 7,
+    Date = 8
+}</pre>
+  </div>
+  <p class="muted">Stored as integers, so every existing row keeps its meaning.</p>
+</section>
+
+<section id="controller" data-part="3" data-cue="DatesController lives under">
+  <h2>DatesController · no rules, only requests</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,9,13">[ApiController]
+[Route("api/weekends/{weekendId:guid}/dates")]
+public sealed class DatesController : ControllerBase
+{
+    [HttpGet]  List(...)            =&gt; new GetDatesQuery(weekendId)
+    /// Plans a date, or returns the one already on that meal and day (ADR-003).
+    [HttpPost] Plan(...)            =&gt; new PlanDateCommand(weekendId, body.Day, body.Meal,
+                                                           body.AttendeeMemberIds)
+    [HttpPut("{dateId:guid}")]              Move       =&gt; ChangeDateCommand(…, DateChange.Move, body.Day, body.Meal)
+    [HttpPost("{dateId:guid}/regenerate")]  Regenerate =&gt; ChangeDateCommand(…, DateChange.Regenerate)
+    [HttpPost("{dateId:guid}/swap-restaurant")] SwapRestaurant
+    [HttpPost("{dateId:guid}/swap-activity")]   SwapActivity
+    [HttpDelete("{dateId:guid}/activity")]      DropActivity
+    [HttpDelete("{dateId:guid}")]               Cancel     =&gt; 204
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Api/Controllers/DatesController.cs</span> · every handler loads by id <b>and</b> family (ADR-008)</p>
+</section>
+
+<section id="attendees" data-part="4" data-cue="DateRules holds the small rules.">
+  <h2>DateAttendees · DateWindow</h2>
+  <pre class="code tight" data-lang="cs" data-mark="6,7,11,14,15">public static IReadOnlyList&lt;FamilyMember&gt; Resolve(
+    IReadOnlyList&lt;FamilyMember&gt; members, IReadOnlyList&lt;Guid&gt;? requested)
+{
+    if (requested is null || requested.Count == 0)
+    {
+        var adults = Adults(members);                       // 18+, oldest first
+        if (adults.Count &lt; 2) throw new ValidationException("attendeeMemberIds", NeedsTwoAdults);
+        return adults.Take(2).ToList();
+    }
+    if (requested.Count != 2 || requested[0] == requested[1])
+        throw new ValidationException("attendeeMemberIds", "Choose exactly two different people for the date.");
+    var chosen = requested.Select(id =&gt; members.FirstOrDefault(m =&gt; m.Id == id)
+        ?? throw new NotFoundException(nameof(FamilyMember), id)).ToList();
+    if (chosen.Any(m =&gt; m.Age &lt; AdultAge))
+        throw new ValidationException("attendeeMemberIds", "Both people on a date must be 18 or over.");
+    return chosen.OrderByDescending(m =&gt; m.Age).ThenBy(m =&gt; m.Name, StringComparer.Ordinal).ToList();
+}</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Dates/DateRules.cs</span> · <code>DateWindow.Check</code>: this weekend or next, else 400</p>
+</section>
+
+<section id="busy" data-part="4" data-cue="And DateBusyTime builds what the date may not overlap">
+  <h2>DateBusyTime · what a date may not overlap</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,4,7,10,11">var busy = new List&lt;BusyTime&gt;();
+busy.AddRange(ctx.Family.Commitments
+    .Where(c =&gt; c.DayOfWeek == dow
+                &amp;&amp; (c.AttendeeMemberIds.Count == 0 || c.AttendeeMemberIds.Any(attendees.Contains)))
+    .Select(c =&gt; new BusyTime(c.StartTime, c.EndTime, c.Title)));
+busy.AddRange((ctx.CalendarCommitments ?? Array.Empty&lt;CalendarCommitment&gt;())
+    .Where(c =&gt; c.Day == day)
+    .Select(c =&gt; new BusyTime(c.Start, c.End, c.Title)));
+// Locked blocks (commitments are already above) and the day's other dates.
+busy.AddRange(weekend.Blocks
+    .Where(b =&gt; b.Day == day &amp;&amp; b.IsLocked &amp;&amp; b.Kind != BlockKind.Commitment
+                &amp;&amp; !(b.Kind == BlockKind.Date &amp;&amp; b.RefId == exceptDateId))
+    .Select(b =&gt; new BusyTime(b.StartTime, b.EndTime, b.Title)));</pre>
+  <p class="muted">A swim lesson only for a child does not block the parents' breakfast.</p>
+</section>
+
+<section id="window" data-part="5" data-cue="DatePlanner is deterministic and pure">
+  <h2>DatePlanner · the meal windows</h2>
+  <pre class="code" data-lang="cs">/// The meal itself starts and ends inside its window (L2-219).
+public static (TimeOnly Start, TimeOnly End) Window(MealSlot meal) =&gt; meal switch
+{
+    MealSlot.Breakfast =&gt; (new TimeOnly(8, 0), new TimeOnly(10, 30)),
+    MealSlot.Lunch     =&gt; (new TimeOnly(11, 30), new TimeOnly(14, 0)),
+    _                  =&gt; (new TimeOnly(17, 30), new TimeOnly(21, 0)),
+};</pre>
+  <ul>
+    <li>Same <code>PlannerContext</code> as the weekend planner: home, drive times, profile, preferences, calendar, sunsets</li>
+    <li>90-minute meal inside the window; the same request always plans the same date</li>
+  </ul>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Dates/DatePlanner.cs</span></p>
+</section>
+
+<section id="ranking" data-part="5" data-cue="First it ranks the restaurants of that meal">
+  <h2>Ranking the restaurants</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,3,4,12,13,14">return ctx.Restaurants
+    .Where(r =&gt; r.Slot == request.Meal &amp;&amp; r.WifeApproved &amp;&amp; r.DriveMinutes &lt;= profile.MaxDriveMinutes)
+    .Where(r =&gt; !request.RejectedRestaurants.Contains(r.Id))
+    .Where(r =&gt; !dislikes.Any(d =&gt; Matches(r, d)) &amp;&amp; !profile.ExcludedThemes.Any(t =&gt; Matches(r, t)))
+    .Select(r =&gt; new
+    {
+        Restaurant = r,
+        Locked = r.Id == request.LockedRestaurantId,
+        Liked = likes.Where(l =&gt; Matches(r, l)).ToList(),
+        Votes = request.Votes.GetValueOrDefault(r.Id),
+    })
+    .OrderBy(x =&gt; x.Restaurant.Id == request.AvoidRestaurantId ? 1 : 0)
+    .ThenByDescending(x =&gt; x.Locked)
+    .ThenByDescending(x =&gt; 3 * x.Liked.Count + x.Votes)
+    .ThenBy(x =&gt; x.Restaurant.DriveMinutes)
+    .ThenBy(x =&gt; x.Restaurant.Name, StringComparer.Ordinal)</pre>
+  <p class="muted">None passes → 409 <code>no_restaurant_fits</code>, naming the meal and what to try.</p>
+</section>
+
+<section id="loop" data-part="5" data-cue="Then it walks the ranked list">
+  <h2>The first start that fits</h2>
+  <pre class="code tight" data-lang="cs" data-mark="4,6,7,12,15">var window = Window(request.Meal);
+BusyTime? firstClash = null;
+foreach (var (restaurant, reason) in ranked)
+{
+    var drive = Math.Max(1, restaurant.DriveMinutes);
+    for (var start = Min(window.Start); start + MealMinutes &lt;= Min(window.End); start += StepMinutes)
+    {
+        if (start - drive &lt; 0 || start + MealMinutes + drive &gt;= 24 * 60) continue;
+        var clash = Clash(request.Busy, start - drive, start + MealMinutes + drive);
+        if (clash is not null) { firstClash ??= clash; continue; }
+        return Build(request, restaurant, reason, start);
+    }
+}
+throw new ConflictException("date_clash",
+    $"Nothing fits {request.Day} {meal} for the two of you: " +
+    $"it clashes with {firstClash?.Title ?? "the weekend"}. " +
+    "Try another meal or day.");</pre>
+</section>
+
+<section id="activity" data-part="5" data-cue="Finally the activity:">
+  <h2>The optional activity</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>When</h3>
+      <p>60 minutes <b>after</b> breakfast or lunch, <b>before</b> dinner.</p>
+    </div>
+    <div class="card">
+      <h3>Which</h3>
+      <p><code>CandidateFilter.Exclusion()</code> for the two adults; within 15 minutes of the restaurant; nearest first; open for the visit; back before sunset outdoors.</p>
+    </div>
+    <div class="card">
+      <h3>If none</h3>
+      <p>The date is just the meal; <code>activity</code> is null.</p>
+    </div>
+  </div>
+  <p class="muted">Reasons: "near home", "locked by family vote", "2 votes up", "5 min from Snug Harbour", "back before sunset 8:41pm".</p>
+</section>
+
+<section id="workflow" data-part="6" data-cue="DateWorkflow holds the steps every handler shares.">
+  <h2>DateWorkflow.PlanAsync · the one locked block</h2>
+  <pre class="code tight" data-lang="cs" data-mark="1,7,10,13,14,16">var plan = _planner.Plan(new DateRequest(ctx, attendees, date.Day, date.Meal,
+    DateBusyTime.For(ctx, weekend, date.Day, date.AttendeeMemberIds, date.Id), votes, locked,
+    date.RejectedRestaurantIds.ToHashSet(), date.RejectedActivityIds.ToHashSet(),
+    WithActivity: !date.ActivityDropped, AvoidRestaurantId: avoidRestaurantId));
+check?.Invoke(plan);
+
+date.RestaurantId = plan.Restaurant.Id;  date.ActivityId = plan.Activity?.Id;
+date.StartTime = plan.Start;             date.EndTime = plan.End;
+date.StepsJson = DateSteps.Serialize(plan.Steps);
+RemoveBlock(weekend, date.Id);
+var care = CoupleDateMapper.KidsNeedCare(date, members);
+var reason = CoupleDateMapper.Names(date, members)
+             + (care.Count &gt; 0 ? $"; kids need care {date.StartTime:H\\:mm}–{date.EndTime:H\\:mm}" : string.Empty);
+var block = new ItineraryBlock { Day = date.Day, StartTime = date.StartTime, EndTime = date.EndTime,
+    Kind = BlockKind.Date, Title = CoupleDateMapper.Title(date, plan.Restaurant.Name), RefId = date.Id,
+    IsLocked = true, Reason = reason };</pre>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Dates/DateWorkflow.cs</span> · a refused plan throws before anything is written</p>
+</section>
+
+<section id="replan" data-part="6" data-cue="Then it calls WeekendReplanner, replan day">
+  <h2>WeekendReplanner.ReplanDayAsync</h2>
+  <pre class="code tight" data-lang="cs" data-mark="3,4,6,7">/// Re-plans one day (L2-085): the other day is fixed wholesale and, on day,
+/// only locked blocks survive, commitments and date blocks among them (L2-011 AC2, L2-222). Saves.
+public async Task&lt;PlannerContext&gt; ReplanDayAsync(
+    Weekend weekend, Guid familyId, DayOfWeekend day, int seed, CancellationToken ct)
+{
+    var fixedBlocks = weekend.Blocks.Where(b =&gt; b.Day != day || b.IsLocked).ToList();
+    var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, ct);
+    var planned = _planner.Plan(ctx.ToInputs(fixedBlocks, weekend.Errands.FirstOrDefault(e =&gt; !e.Done), seed));
+    …
+}</pre>
+  <ul>
+    <li>Both days on a move across days; the day's regenerate uses it too</li>
+    <li><code>WeekendPlanner.BuildFixedBlocks()</code> already carried locked blocks of any kind</li>
+  </ul>
+  <p class="small muted"><span class="file">backend/src/Saturdaze.Application/Weekends/WeekendReplanner.cs</span></p>
+</section>
+
+<section id="guards" data-part="6" data-cue="Three guards keep the block fixed.">
+  <h2>Three guards, one subtle change</h2>
+  <pre class="code tight" data-lang="cs" data-mark="2,6,9">// LockBlockCommandHandler
+if (block.Kind == BlockKind.Date &amp;&amp; !request.Locked)
+    throw new ConflictException("date_locked",
+        "A date stays on the weekend; change or cancel it from the date.");
+// LockWeekendDayCommandHandler
+block.IsLocked = request.Locked || block.Kind is BlockKind.Commitment or BlockKind.Date;
+// ReuseWeekendCommandHandler: a past weekend's dates are not this weekend's
+foreach (var block in sourceBlocks.Where(b =&gt; !b.FromCalendar &amp;&amp; b.Kind != BlockKind.Date &amp;&amp; …))
+// WeekendPlanner.Splittable: a Date block may overlap a commitment whose attendees are named
+if (a.Kind == BlockKind.Date || b.Kind == BlockKind.Date)
+{
+    var other = a.Kind == BlockKind.Date ? b : a;
+    return other.Kind == BlockKind.Commitment
+           &amp;&amp; commitments.FirstOrDefault(c =&gt; Represents(other, c) &amp;&amp; c.Title == other.Title)
+               is { AttendeeMemberIds.Count: &gt; 0 };
+}</pre>
+</section>
+
+<section id="breakfast" data-part="7" data-cue="Breakfast is a meal slot now.">
+  <h2>Breakfast is a meal slot</h2>
+  <pre class="code" data-lang="cs" data-mark="2,3,4">// LockRestaurantCommandHandler: a breakfast lock starts at PlannerTimes.BreakfastWindowStart (8:30)
+/// Breakfast before 11:00, lunch until 15:00, dinner after (L2-220 AC4).
+private static bool IsSlot(TimeOnly startTime, MealSlot slot) =&gt; slot switch
+{
+    MealSlot.Breakfast =&gt; startTime &lt; new TimeOnly(11, 0),
+    MealSlot.Lunch =&gt; startTime &gt;= new TimeOnly(11, 0) &amp;&amp; startTime &lt; new TimeOnly(15, 0),
+    _ =&gt; startTime &gt;= new TimeOnly(15, 0),
+};</pre>
+  <ul>
+    <li>Seeds keyed by (Name, Slot): Breakfast Social, Cora's Port Credit, Plum Cafe</li>
+    <li><code>IngestionPrompts</code> lists "Breakfast"; the family planner still reserves only lunch and dinner</li>
+  </ul>
+</section>
+
+<section id="tests" data-part="8" data-cue="Every slice was built test-first.">
+  <h2>34 API tests + the planner alone</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Saturdaze.Api.Tests/Dates/</h3>
+      <ul class="small">
+        <li>BreakfastSlotTests · PlanDateTests</li>
+        <li>DateScopeTests · DateFitsWeekendTests</li>
+        <li>ChangeDateTests · DateProfileTests</li>
+        <li>PastDateTests</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Named after the criterion</h3>
+      <ul class="small">
+        <li><code>A_commitment_for_everyone_holds_the_date_back_and_one_only_for_a_child_does_not</code></li>
+        <li><code>Swapping_the_restaurant_never_offers_one_swapped_away_and_ends_when_none_is_left</code></li>
+        <li><code>The_date_block_cannot_be_unlocked_and_unlocking_the_day_keeps_it_locked</code></li>
+      </ul>
+    </div>
+  </div>
+  <p class="muted">In-memory SQLite per fixture (ADR-020); <code>DatePlannerTests</code> builds a tiny catalog by hand. No database server.</p>
+</section>
+
+<section id="ripples" data-part="9" data-cue="A build this size leaves small ripples">
+  <h2>Everything else the branch touched</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Frontend api library</h3>
+      <ul class="small">
+        <li><code>restaurant.service.ts</code>: fetches Breakfast for both days; meal blocks before 11:00 are breakfast</li>
+        <li>Its spec and <code>saved.service.ts</code> follow</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Tests that only moved a count</h3>
+      <ul class="small">
+        <li><code>AdminPhotoHealthTests</code>: 8 → 10 places, 7 → 9 without a photo</li>
+        <li><code>AdminPlacesListTests</code>: 7 → 9 names</li>
+        <li><code>CatalogUpserterTests</code>: + ingested breakfast stored as breakfast</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Docs</h3>
+      <ul class="small">
+        <li>Cross-references in four other weekend-planning designs</li>
+        <li><code>docs/estimates</code>: plan-a-couples-date 8 days, 90%; roadmap item</li>
+        <li><code>docs/mocks/index.html</code>, <code>app.css</code>, root <code>README.md</code></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="recap" data-part="10" data-cue="A date is its own aggregate, and the weekend sees it as one locked block.">
+  <h2>Things to remember</h2>
+  <ul class="recap">
+    <li><code>CoupleDate</code> is its own aggregate; the weekend sees one locked <code>Date</code> block</li>
+    <li><code>DatePlanner</code>: same context and rules; rank by lock, likes, votes, drive; first start clear of busy time; nearby activity if it fits</li>
+    <li><code>DateWorkflow</code> rewrites the block and re-plans only the affected days</li>
+    <li>Breakfast is a slot; 34 API tests and the planner tests prove every criterion</li>
+    <li>Next: the frontend and the end-to-end tests</li>
+  </ul>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

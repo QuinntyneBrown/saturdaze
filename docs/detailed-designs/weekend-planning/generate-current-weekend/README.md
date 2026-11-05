@@ -22,6 +22,8 @@ Saturdaze is a web application that plans personalized family weekends. Weekend 
 
 The Weekend screen layout follows `docs/mocks/pages/weekend.html` since 2026-10-06: a cover photo, Saturday | Sunday tabs, and the selected day beside its map. `weekend-planning/map-itinerary-and-travel-legs` designs the tabs, numbered stops, travel legs, and map; `weekend-planning/choose-weekend-cover-photo` designs the cover and the Open Graph share preview. The current `WeekendPage` still renders both days side by side until those designs are implemented.
 
+**Couples dates (L1-042, ADR-025).** A weekend may carry dates (`CoupleDate`, `plan-a-couples-date`). Generating a weekend never creates or re-plans a date; once a date exists, its locked `Date` block is a fixed block for every later regenerate, and `POST /api/weekends/plan` stays idempotent for the weekend as for the date.
+
 ## Requirements
 
 The following L2 requirements refine the cited L1 capabilities. Implementation gaps stated in Description do not waive these obligations.

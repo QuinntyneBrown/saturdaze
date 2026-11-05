@@ -177,6 +177,10 @@ export class IdeasPage extends BasePage {
 
   /* ---------- Food ---------- */
 
+  breakfastSection(): Locator {
+    return this.section("Breakfast");
+  }
+
   lunchSection(): Locator {
     return this.section("Lunch");
   }

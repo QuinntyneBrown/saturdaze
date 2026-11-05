@@ -27,6 +27,15 @@ test.describe("Ideas — Food", () => {
     await expect(i.filters.locator(".filters__divider")).toHaveCount(2);
   });
 
+  // Traces to: L2-220 AC5, L2-225 AC6
+  test("Breakfast shows only the breakfast section and its spots", async ({ pages }) => {
+    const i = pages.ideas;
+    await i.filterChip("Breakfast").click();
+    await expect(i.filterChip("Breakfast")).toHaveAttribute("aria-pressed", "true");
+    await expect(i.sections().locator(".section-header__title")).toHaveText(["Breakfast"]);
+    await expect(i.cards(i.breakfastSection()).first()).toBeVisible();
+  });
+
   test("dropped v1 affordances are gone: no Refresh picks, no Unlock", async ({ pages }) => {
     const i = pages.ideas;
     await expect(i.pageActions().getByRole("button", { name: "Refresh picks" })).toHaveCount(0);

@@ -34,6 +34,8 @@ public static class DependencyInjection
         services.AddScoped<Admin.Invitations.PlatformInvitationMapper>();
         services.AddScoped<Admin.Prospects.ProspectReader>();
         services.AddScoped<Weekends.WeekendReplanner>();
+        services.AddSingleton<Dates.DatePlanner>();
+        services.AddScoped<Dates.DateWorkflow>();
         services.AddScoped<Blocks.BlockSwapper>();
         services.AddScoped<Admin.Photos.PhotoAuditWriter>();
         services.AddScoped<WeekendForecastService>();

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { Button } from '../button/button';
+import { Chip } from '../chip/chip';
 import { Icon } from '../icon/icon';
 import { CardMedia, Media } from '../media/media';
 import { Stars } from '../stars/stars';
@@ -22,7 +23,7 @@ import { Stars } from '../stars/stars';
 @Component({
   selector: 'sd-past-card',
   standalone: true,
-  imports: [Button, Icon, Media, Stars],
+  imports: [Button, Chip, Icon, Media, Stars],
   templateUrl: './past-card.html',
   styleUrl: './past-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +38,8 @@ export class PastCard {
   readonly rating = input<number | null>(null);
   readonly favourite = input(false, { transform: booleanAttribute });
   readonly highlights = input<string>('');
+  /** The weekend's couples dates, one line each: "Sunday dinner at Snug Harbour · Ada and Ben" (L2-225). */
+  readonly dates = input<readonly string[]>([]);
   /** The weekend's cover; `null` shows "Add a photo to {title}" (L2-110 AC2). */
   readonly cover = input<CardMedia | null>(null);
   readonly addPhoto = output<void>();

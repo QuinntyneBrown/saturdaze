@@ -1,0 +1,92 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Plan a couple's date
+
+class CoupleDate {
+  +Id: Guid
+  +FamilyId: Guid
+  +WeekendId: Guid
+  +Day: DayOfWeekend
+  +Meal: MealSlot
+  +StartTime: TimeOnly
+  +EndTime: TimeOnly
+  +AttendeeMemberIds: List<Guid>
+  +RestaurantId: Guid
+  +ActivityId: Guid?
+  +ActivityDropped: bool
+  +RejectedRestaurantIds: List<Guid>
+  +RejectedActivityIds: List<Guid>
+  +StepsJson: string
+  +RegenerateCount: int
+}
+class DateStep <<record>> {
+  +Kind: string
+  +Title: string
+  +StartTime: TimeOnly
+  +EndTime: TimeOnly
+  +Reason: string
+  +RefId: Guid?
+  +Stop: GeoLocation?
+}
+class DateRequest <<record>> {
+  +Context: PlannerContext
+  +Attendees: IReadOnlyList<FamilyMember>
+  +Day: DayOfWeekend
+  +Meal: MealSlot
+  +Busy: IReadOnlyList<BusyTime>
+  +Votes: IReadOnlyDictionary<Guid, int>
+  +LockedRestaurantId: Guid?
+  +RejectedRestaurants: ISet<Guid>
+  +RejectedActivities: ISet<Guid>
+  +WithActivity: bool
+  +AvoidRestaurantId: Guid?
+}
+class DatePlanner {
+  +Plan(request: DateRequest): DatePlan
+}
+class DatePlan <<record>> {
+  +Restaurant: Restaurant
+  +Activity: Activity?
+  +Start: TimeOnly
+  +End: TimeOnly
+  +Steps: IReadOnlyList<DateStep>
+}
+class DateBusyTime <<static>> {
+  +For(ctx, weekend, day, attendees, exceptDateId): IReadOnlyList<BusyTime>
+}
+class DateWorkflow {
+  +PlanAsync(weekend, date, attendees, avoidRestaurantId, days, ct, check): Task
+  +RemoveFromWeekendAsync(weekend, date, ct): Task
+  +ToDtoAsync(date, ct): Task<CoupleDateDto>
+}
+class WeekendReplanner {
+  +RegenerateAsync(weekend, familyId, ct): Task<PlannerContext>
+  +ReplanDayAsync(weekend, familyId, day, ct): Task
+}
+enum MealSlot {
+  Lunch = 1
+  Dinner = 2
+  Breakfast = 3
+}
+enum BlockKind {
+  ...
+  Date = 8
+}
+CoupleDate --> "1..*" DateStep : StepsJson
+CoupleDate --> MealSlot
+DatePlanner ..> DateRequest
+DatePlanner ..> DatePlan
+DateRequest ..> DateBusyTime
+DateWorkflow ..> WeekendReplanner
+DateWorkflow ..> CoupleDate
+DateWorkflow ..> BlockKind
+@enduml

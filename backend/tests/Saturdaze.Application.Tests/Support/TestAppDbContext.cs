@@ -33,6 +33,7 @@ internal sealed class TestAppDbContext : DbContext, IAppDbContext
     public DbSet<RegionResearch> RegionResearch => Set<RegionResearch>();
     public DbSet<Weekend> Weekends => Set<Weekend>();
     public DbSet<ItineraryBlock> ItineraryBlocks => Set<ItineraryBlock>();
+    public DbSet<CoupleDate> CoupleDates => Set<CoupleDate>();
     public DbSet<ShoppingErrand> ShoppingErrands => Set<ShoppingErrand>();
     public DbSet<User> Users => Set<User>();
     public DbSet<UserAvatar> UserAvatars => Set<UserAvatar>();

@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Plan a couple's date
+
+Container(spa, "Saturdaze web app", "Angular", "WeekendPage, DatePage, PlanDateDialog and the date dialogs; DATE_SERVICE")
+Container_Boundary(api, "Saturdaze API") {
+  Component(controller, "DatesController", "ASP.NET Core", "api/weekends/{weekendId}/dates; authenticated")
+  Component(handlers, "PlanDate / ChangeDate / CancelDate / GetDates handlers", "MediatR", "Family scope, attendees, weekend window, idempotency")
+  Component(loader, "PlannerInputLoader", "Application service", "Home, drive times, profile, preferences, calendar commitments, sunsets")
+  Component(planner, "DatePlanner", "Application planner", "Restaurant ranking, meal window, busy time, nearby activity, steps")
+  Component(sync, "DateWorkflow", "Application service", "Runs the planner, writes the Date block, re-plans the affected days")
+  Component(replanner, "WeekendReplanner.ReplanDayAsync()", "Application service", "Keeps locked blocks; plans the rest around them")
+  Component(weekendPlanner, "WeekendPlanner", "Application planner", "Treats the Date block as a fixed block")
+  ComponentDb(db, "AppDbContext", "EF Core", "CoupleDates, ItineraryBlocks, Restaurants, RestaurantVotes, RestaurantLocks")
+}
+Rel(spa, controller, "GET, POST, PUT, DELETE", "JSON over HTTPS")
+Rel(controller, handlers, "Send()")
+Rel(sync, loader, "LoadAsync(familyId, weekendOf)")
+Rel(sync, planner, "Plan(DateRequest)")
+Rel(handlers, sync, "PlanAsync(weekend, date, days)")
+Rel(sync, replanner, "ReplanDayAsync(day)")
+Rel(replanner, weekendPlanner, "Plan(inputs)")
+Rel(handlers, db, "Reads and saves")
+@enduml

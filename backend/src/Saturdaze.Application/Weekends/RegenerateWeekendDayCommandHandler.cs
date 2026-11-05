@@ -15,19 +15,16 @@ public sealed class RegenerateWeekendDayCommandHandler
 {
     private readonly IAppDbContext _db;
     private readonly ICurrentFamilyAccessor _current;
-    private readonly IWeekendPlanner _planner;
-    private readonly PlannerInputLoader _loader;
+    private readonly WeekendReplanner _replanner;
 
     public RegenerateWeekendDayCommandHandler(
         IAppDbContext db,
         ICurrentFamilyAccessor current,
-        IWeekendPlanner planner,
-        PlannerInputLoader loader)
+        WeekendReplanner replanner)
     {
         _db = db;
         _current = current;
-        _planner = planner;
-        _loader = loader;
+        _replanner = replanner;
     }
 
     public async Task<WeekendDto> Handle(RegenerateWeekendDayCommand request, CancellationToken cancellationToken)
@@ -40,48 +37,9 @@ public sealed class RegenerateWeekendDayCommandHandler
             .SingleOrDefaultAsync(w => w.Id == request.WeekendId && w.FamilyId == familyId, cancellationToken)
             ?? throw new NotFoundException(nameof(Weekend), request.WeekendId);
 
-        // The other day is fixed wholesale; on the requested day only locked
-        // blocks survive, commitments among them (L2-085, L2-011 AC2).
-        var fixedBlocks = weekend.Blocks
-            .Where(b => b.Day != request.Day || b.IsLocked)
-            .ToList();
-
-        var ctx = await _loader.LoadAsync(familyId, weekend.WeekendOf, cancellationToken);
-
         weekend.RegenerateCount++;
         var seed = weekend.WeekendOf.DayNumber + weekend.RegenerateCount * 47 + (int)request.Day;
-        var planned = _planner.Plan(ctx.ToInputs(fixedBlocks, weekend.Errands.FirstOrDefault(e => !e.Done), seed));
-
-        var fixedIds = fixedBlocks.Select(b => b.Id).ToHashSet();
-        foreach (var block in weekend.Blocks
-                     .Where(b => b.Day == request.Day && !fixedIds.Contains(b.Id))
-                     .ToList())
-        {
-            weekend.Blocks.Remove(block);
-            _db.ItineraryBlocks.Remove(block);
-        }
-
-        foreach (var block in planned.Where(b => b.Day == request.Day && !fixedIds.Contains(b.Id)))
-        {
-            _db.ItineraryBlocks.Add(new ItineraryBlock
-            {
-                Id = Guid.NewGuid(),
-                WeekendId = weekend.Id,
-                Day = block.Day,
-                StartTime = block.StartTime,
-                EndTime = block.EndTime,
-                Kind = block.Kind,
-                Title = block.Title,
-                RefId = block.RefId,
-                IsLocked = block.IsLocked,
-                Reason = block.Reason,
-                SortOrder = block.SortOrder,
-                Stop = block.Stop?.Copy(),
-                FromCalendar = block.FromCalendar
-            });
-        }
-
-        await _db.SaveChangesAsync(cancellationToken);
+        var ctx = await _replanner.ReplanDayAsync(weekend, familyId, request.Day, seed, cancellationToken);
         return WeekendMapper.ToDto(weekend, ctx.Forecast);
     }
 }

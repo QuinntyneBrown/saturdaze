@@ -39,6 +39,7 @@ export type PageSlug =
   | "legal"
   | "shared-weekend"
   | "dialogs"
+  | "date"
   | "admin";
 
 interface RouteEntry {

@@ -13,6 +13,7 @@ import {
 } from '../api/history-filters';
 import { RemixPreviewRow, remixPreviewRows } from '../api/remix-preview';
 import { formatWeekendEyebrow } from '../api/weekend-dates';
+import { pastDateLine } from '../api/couple-date-projection';
 import { projectWeekend, toCoverView, withApiOrigin } from '../api/weekend-projection';
 import { CoverChoice, CoverSelection } from '../models/cover-view';
 import { PastView } from '../models/past-view';
@@ -50,6 +51,7 @@ export function toPastCard(dto: WeekendSummaryDto): PastWeekendCard {
     highlights: highlightLine(dto),
     favourite: dto.isFavourite,
     cover: toCoverView(dto.cover),
+    dates: (dto.dates ?? []).map(pastDateLine),
   };
 }
 

@@ -1,3 +1,4 @@
+import { compactRange } from './couple-date-projection';
 import { BlockKind } from '../models/block-kind';
 import { BlockRow } from '../models/block-row';
 import { ChipView } from '../models/chip-view';
@@ -241,7 +242,8 @@ export function toBlockRow(
     drive,
     highlight,
     swappable: b.kind === 'Activity' && !b.isLocked,
-    lockable: !commitment && !drive,
+    // A date stays locked; it is changed from its own screen (L2-222 AC6).
+    lockable: !commitment && !drive && b.kind !== 'Date',
     stopNumber: b.stopNumber ?? null,
     leg: b.legBefore ? toLegView(b.legBefore.minutes, b.legBefore.distanceKm, b) : null,
     pickedByAgents: b.pickedByAgents ?? false,
@@ -310,6 +312,8 @@ export function blockIcon(kind: BlockKind, title: string): string {
       return 'lock';
     case 'Errand':
       return 'bag';
+    case 'Date':
+      return 'heart';
     default:
       return activityIcon(t);
   }
@@ -361,6 +365,8 @@ function activityIcon(lowerTitle: string): string {
 
 function blockSubtitle(b: ItineraryBlockDto, reason: string | null): string | null {
   if (b.kind === 'Drive') return null;
+  // "Ada and Ben; kids need care 17:25–20:05" → who is going (L2-225).
+  if (b.kind === 'Date') return reason ? (reason.split(';')[0] ?? '').trim() : null;
   if (b.fromCalendar) return 'From your calendar · planned around';
   if (b.kind === 'Commitment') {
     const boilerplate = !reason || reason.toLowerCase() === PLANNER_COMMITMENT_REASON;
@@ -374,6 +380,12 @@ function blockChips(
   ctx: { previous: ItineraryBlockDto | null; highlight: boolean; done: boolean },
 ): ChipView[] {
   const chips: ChipView[] = [];
+  if (b.kind === 'Date') {
+    chips.push({ tone: 'primary', icon: 'heart', label: 'Date' });
+    if (b.reason.includes('kids need care'))
+      chips.push({ tone: 'warn', label: `Kids need care ${compactRange(b.startTime, b.endTime)}` });
+    return chips;
+  }
   if (b.kind === 'Commitment') {
     chips.push({ tone: 'accent', icon: 'lock', label: 'Commitment' });
     if (b.fromCalendar) chips.push({ tone: 'default', icon: 'calendar', label: 'Calendar' });
