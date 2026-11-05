@@ -1,0 +1,27 @@
+<sd-dialog
+  title="Move the date"
+  subtitle="Pick another meal or day this weekend. The restaurant is chosen again for the new time."
+>
+  <div class="form">
+    <sd-seg-radio
+      label="Meal"
+      name="meal"
+      [options]="meals"
+      [ngModel]="meal()"
+      (ngModelChange)="meal.set($event)"
+    />
+    <sd-seg-radio
+      label="Day"
+      name="day"
+      [options]="days"
+      [ngModel]="day()"
+      (ngModelChange)="day.set($event)"
+    />
+    <p class="field__hint">A meal and day that already has a date can't be chosen twice.</p>
+  </div>
+  <sd-button slot="actions" variant="quiet" type="button" (click)="cancel()">Cancel</sd-button>
+  <sd-button slot="actions" variant="primary" type="button" (click)="confirm()">
+    <sd-icon name="calendar" />
+    Move date
+  </sd-button>
+</sd-dialog>

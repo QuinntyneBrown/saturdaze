@@ -1,11 +1,13 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import {
   CALENDAR_SERVICE,
   BlockRow,
+  DATE_SERVICE,
+  DateRefusal,
   DayView,
   FAMILY_SERVICE,
   WEEKEND_PLAN_SERVICE,
@@ -56,6 +58,11 @@ import {
   ErrandAddedDialogData,
 } from '../../dialogs/errand-added-dialog/errand-added-dialog';
 import { ShareDialog, ShareDialogData } from '../../dialogs/share-dialog/share-dialog';
+import {
+  PlanDateDialog,
+  PlanDateDialogData,
+  PlanDateDialogResult,
+} from '../../dialogs/plan-date-dialog/plan-date-dialog';
 import { MenuOpener } from '../../shell/menu-opener';
 import { applyBlockAction, openBlockDialog } from '../../shared/block-actions';
 import { chipTone } from '../../shared/chip-tones';
@@ -113,6 +120,8 @@ export class WeekendPage {
   private readonly dialog = inject(Dialog);
   private readonly menu = inject(MenuOpener);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly dates = inject(DATE_SERVICE);
 
   private readonly dev = devState(this.route);
 
@@ -323,7 +332,37 @@ export class WeekendPage {
 
   // ---- blocks ---------------------------------------------------------
 
+  /** "Plan a date" → D38, or D38b with fewer than two adults; then the date's screen (L2-225 AC1, AC2). */
+  protected planDate(): Promise<void> {
+    return this.run(async () => {
+      const weekendId = this.weekend().id;
+      if (!weekendId) return;
+      const planning = await this.dates.planning(weekendId);
+      const ref = this.dialog.open<PlanDateDialogResult, PlanDateDialogData>(PlanDateDialog, {
+        ...DIALOG_OPTIONS,
+        data: { planning },
+      });
+      const choice = await firstValueFrom(ref.closed);
+      if (!choice) return;
+      try {
+        const date = await this.dates.plan(weekendId, choice.day, choice.meal, choice.attendeeIds);
+        await this.router.navigate(['/weekend/dates', date.id]);
+      } catch (err) {
+        if (!(err instanceof DateRefusal)) throw err;
+        this.error.set(err.message);
+      }
+    });
+  }
+
+  protected openDate(block: BlockRow): void {
+    if (block.refId) void this.router.navigate(['/weekend/dates', block.refId]);
+  }
+
   protected blockDetails(block: BlockRow): Promise<void> {
+    if (block.kind === 'Date') {
+      this.openDate(block);
+      return Promise.resolve();
+    }
     return this.run(async () => {
       const result = await openBlockDialog(this.dialog, block);
       await applyBlockAction(this.weekendService, block, result);

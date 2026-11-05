@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import {
   BlockRow,
   CALENDAR_SERVICE,
+  DATE_SERVICE,
   FAMILY_SERVICE,
   FamilyView,
   WEEKEND_PLAN_SERVICE,
@@ -170,6 +171,7 @@ describe('WeekendPage', () => {
         { provide: WEEKEND_PLAN_SERVICE, useValue: weekend },
         { provide: FAMILY_SERVICE, useValue: family },
         { provide: CALENDAR_SERVICE, useValue: calendarService },
+        { provide: DATE_SERVICE, useValue: {} },
         { provide: Dialog, useValue: dialog },
         { provide: MenuOpener, useValue: menu },
         {
@@ -265,6 +267,11 @@ describe('WeekendPage', () => {
   const cover = (): Element => host.querySelector('sd-cover')!;
   const coverAction = (selector: string): HTMLButtonElement =>
     host.querySelector(`.cover-actions ${selector} button`) as HTMLButtonElement;
+  /** A cover action by its visible text ("Add to calendar", "Plan a date"). */
+  const coverActionNamed = (text: string): HTMLButtonElement =>
+    Array.from(host.querySelectorAll<HTMLButtonElement>('.cover-actions sd-button button')).find(
+      (b) => b.textContent?.trim() === text,
+    )!;
   /** Switch the day tab (L2-104): one day is on screen at a time. */
   const showDay = (day: 'Saturday' | 'Sunday'): void => {
     const tab = Array.from(host.querySelectorAll<HTMLButtonElement>('[role="tab"]')).find(
@@ -377,7 +384,7 @@ describe('WeekendPage', () => {
       }),
     );
 
-    coverAction('sd-button[variant="quiet"]:not([label])').click();
+    coverActionNamed('Add to calendar').click();
     await settle();
     expect(weekend.calendarExport).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenLastCalledWith(
@@ -403,7 +410,7 @@ describe('WeekendPage', () => {
       feed: { active: false, createdUtc: null },
     });
     await mountReady();
-    coverAction('sd-button[variant="quiet"]:not([label])').click();
+    coverActionNamed('Add to calendar').click();
     await settle();
     expect(dialog.open).toHaveBeenLastCalledWith(
       CalendarDialog,

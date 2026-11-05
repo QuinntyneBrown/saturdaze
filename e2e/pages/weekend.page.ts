@@ -60,9 +60,41 @@ export class WeekendPage extends BasePage {
     return this.dialogBody().locator(".copy-field__value");
   }
 
-
   addToCalendarButton(): Locator {
     return this.headerAction("Add to calendar");
+  }
+
+  /* ---------- Couples dates (L2-225) ---------- */
+
+  planDateButton(): Locator {
+    return this.headerAction("Plan a date");
+  }
+
+  /** The date's block on a day ("Dinner date at …"). */
+  dateBlock(name?: DayName): Locator {
+    return this.blocks(name).filter({
+      has: this.page.locator(".block__title", { hasText: / date at / }),
+    });
+  }
+
+  /** Opens the date's screen from its block. */
+  openDateButton(name?: DayName): Locator {
+    return this.dateBlock(name).getByRole("button", { name: /^Open the date/ });
+  }
+
+  /** A seg-radio option in the open dialog (Meal, Day). */
+  dialogOption(name: string): Locator {
+    return this.dialog().getByRole("radio", { name, exact: true });
+  }
+
+  /** A "Who is going" checkbox in D38. */
+  dialogPerson(name: string): Locator {
+    return this.dialog().getByRole("checkbox", { name, exact: true });
+  }
+
+  /** D38b's reason. */
+  dialogWell(): Locator {
+    return this.dialog().locator(".well");
   }
 
   /* ---------- Days ---------- */

@@ -87,6 +87,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/weekend/weekend.page').then((m) => m.WeekendPage),
   },
   {
+    path: 'weekend/dates/:id',
+    data: { nav: 'weekend', page: 'date' },
+    canActivate: [requireAuth],
+    loadComponent: () => import('./pages/date/date.page').then((m) => m.DatePage),
+  },
+  {
     path: 'ideas',
     data: { nav: 'ideas', page: 'ideas' },
     canActivate: [requireAuth],

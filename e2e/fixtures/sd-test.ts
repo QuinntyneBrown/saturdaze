@@ -36,6 +36,7 @@ import { installFakeGoogleIdentity } from "./google-identity.js";
 import { WeekendPage } from "../pages/weekend.page.js";
 import { IdeasPage } from "../pages/ideas.page.js";
 import { PastPage } from "../pages/past.page.js";
+import { DatePage } from "../pages/date.page.js";
 import { FamilyPage } from "../pages/family.page.js";
 import { ReviewSubmissionsPage } from "../pages/review-submissions.page.js";
 import { SignInPage } from "../pages/sign-in.page.js";
@@ -65,6 +66,7 @@ interface Pages {
   weekend: WeekendPage;
   ideas: IdeasPage;
   past: PastPage;
+  date: DatePage;
   family: FamilyPage;
   reviewSubmissions: ReviewSubmissionsPage;
   signIn: SignInPage;
@@ -172,6 +174,7 @@ export const test = base.extend<SdFixtures>({
       weekend: new WeekendPage(page),
       ideas: new IdeasPage(page),
       past: new PastPage(page),
+      date: new DatePage(page),
       family: new FamilyPage(page),
       reviewSubmissions: new ReviewSubmissionsPage(page),
       signIn: new SignInPage(page),

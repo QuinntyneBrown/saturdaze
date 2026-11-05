@@ -29,6 +29,7 @@ export * from './lib/api/remix-preview';
 export * from './lib/api/weather';
 export * from './lib/api/weekend-dates';
 export * from './lib/api/weekend-projection';
+export * from './lib/api/couple-date-projection';
 
 // Shared presentational models
 export * from './lib/models/chip-view';
@@ -78,10 +79,12 @@ export * from './lib/services/saved.service.contract';
 export * from './lib/services/session-store.contract';
 export * from './lib/services/shared-weekend.service.contract';
 export * from './lib/services/calendar.service.contract';
+export * from './lib/services/date.service.contract';
 export * from './lib/services/weekend-plan.service.contract';
 
 // Concrete implementations (imported only by composition roots)
 export * from './lib/services/activity.service';
+export * from './lib/services/date.service';
 export * from './lib/services/admin-places.service';
 export * from './lib/services/admin-photos.service';
 export * from './lib/services/admin-agent-runs.service';
