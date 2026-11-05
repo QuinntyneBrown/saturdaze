@@ -1,6 +1,6 @@
 # 46 · Couples dates: the backend
 
-> **Runtime:** ~8.3 min · **Audience:** backend developers joining the planner · **Prerequisites:** video 45; .NET, EF Core and MediatR basics
+> **Runtime:** ~9.5 min · **Audience:** backend developers joining the planner · **Prerequisites:** video 45; .NET, EF Core and MediatR basics
 
 **Video:** [46-couples-date-the-backend.mp4](46-couples-date-the-backend.mp4) · [Slides](slides.html) · **Audio:** [46-couples-date-the-backend.mp3](46-couples-date-the-backend.mp3) · [Transcript](script.md)
 
@@ -19,6 +19,7 @@ By the end, the viewer can:
 - Trace `DateWorkflow.PlanAsync()` through the block rewrite and `WeekendReplanner.ReplanDayAsync()`
 - Say what breakfast changed: `MealSlot.Breakfast`, seeds, ingestion, locks, and what the family planner still does not do
 - Find the test that proves each acceptance criterion
+- Account for every other file the branch touched: the restaurant service, the admin test counts, the design cross-references and the estimates
 
 ## Key questions
 
@@ -58,8 +59,9 @@ By the end, the viewer can:
 | 03:25–05:11 | The planner | Windows, ranking, the first fitting start, the activity |
 | 05:11–06:37 | Keeping the weekend in step | `DateWorkflow`, `ReplanDayAsync`, the guards |
 | 06:37–07:12 | Breakfast | Slot, seeds, ingestion, locks |
-| 07:12–07:42 | The tests | 34 API tests, `DatePlannerTests` |
-| 07:42–08:14 | Recap | Things to remember |
+| 07:12–07:39 | The tests | 34 API tests, `DatePlannerTests` |
+| 07:39–08:52 | Everything else the branch touched | Restaurant service breakfast, admin test counts, upserter test, cross-reference paragraphs, estimates, mocks index, README |
+| 08:52–09:25 | Recap | Things to remember |
 
 ## Demo commands
 

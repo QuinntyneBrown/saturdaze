@@ -102,7 +102,7 @@ Three videos on couples date planning (L1-042, ADR-025): the product, then the b
 | # | Video | Runtime | What you learn |
 | --- | --- | --- | --- |
 | 45 | [Couples dates: the product](45-couples-date-the-product/README.md) | ~4.9 min | The mocks (Weekend, D38–D43, the date's screen, Food, Past) and the real app: plan, the block, swap, drop, move, regenerate, cancel; the five design choices. |
-| 46 | [Couples dates: the backend](46-couples-date-the-backend/README.md) | ~8.3 min | `CoupleDate`, the `Date` block, `DatesController`, `DateRules`, `DatePlanner`, `DateWorkflow` and `ReplanDayAsync`, the guards, breakfast, 34 API tests. |
+| 46 | [Couples dates: the backend](46-couples-date-the-backend/README.md) | ~9.5 min | `CoupleDate`, the `Date` block, `DatesController`, `DateRules`, `DatePlanner`, `DateWorkflow` and `ReplanDayAsync`, the guards, breakfast, 34 API tests, and every other file the branch touched. |
 | 47 | [Couples dates: the frontend and tests](47-couples-date-the-frontend/README.md) | ~5.8 min | DTO, view, projections, `DATE_SERVICE`, the `Date` block, `planDate()`, D38, `DatePage.change()`, Food and Past, page objects and the six e2e tests. |
 
 ## Components series

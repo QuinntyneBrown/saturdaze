@@ -6,7 +6,7 @@
 <title>Video 46 Slides</title>
 <link rel="stylesheet" href="../assets/slides.css">
 </head>
-<body data-video-number="46" data-video-title="Couples dates: the backend" data-parts="Introduction|Requirement and decision|The aggregate|The endpoints|Who can go, and when|The planner|Keeping the weekend in step|Breakfast|The tests|Recap">
+<body data-video-number="46" data-video-title="Couples dates: the backend" data-parts="Introduction|Requirement and decision|The aggregate|The endpoints|Who can go, and when|The planner|Keeping the weekend in step|Breakfast|The tests|Everything else|Recap">
 
 <section id="title" data-part="0">
   <div class="kicker">Saturdaze · Video 46</div>
@@ -325,7 +325,36 @@ private static bool IsSlot(TimeOnly startTime, MealSlot slot) =&gt; slot switch
   <p class="muted">In-memory SQLite per fixture (ADR-020); <code>DatePlannerTests</code> builds a tiny catalog by hand. No database server.</p>
 </section>
 
-<section id="recap" data-part="9" data-cue="A date is its own aggregate, and the weekend sees it as one locked block.">
+<section id="ripples" data-part="9" data-cue="A build this size leaves small ripples">
+  <h2>Everything else the branch touched</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>Frontend api library</h3>
+      <ul class="small">
+        <li><code>restaurant.service.ts</code>: fetches Breakfast for both days; meal blocks before 11:00 are breakfast</li>
+        <li><code>restaurant.service.spec.ts</code>, <code>saved.service.ts</code> + spec follow</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Tests that only moved a count</h3>
+      <ul class="small">
+        <li><code>AdminPhotoHealthTests</code>: 8 → 10 places, 7 → 9 without a photo</li>
+        <li><code>AdminPlacesListTests</code>: 7 → 9 names</li>
+        <li><code>CatalogUpserterTests</code>: + ingested breakfast stored as breakfast</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Docs</h3>
+      <ul class="small">
+        <li>Cross-reference paragraphs in generate-current-weekend, fit-plans-to-the-family, control-itinerary-blocks, plan-with-agents</li>
+        <li><code>docs/estimates</code>: plan-a-couples-date 8 days, 90%; roadmap item</li>
+        <li><code>docs/mocks/index.html</code>, <code>app.css</code>, root <code>README.md</code></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="recap" data-part="10" data-cue="A date is its own aggregate, and the weekend sees it as one locked block.">
   <h2>Things to remember</h2>
   <ul class="recap">
     <li><code>CoupleDate</code> is its own aggregate; the weekend sees one locked <code>Date</code> block</li>
