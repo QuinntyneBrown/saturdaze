@@ -44,4 +44,6 @@ export interface PastWeekendCard {
    * Cover — the photo the card leads with; `null` offers "Add a photo" (L2-110).
    */
   readonly cover: CoverView | null;
+  /** "Sunday dinner at Snug Harbour · Ada and Ben", one per date (L2-225 AC7). */
+  readonly dates: readonly string[];
 }

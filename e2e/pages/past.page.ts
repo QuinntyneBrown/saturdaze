@@ -83,6 +83,11 @@ export class PastPage extends BasePage {
     return card.locator(".stars__label");
   }
 
+  /** A weekend's date line (L2-225 AC7). */
+  dateLine(card: Locator): Locator {
+    return card.locator(".card__date");
+  }
+
   highlights(card: Locator): Locator {
     return card.locator(".card__highlights");
   }

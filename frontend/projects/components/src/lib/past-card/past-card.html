@@ -47,6 +47,12 @@
 @if (highlights()) {
   <p class="card__highlights">{{ highlights() }}</p>
 }
+@for (line of dates(); track line) {
+  <p class="card__date">
+    <sd-chip tone="primary"><sd-icon name="heart" [size]="13" [stroke]="2" />Date</sd-chip>
+    {{ line }}
+  </p>
+}
 <div class="card__footer card__footer--2up">
   <sd-button variant="quiet" size="sm" (click)="remix.emit()">
     <sd-icon name="sparkle" />

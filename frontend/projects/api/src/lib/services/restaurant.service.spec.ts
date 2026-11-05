@@ -137,7 +137,14 @@ describe('RestaurantService', () => {
   const closest = (rows: RestaurantDto[]): RestaurantDto[] =>
     [...rows].sort((a, b) => a.driveMinutes - b.driveMinutes);
 
+  /** Breakfast is a meal slot too (L2-220); these specs have no breakfast places. */
+  function flushBreakfasts(): void {
+    httpMock.expectOne(url(saturday, 'Breakfast')).flush([]);
+    httpMock.expectOne(url(sunday, 'Breakfast')).flush([]);
+  }
+
   async function flushLoad(): Promise<void> {
+    flushBreakfasts();
     httpMock.expectOne(url(saturday, 'Lunch')).flush(closest(SAT_LUNCH));
     httpMock.expectOne(url(saturday, 'Dinner')).flush(closest(SAT_DINNER));
     httpMock.expectOne(url(sunday, 'Lunch')).flush(closest(SUN_LUNCH));
@@ -145,13 +152,14 @@ describe('RestaurantService', () => {
     await settle();
   }
 
-  it('fetches both days and both meals on load', async () => {
+  it('fetches both days and every meal on load', async () => {
     await flushLoad();
     const view = service.list()();
     expect(view.subtitle).toBe('Places to eat near what you are already doing.');
-    expect(view.sections.map((s) => s.title)).toEqual(['Lunch', 'Dinner']);
-    expect(view.sections[0]!.picks).toHaveLength(3);
-    expect(view.sections[1]!.picks).toHaveLength(2);
+    expect(view.sections.map((s) => s.title)).toEqual(['Breakfast', 'Lunch', 'Dinner']);
+    expect(view.sections[0]!.picks).toHaveLength(0);
+    expect(view.sections[1]!.picks).toHaveLength(3);
+    expect(view.sections[2]!.picks).toHaveLength(2);
   });
 
   it('starts on Saturday with no slot narrowed and every toggle off', async () => {
@@ -168,14 +176,14 @@ describe('RestaurantService', () => {
       ['Saturday', true],
       ['Sunday', false],
     ]);
-    expect(view.slotChips.map((c) => c.active)).toEqual([false, false]);
+    expect(view.slotChips.map((c) => c.active)).toEqual([false, false, false]);
     expect(view.extraChips.map((c) => c.label)).toEqual(['Wife-approved', 'Under 15 min', 'Patio']);
     expect(view.extraChips[0]).toMatchObject({ tone: 'accent', icon: 'heart', active: false });
   });
 
   it('ranks approved places first, then closest, and marks the top pick', async () => {
     await flushLoad();
-    const lunch = service.list()().sections[0]!;
+    const lunch = service.list()().sections[1]!;
     expect(lunch.picks.map((p) => p.id)).toEqual(['r1', 'r2', 'r3']);
     expect(lunch.picks.map((p) => p.topPick)).toEqual([true, false, false]);
     expect(lunch.lockedId).toBeNull();
@@ -183,7 +191,7 @@ describe('RestaurantService', () => {
 
   it('builds a card with meta, chips, the roster votes and the menu link', async () => {
     await flushLoad();
-    const card = service.list()().sections[0]!.picks[0]!;
+    const card = service.list()().sections[1]!.picks[0]!;
     expect(card).toMatchObject({
       id: 'r1',
       name: 'La Marina',
@@ -204,19 +212,19 @@ describe('RestaurantService', () => {
       { name: 'Eli', initial: 'E', tone: 'sky', vote: 'none' },
       { name: 'Mae', initial: 'M', tone: 'sun', vote: 'none' },
     ]);
-    const unvoted = service.list()().sections[0]!.picks[2]!;
+    const unvoted = service.list()().sections[1]!.picks[2]!;
     expect(unvoted.meta).toBe('Italian');
     expect(unvoted.chips).toEqual([{ tone: 'sky', icon: 'car', label: '12 min' }]);
-    expect(service.list()().sections[0]!.picks[1]!.menuUrl).toBeNull();
+    expect(service.list()().sections[1]!.picks[1]!.menuUrl).toBeNull();
   });
 
   it('describes each section from the weekend meal block, else close to home', async () => {
     await flushLoad();
-    const [lunch, dinner] = service.list()().sections;
+    const [, lunch, dinner] = service.list()().sections;
     expect(lunch!.subtitle).toBe('Near Lavender fields · 1:00pm to 2:15pm');
     expect(dinner!.subtitle).toBe('Close to home');
     service.setFilters({ day: 'Sunday' });
-    expect(service.list()().sections[0]!.subtitle).toBe('Close to home');
+    expect(service.list()().sections[1]!.subtitle).toBe('Close to home');
   });
 
   it('narrows to one slot, switches day, and applies the toggles', async () => {
@@ -224,30 +232,30 @@ describe('RestaurantService', () => {
     service.setFilters({ slot: 'Dinner' });
     let view = service.list()();
     expect(view.sections.map((s) => s.title)).toEqual(['Dinner']);
-    expect(view.slotChips.map((c) => c.active)).toEqual([false, true]);
+    expect(view.slotChips.map((c) => c.active)).toEqual([false, false, true]);
     expect(view.sections[0]!.picks.map((p) => p.id)).toEqual(['r4', 'r5']);
 
     service.setFilters({ slot: null, day: 'Sunday' });
     view = service.list()();
     expect(view.dayChips[1]!.active).toBe(true);
-    expect(view.sections.map((s) => s.picks.length)).toEqual([1, 0]);
+    expect(view.sections.map((s) => s.picks.length)).toEqual([0, 1, 0]);
 
     service.setFilters({ day: 'Saturday', wifeApproved: true });
     expect(
       service
         .list()()
-        .sections[0]!.picks.map((p) => p.id),
+        .sections[1]!.picks.map((p) => p.id),
     ).toEqual(['r1', 'r2']);
     service.setFilters({ wifeApproved: false, quick: true });
     expect(
       service
         .list()()
-        .sections[0]!.picks.map((p) => p.id),
+        .sections[1]!.picks.map((p) => p.id),
     ).toEqual(['r1', 'r2', 'r3']);
     expect(
       service
         .list()()
-        .sections[1]!.picks.map((p) => p.id),
+        .sections[2]!.picks.map((p) => p.id),
     ).toEqual(['r4']);
   });
 
@@ -259,7 +267,7 @@ describe('RestaurantService', () => {
     expect(req.request.body).toEqual({ day: 'Saturday', slot: 'Lunch' });
     req.flush(SAT_LUNCH[1]);
     await promise;
-    const lunch = service.list()().sections[0]!;
+    const lunch = service.list()().sections[1]!;
     expect(lunch.lockedId).toBe('r2');
     expect(lunch.picks.map((p) => p.id)).toEqual(['r2', 'r1', 'r3']);
     expect(lunch.picks[0]).toMatchObject({
@@ -275,7 +283,7 @@ describe('RestaurantService', () => {
       dimmed: true,
       votesDisabled: true,
     });
-    expect(service.list()().sections[1]!.lockedId).toBeNull();
+    expect(service.list()().sections[2]!.lockedId).toBeNull();
   });
 
   it('records a vote and reflects the server reply', async () => {
@@ -294,7 +302,7 @@ describe('RestaurantService', () => {
       }),
     );
     await promise;
-    const card = service.list()().sections[0]!.picks[0]!;
+    const card = service.list()().sections[1]!.picks[0]!;
     expect(card.votes.find((v) => v.name === 'Mae')?.vote).toBe('down');
     expect(card.meta).toBe('Mediterranean · Patio · 2 of 4 votes');
   });
@@ -313,6 +321,7 @@ describe('RestaurantService', () => {
 
   it('treats a failed list as empty without losing the others', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    flushBreakfasts();
     httpMock.expectOne(url(saturday, 'Lunch')).flush(null, { status: 500, statusText: 'Boom' });
     httpMock.expectOne(url(saturday, 'Dinner')).flush(SAT_DINNER);
     httpMock.expectOne(url(sunday, 'Lunch')).flush(SUN_LUNCH);
@@ -322,7 +331,7 @@ describe('RestaurantService', () => {
       service
         .list()()
         .sections.map((s) => s.picks.length),
-    ).toEqual([0, 2]);
+    ).toEqual([0, 0, 2]);
     vi.restoreAllMocks();
   });
 });

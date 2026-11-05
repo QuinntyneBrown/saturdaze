@@ -77,3 +77,14 @@
   outline: 2px solid var(--colorStrokeFocus2);
   outline-offset: -4px;
 }
+
+// A past weekend's date (L2-225) — `.card__date` in docs/mocks/pages/past.html.
+.card__date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fontSizeBase300);
+  color: var(--colorNeutralForeground2);
+}

@@ -1,4 +1,5 @@
 import { CoverDto } from './cover.dto';
+import { DateSummaryDto } from './couple-date.dto';
 
 /**
  * Server-side shape of one row from `GET /api/weekends/history`. Mirrors
@@ -41,4 +42,6 @@ export interface WeekendSummaryDto {
    * Cover — the same cover the Weekend screen shows, or `null` (L2-110).
    */
   readonly cover?: CoverDto | null;
+  /** The weekend's couples dates (L2-225 AC7). */
+  readonly dates?: readonly DateSummaryDto[];
 }
