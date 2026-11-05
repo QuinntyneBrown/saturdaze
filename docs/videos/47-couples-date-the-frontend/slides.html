@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video 47 Slides</title>
+<link rel="stylesheet" href="../assets/slides.css">
+</head>
+<body data-video-number="47" data-video-title="Couples dates: the frontend and tests" data-parts="Introduction|The API library|The Weekend page|The date's screen|Food and Past|The tests|Recap">
+
+<section id="title" data-part="0">
+  <div class="kicker">Saturdaze · Video 47</div>
+  <h1>Couples dates: the frontend and tests</h1>
+  <p class="lead">A contract and a token, a new screen under the same navigation, dialogs for every edit, and page objects that own the DOM.</p>
+</section>
+
+<section id="models" data-part="1" data-cue="Everything starts in the api library">
+  <h2>DTO in, view out</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>couple-date.dto.ts</h3>
+      <p>The server's shape: day, meal, start and end, attendees, restaurant, activity, steps with reasons, <code>kidsNeedCare</code>; plus the planning summary (adults, <code>canPlan</code>, <code>reason</code>).</p>
+    </div>
+    <div class="card">
+      <h3>couple-date-view.ts</h3>
+      <p>What a page renders: <code>headline</code> "Dinner date", <code>subtitle</code>, each step's clock, duration, icon and reason, <code>careTitle</code> and <code>careBody</code>.</p>
+    </div>
+  </div>
+  <p class="small muted"><span class="file">frontend/projects/api/src/lib/models/</span></p>
+</section>
+
+<section id="projection" data-part="1" data-cue="The projection file turns one into the other.">
+  <h2>couple-date-projection.ts</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,8,14">/** "5:15–8:15pm", or "11:45am–2:30pm" across noon (L2-222 AC4, the mock's care chip). */
+export function compactRange(start: string, end: string): string {
+  const samePart = toMinutes(start) &gt;= 12 * 60 === toMinutes(end) &gt;= 12 * 60;
+  return `${samePart ? hhmm12(start) : clock12(start)}–${clock12(end)}`;
+}
+
+/** "Ada and Ben", "Ada, Ben and Cy". */
+export function andList(names: readonly string[]): string {
+  if (names.length &lt;= 1) return names.join('');
+  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+}
+
+/** "Sunday dinner at Snug Harbour · Ada and Ben" for /past (L2-225 AC7). */
+export function pastDateLine(d: DateSummaryDto): string {
+  return `${d.day} ${d.meal.toLowerCase()} at ${d.restaurant} · ${andList(d.attendees)}`;
+}</pre>
+  <p class="small muted"><span class="file">frontend/projects/api/src/lib/api/couple-date-projection.ts</span> · specs in <code>couple-date-projection.spec.ts</code></p>
+</section>
+
+<section id="contract" data-part="1" data-cue="The service follows the house pattern">
+  <h2>Contract + token, never the class</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,4,10,16">export interface IDateService {
+  planning(weekendId: string): Promise&lt;DatePlanningView&gt;;   // who can go, canPlan, reason
+  get(weekendId: string, dateId: string): Promise&lt;CoupleDateView | null&gt;;
+  plan(weekendId: string, day: WeekendDay, meal: MealSlot, attendeeIds: readonly string[]):
+    Promise&lt;CoupleDateView&gt;;
+  move(weekendId: string, dateId: string, day: WeekendDay, meal: MealSlot): Promise&lt;CoupleDateView&gt;;
+  regenerate · swapRestaurant · swapActivity · dropActivity(weekendId, dateId): Promise&lt;CoupleDateView&gt;;
+  cancel(weekendId: string, dateId: string): Promise&lt;void&gt;;
+}
+/** The server refused a date change; `message` is its own words (L2-225). */
+export class DateRefusal extends Error {
+  constructor(message: string, readonly code: string | null) {
+    super(message);
+  }
+}
+export const DATE_SERVICE = new InjectionToken&lt;IDateService&gt;('DATE_SERVICE');</pre>
+  <p class="small muted"><span class="file">frontend/projects/api/src/lib/services/date.service.contract.ts</span> · implemented by <code>date.service.ts</code>, provided in <code>app.config.ts</code></p>
+</section>
+
+<section id="block" data-part="1" data-cue="The weekend projection learned the new block kind.">
+  <h2>weekend-projection.ts · the Date block</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,6,10,11,12">// A date stays locked; it is changed from its own screen (L2-222 AC6).
+lockable: !commitment &amp;&amp; !drive &amp;&amp; b.kind !== 'Date',
+…
+case 'Date':
+  return 'heart';
+// "Ada and Ben; kids need care 17:25–20:05" → who is going (L2-225).
+if (b.kind === 'Date') return reason ? (reason.split(';')[0] ?? '').trim() : null;
+…
+if (b.kind === 'Date') {
+  chips.push({ tone: 'primary', icon: 'heart', label: 'Date' });
+  if (b.reason.includes('kids need care'))
+    chips.push({ tone: 'warn', label: `Kids need care ${compactRange(b.startTime, b.endTime)}` });
+  return chips;
+}</pre>
+</section>
+
+<section id="weekend-page" data-part="2" data-cue="On the Weekend page, Plan a date is a quiet button">
+  <h2>WeekendPage.planDate()</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,4,5,8,9,11">protected planDate(): Promise&lt;void&gt; {        // D38, or D38b with fewer than two adults
+  return this.run(async () =&gt; {
+    const weekendId = this.weekend().id;
+    const planning = await this.dates.planning(weekendId);
+    const ref = this.dialog.open&lt;PlanDateDialogResult, PlanDateDialogData&gt;(PlanDateDialog,
+      { ...DIALOG_OPTIONS, data: { planning } });
+    const choice = await firstValueFrom(ref.closed);
+    if (!choice) return;
+    try {
+      const date = await this.dates.plan(weekendId, choice.day, choice.meal, choice.attendeeIds);
+      await this.router.navigate(['/weekend/dates', date.id]);
+    } catch (err) {
+      if (!(err instanceof DateRefusal)) throw err;
+      this.error.set(err.message);           // the page's warn banner
+    }
+  });
+}</pre>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/pages/weekend/weekend.page.ts</span></p>
+</section>
+
+<section id="dialog" data-part="2" data-cue="The plan date dialog is D38.">
+  <h2>PlanDateDialog · D38 and D38b</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,3,5,6,7,8">export class PlanDateDialog {
+  protected readonly data = inject&lt;PlanDateDialogData&gt;(DIALOG_DATA);
+  protected readonly canPlan = this.data.planning.canPlan;
+  protected readonly meal = signal&lt;string&gt;('Dinner');
+  protected readonly day = signal&lt;string&gt;('Saturday');
+  protected readonly going = signal&lt;readonly string[]&gt;(
+    this.data.planning.adults.slice(0, 2).map((a) =&gt; a.id),
+  );
+  protected readonly ready = computed(() =&gt; this.canPlan &amp;&amp; this.going().length === 2);
+  protected confirm(): void {
+    if (!this.ready()) return;
+    this.dialogRef.close({
+      day: this.day() as WeekendDay, meal: this.meal() as MealSlot, attendeeIds: this.going(),
+    });
+  }
+}</pre>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/dialogs/plan-date-dialog/</span> · <code>sd-seg-radio</code>, <code>sd-checkbox</code>, <code>sd-well</code> (warn) for D38b</p>
+</section>
+
+<section id="date-page" data-part="3" data-cue="The date page sits at weekend slash dates slash id">
+  <h2>DatePage · /weekend/dates/:id</h2>
+  <pre class="code" data-lang="ts" data-mark="2,3">{
+  path: 'weekend/dates/:id',
+  data: { nav: 'weekend', page: 'date' },
+  canActivate: [requireAuth],
+  loadComponent: () =&gt; import('./pages/date/date.page').then((m) =&gt; m.DatePage),
+},</pre>
+  <ul>
+    <li>Header with a back link to "This weekend"; the <code>.date-care</code> banner; steps as <code>sd-block</code> rows</li>
+    <li><code>.date-step--meal</code> offers Swap restaurant, <code>.date-step--activity</code> Change activity; below 720px the chevron opens the same dialog</li>
+    <li>Actions: Move · Regenerate · Cancel date</li>
+  </ul>
+  <p class="small muted"><span class="file">frontend/projects/saturdaze/src/app/app.routes.ts</span> · <span class="file">pages/date/date.page.ts</span></p>
+</section>
+
+<section id="change" data-part="3" data-cue="Every action is a dialog.">
+  <h2>One <code>change()</code> for every edit</h2>
+  <pre class="code tight" data-lang="ts" data-mark="2,3,6,8">private async change(work: () =&gt; Promise&lt;CoupleDateView | null&gt;): Promise&lt;void&gt; {
+  this.busy.set(true);          // "Planning your date…"
+  this.error.set('');
+  try {
+    const next = await work();
+    if (next) this.date.set(next);
+  } catch (err) {
+    if (err instanceof DateRefusal) this.error.set(err.message);
+    else this.error.set('Something did not go through. Try again in a moment.');
+  } finally {
+    this.busy.set(false);
+  }
+}</pre>
+  <p class="muted"><code>confirmWith()</code> for D39, D42, D43 (danger) · <code>DateActivityDialog</code> for D40 · <code>MoveDateDialog</code> for D41</p>
+</section>
+
+<section id="food-past" data-part="4" data-cue="Two small changes finish the UI.">
+  <h2>Food and Past</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>/ideas/food</h3>
+      <p><code>MealSlot</code> gains <code>'Breakfast'</code>; a Breakfast filter chip and a Breakfast section beside Lunch and Dinner.</p>
+    </div>
+    <div class="card">
+      <h3>sd-past-card</h3>
+      <pre class="code" data-lang="html">@for (line of dates(); track line) {
+  &lt;p class="card__date"&gt;
+    &lt;sd-chip tone="primary"&gt;&lt;sd-icon name="heart" [size]="13" [stroke]="2" /&gt;Date&lt;/sd-chip&gt;
+    {{ line }}
+  &lt;/p&gt;
+}</pre>
+      <p class="small muted">Story "With date" in <span class="file">stories/src/PastCard/</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="page-objects" data-part="5" data-cue="The end-to-end suite runs in Chromium through page objects">
+  <h2>Page objects own the DOM</h2>
+  <pre class="code tight" data-lang="ts" data-mark="4,5,9,14">export class DatePage extends BasePage {
+  readonly slug: PageSlug = "date";
+  /** The meal row ("Dinner at Snug Harbour"). */
+  mealTitle(): Locator {
+    return this.main.locator(".date-plan .date-step--meal .block__title");
+  }
+  careBanner(): Locator { return this.main.locator(".date-care"); }
+  /** "Swap restaurant" on the meal row; below 720px its chevron. */
+  swapRestaurantButton(): Locator {
+    const meal = this.main.locator(".date-plan .date-step--meal");
+    return meal.getByRole("button", { name: /^Swap restaurant/ })
+      .or(meal.locator(".block__chev")).filter({ visible: true });
+  }
+  cancelButton(): Locator { return control(this.pageActions(), "Cancel date"); }
+  backLink(): Locator { return this.pageHeader.getByRole("link", { name: "This weekend" }); }
+}</pre>
+  <p class="small muted"><span class="file">e2e/pages/date.page.ts</span> · <code>weekend.page.ts</code> gained <code>planDateButton()</code>, <code>dateBlock()</code>, <code>dialogPerson()</code>, <code>dialogWell()</code></p>
+</section>
+
+<section id="spec" data-part="5" data-cue="The couples date spec has six tests">
+  <h2>couple-date.spec.ts · six tests, intent only</h2>
+  <pre class="code tight" data-lang="ts" data-mark="1,2,7,8,11,12">test("Given two adults, when a Sunday dinner date is planned through D38, " +
+     "then its screen opens and Sunday shows the date with kids-need-care",
+  async ({ page, request, signIn, pages }) =&gt; {
+  await signIn(await dateFamily(request));
+  await page.goto("/weekend");
+  const w = pages.weekend;
+  await w.planDateButton().click();
+  await expect(w.dialogTitle()).toHaveText("Plan a date");
+  await w.dialogOption("Dinner").check();
+  await w.dialogOption("Sunday").check();
+  await w.dialogAction("Plan the date").click();
+  const d = pages.date;
+  await expect(d.pageTitle()).toHaveText("Dinner date");
+  await expect(d.careBanner()).toContainText("Kids need care");   // … then back to /weekend
+});</pre>
+  <p class="small muted"><span class="file">e2e/tests/couple-date.spec.ts</span> · <code>fixtures/couple-date.ts</code>: a throwaway family per test; <code>stubPastDate()</code> for the Past case</p>
+</section>
+
+<section id="recap" data-part="6" data-cue="The api library carries the contract, the token and the projections">
+  <h2>Things to remember</h2>
+  <ul class="recap">
+    <li>The api library carries the DTO, the view, the projections, the contract and the token; pages stay thin</li>
+    <li>"Plan a date" and the date block on Weekend; the date's screen under the same navigation item</li>
+    <li>Every edit is a CDK dialog; a refusal is shown in the server's words</li>
+    <li>Breakfast on Food ideas, the date on Past</li>
+    <li>Page objects own the DOM; six e2e tests and the projection specs prove the behaviour</li>
+  </ul>
+</section>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

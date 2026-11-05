@@ -6,13 +6,17 @@
 //   node tools/video-audio/generate-audio.mjs docs/videos/01-x             synthesize the MP3
 //   node tools/video-audio/generate-audio.mjs --say "`_tokens.scss`"        pronunciation test (WAV)
 //
-// Engines (--engine edge|piper|azure, default edge). Each synthesizes one clip per paragraph, so
+// Engines (--engine edge|kokoro|piper|azure, default edge). Each synthesizes one clip per paragraph, so
 // the timing manifest is built from measured clip durations, never estimated:
 //   edge   Free Microsoft Edge read-aloud voices via the `edge-tts` Python package
 //          (`python -m pip install edge-tts`). Needs internet access; no key or subscription.
 //          PYTHON overrides the interpreter (default python3), EDGE_VOICE / EDGE_VOICE_2 the
 //          narrator and second-speaker voices (`python -m edge_tts --list-voices`). Honours
 //          HTTPS_PROXY; behind a TLS-inspecting proxy set SSL_CERT_FILE to its CA bundle.
+//   kokoro Kokoro-82M from Hugging Face (hexgrad/Kokoro-82M), run locally and free through
+//          `python -m pip install kokoro-onnx soundfile` (tools/video-audio/kokoro_say.py; model
+//          files download to .cache/kokoro/ on first use). KOKORO_VOICE (default af_heart) and
+//          KOKORO_VOICE_2 (default am_michael) pick the voices; KOKORO_SPEED the rate.
 //   piper  Offline neural TTS (`pip install piper-tts`). Needs PIPER_MODEL pointing at a voice
 //          .onnx (e.g. en_US-ryan-high.onnx); PIPER_MODEL_2 optionally voices `**Name:**`
 //          paragraphs.
@@ -37,6 +41,8 @@ const SECTION_GAP = 0.8; // and between sections
 const EDGE_VOICE = process.env.EDGE_VOICE ?? 'en-US-AndrewMultilingualNeural';
 const EDGE_VOICE_2 = process.env.EDGE_VOICE_2 ?? 'en-US-AvaMultilingualNeural';
 const python = process.env.PYTHON ?? 'python3';
+const KOKORO_VOICE = process.env.KOKORO_VOICE ?? 'af_heart';
+const KOKORO_VOICE_2 = process.env.KOKORO_VOICE_2 ?? 'am_michael';
 const AZURE_VOICE = process.env.AZURE_VOICE ?? 'en-US-JennyNeural';
 const AZURE_VOICE_2 = process.env.AZURE_VOICE_2 ?? 'en-US-GuyNeural';
 const AZURE_STYLE = process.env.AZURE_STYLE ?? 'cheerful';
@@ -210,6 +216,15 @@ function edgeSay(text, speaker, out, attempts = 4) {
   throw new Error(`edge-tts failed after ${attempts} attempts: ${last}`);
 }
 
+function kokoroSay(text, speaker, out) {
+  const r = spawnSync(python, [join(here, 'kokoro_say.py'), speaker ? KOKORO_VOICE_2 : KOKORO_VOICE, out], {
+    input: text,
+    encoding: 'utf8',
+  });
+  if (r.status !== 0 || !existsSync(out)) throw new Error(`kokoro failed: ${r.stderr}`);
+  return normalise(out);
+}
+
 const xml = (t) => t.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 /** The SSML Azure Speech reads: the voice, its speaking style and the rate. */
@@ -253,6 +268,7 @@ async function azureSay(text, speaker, out, attempts = 4) {
 
 const engines = {
   edge: { say: edgeSay, voice: () => EDGE_VOICE, ready: () => {} },
+  kokoro: { say: kokoroSay, voice: () => KOKORO_VOICE, ready: () => {} },
   azure: {
     say: azureSay,
     voice: () => `${AZURE_VOICE} (${AZURE_STYLE || 'no style'}, ${AZURE_RATE})`,
@@ -278,7 +294,7 @@ async function main() {
   const flag = (name) => args.includes(name);
   const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
   const engine = opt('--engine') ?? 'edge';
-  if (!engines[engine]) throw new Error(`unknown engine "${engine}" (use --engine edge|piper|azure)`);
+  if (!engines[engine]) throw new Error(`unknown engine "${engine}" (use --engine edge|kokoro|piper|azure)`);
   const { say, ready } = engines[engine];
 
   if (flag('--say')) {

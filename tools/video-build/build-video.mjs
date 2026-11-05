@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Video builder for docs/videos/NN-topic/: slides.html + the narration manifest → captioned MP4.
+// Video builder for docs/videos/NN-topic/: slides.html + the narration manifest → captioned MP4
+// (--no-captions skips the burn-in; --music <file> mixes a bed under the narration).
 //
 //   node tools/video-build/build-video.mjs docs/videos/01-x --check         resolve cues, print the schedule
 //   node tools/video-build/build-video.mjs docs/videos/01-x --slides-only   render PNGs to .cache/01-x/slides/
@@ -475,7 +476,9 @@ function main() {
     last = `v${i}`;
   });
   // Relative to cwd: an absolute Windows path (C:\…) breaks the filter's option parsing.
-  graph.push(`[${last}]ass=${basename(ass)},format=yuv420p[out]`);
+  // --no-captions leaves the burn-in out (the SRT is still written beside the manifest).
+  const captions = !args.includes("--no-captions");
+  graph.push(`[${last}]${captions ? `ass=${basename(ass)},` : ""}format=yuv420p[out]`);
   // The music loops from the start at a fixed gain (no ducking) and ends with the video; the
   // narration is padded with silence to the same length, so the tail is music alone.
   if (music) {

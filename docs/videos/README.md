@@ -95,6 +95,16 @@ Four videos on family member sign-in (L1-037, ADR-016): the account that creates
 | --- | --- | --- | --- |
 | 34 | [The plan, in plain words](34-the-plan-in-plain-words/README.md) | ~9.1 min | The business plan explained simply: grown-up likes, the five jars, 2027 to 2029, the $2.0M seed, the never list and the risks; then what changes if the seed never comes. |
 
+## Couples dates series
+
+Three videos on couples date planning (L1-042, ADR-025): the product, then the backend, then the frontend and tests. Narrated with the free Kokoro voice from Hugging Face (`--engine kokoro`), built without captions (`--no-captions`) and with a soca bed from Pixabay (`--music`). Watch in order.
+
+| # | Video | Runtime | What you learn |
+| --- | --- | --- | --- |
+| 45 | [Couples dates: the product](45-couples-date-the-product/README.md) | ~4.9 min | The mocks (Weekend, D38–D43, the date's screen, Food, Past) and the real app: plan, the block, swap, drop, move, regenerate, cancel; the five design choices. |
+| 46 | [Couples dates: the backend](46-couples-date-the-backend/README.md) | ~8.3 min | `CoupleDate`, the `Date` block, `DatesController`, `DateRules`, `DatePlanner`, `DateWorkflow` and `ReplanDayAsync`, the guards, breakfast, 34 API tests. |
+| 47 | [Couples dates: the frontend and tests](47-couples-date-the-frontend/README.md) | ~5.8 min | DTO, view, projections, `DATE_SERVICE`, the `Date` block, `planDate()`, D38, `DatePage.change()`, Food and Past, page objects and the six e2e tests. |
+
 ## Components series
 
 Fifty-two instructional videos, one per component in `frontend/projects/components/src/lib/`: each codes the component step by step, calls out its best practices (especially signals) and walks through its unit tests. See the [series index](components/README.md).
@@ -113,7 +123,7 @@ The one-minute brand video, served on the marketing site at www.saturdaze.ca (AD
 
 ### Voices
 
-Every video uses the free Edge voices (the generator's default engine), except the brand video, which uses the voice of Shelfie's brand video.
+Every video uses the free Edge voices (the generator's default engine), except the brand video, which uses the voice of Shelfie's brand video, and the couples dates series (45–47), which uses Kokoro-82M from Hugging Face run locally (`--engine kokoro`; `python -m pip install kokoro-onnx soundfile`; model files download to `.cache/kokoro/` on first use; `KOKORO_VOICE`, default `af_heart`).
 
 | | Edge (free) | Azure Speech (paid) |
 | --- | --- | --- |
@@ -145,7 +155,7 @@ node tools/video-build/build-video.mjs docs/videos/01-design-tokens-what-and-why
 node tools/video-audio/generate-audio.mjs --say '`_tokens.scss`' --out /tmp/say.wav
 ```
 
-The engine is Edge by default (`--engine edge|piper` forces one); Edge voices default to `en-US-AndrewMultilingualNeural` for the narrator and `en-US-AvaMultilingualNeural` for `**Name:**` speakers (`EDGE_VOICE` / `EDGE_VOICE_2` override; `python -m edge_tts --list-voices` lists them). The design tokens series was narrated with Piper's `en_US-ryan-high` voice when it was produced, and the AI series with Edge's `en-US-AndrewMultilingualNeural`; re-run steps 2 and 3 to re-voice the design tokens series with Edge. Behind a TLS-inspecting proxy, set `SSL_CERT_FILE` to its CA bundle; `HTTPS_PROXY` is passed to edge-tts.
+The engine is Edge by default (`--engine edge|kokoro|piper|azure` forces one); Edge voices default to `en-US-AndrewMultilingualNeural` for the narrator and `en-US-AvaMultilingualNeural` for `**Name:**` speakers (`EDGE_VOICE` / `EDGE_VOICE_2` override; `python -m edge_tts --list-voices` lists them). The design tokens series was narrated with Piper's `en_US-ryan-high` voice when it was produced, and the AI series with Edge's `en-US-AndrewMultilingualNeural`; re-run steps 2 and 3 to re-voice the design tokens series with Edge. Behind a TLS-inspecting proxy, set `SSL_CERT_FILE` to its CA bundle; `HTTPS_PROXY` is passed to edge-tts.
 
 Slides use the shared `assets/slides.css` and `assets/slides.js`; open any `slides.html` in a browser and use the arrow keys, or `?slide=N`.
 
@@ -162,7 +172,7 @@ The admin series records against a separate demo database and image host; see `t
 
 ### Background music
 
-`--music <file>` on the builder mixes a music bed under the narration. It is opt-in: only the brand video (44) passes it, and every other video builds exactly as before, narration only. The mix copies Shelfie's brand video (`meet-shelfie.mp4`), measured from that file:
+`--music <file>` on the builder mixes a music bed under the narration. It is opt-in: the brand video (44) and the couples dates series (45–47) pass it, and every other video builds exactly as before, narration only. `--no-captions` leaves the burned-in captions out (the SRT is still written to `.cache/`); the couples dates series uses it. The mix copies Shelfie's brand video (`meet-shelfie.mp4`), measured from that file:
 
 | | Value |
 | --- | --- |
@@ -176,4 +186,6 @@ The admin series records against a separate demo database and image host; see `t
 node tools/video-build/build-video.mjs docs/videos/44-meet-saturdaze --music docs/videos/assets/music/on-the-beach-intro-outro.mp3
 ```
 
-The track is [assets/music/on-the-beach-intro-outro.mp3](assets/music/on-the-beach-intro-outro.mp3): "On the Beach Intro Outro" by NaturesEye (1:16, about 100 BPM, upbeat Caribbean/reggae feel), from [Pixabay](https://pixabay.com/music/happy-childrens-tunes-on-the-beach-intro-outro-10278/) under the [Pixabay Content License](https://pixabay.com/service/license-summary/). The licence allows free commercial use in a video without attribution. It does not allow distributing the track on its own, so use it only as a source for our videos. It is the same track Shelfie's brand video uses.
+The couples dates series uses [assets/music/en-la-playa-trinidad-and-tobago-soca.mp3](assets/music/en-la-playa-trinidad-and-tobago-soca.mp3): "En La Playa - Trinidad and Tobago Soca" by JuliusH (1:56, instrumental soca with brass and carnival percussion), from [Pixabay](https://pixabay.com/music/world-en-la-playa-trinidad-and-tobago-soca-4662/) under the same licence.
+
+The brand video's track is [assets/music/on-the-beach-intro-outro.mp3](assets/music/on-the-beach-intro-outro.mp3): "On the Beach Intro Outro" by NaturesEye (1:16, about 100 BPM, upbeat Caribbean/reggae feel), from [Pixabay](https://pixabay.com/music/happy-childrens-tunes-on-the-beach-intro-outro-10278/) under the [Pixabay Content License](https://pixabay.com/service/license-summary/). The licence allows free commercial use in a video without attribution. It does not allow distributing the track on its own, so use it only as a source for our videos. It is the same track Shelfie's brand video uses.
